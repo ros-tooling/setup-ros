@@ -1,10 +1,9 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+name: 'Setup ROS2 environment'
+description: 'Install ROS 2 from source on the host machine'
+author: 'Thomas Moulard'
+branding:
+  icon: 'box'
+  color: 'gray-dark'
 runs:
   using: 'node12'
-  main: 'lib/main.js'
+  main: 'lib/setup-ros2.js'
