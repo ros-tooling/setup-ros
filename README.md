@@ -23,7 +23,7 @@ See [action.yml](action.yml)
 
 ```yaml
 steps:
-- uses: actions/setup-ros2@master
+- uses: thomas-moulard/setup-ros2@master
 - run: vcs --help
 ```
 
