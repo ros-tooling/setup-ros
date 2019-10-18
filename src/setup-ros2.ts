@@ -63,7 +63,7 @@ async function run() {
     // Install all Python 3 dependencies.
     await exec.exec(
     "sudo",
-    ["pip3", "install", "argcomplete", "colcon-common-extensions",
+    ["pip3", "install", "--upgrade", "argcomplete", "colcon-common-extensions",
      "colcon-mixin", "flake8", "flake8-blind-except", "flake8-builtins",
      "flake8-class-newline", "flake8-comprehensions", "flake8-deprecated",
      "flake8-docstrings", "flake8-import-order", "flake8-quotes", "pytest",
