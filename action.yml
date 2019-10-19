@@ -1,6 +1,6 @@
 name: 'Setup ROS2 environment'
 description: 'Install ROS 2 from source on the host machine'
-author: 'Thomas Moulard'
+author: 'ROS Tooling Working Group'
 branding:
   icon: 'box'
   color: 'gray-dark'
