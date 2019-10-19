@@ -1,6 +1,6 @@
 # setup-ros2
 
-[![GitHub Action Status](https://github.com/thomas-moulard/setup-ros2/workflows/Test%20setup-ros2/badge.svg)](https://github.com/thomas-moulard/setup-ros2)
+[![GitHub Action Status](https://github.com/ros-tooling/setup-ros2/workflows/Test%20setup-ros2/badge.svg)](https://github.com/ros-tooling/setup-ros2)
 
 This action sets up a [ROS 2](https://index.ros.org/doc/ros2/) environment:
 
@@ -23,7 +23,7 @@ See [action.yml](action.yml)
 
 ```yaml
 steps:
-- uses: thomas-moulard/setup-ros2@master
+- uses: ros-tooling/setup-ros2@master
 - run: vcs --help
 ```
 
