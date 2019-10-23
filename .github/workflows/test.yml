@@ -24,8 +24,10 @@ jobs:
           os: [macOS-10.14, ubuntu-18.04]
     steps:
     - uses: actions/checkout@v1
-
-    #    - run: npm ci
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
     - run: npm run build
 
     - uses: ./ # Uses an action in the root directory
