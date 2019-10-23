@@ -8,11 +8,15 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+          os: [macOS-10.14, ubuntu-18.04]
     steps:
     - uses: actions/checkout@v1
 
-    - run: npm ci
+    #    - run: npm ci
     - run: npm run build
 
     - uses: ./ # Uses an action in the root directory
