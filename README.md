@@ -1,6 +1,6 @@
 # setup-ros2
 
-[![GitHub Action Status](https://github.com/ros-tooling/setup-ros2/workflows/Test%20setup-ros2/badge.svg)](https://github.com/ros-tooling/setup-ros2)
+[![GitHub Action Status](https://github.com/ros-tooling/setup-ros2/workflows/Test%20setup-ros2/badge.svg)](https://github.com/ros-tooling/setup-ros2) [![Greenkeeper badge](https://badges.greenkeeper.io/ros-tooling/setup-ros2.svg)](https://greenkeeper.io/)
 
 This action sets up a [ROS 2](https://index.ros.org/doc/ros2/) environment:
 
