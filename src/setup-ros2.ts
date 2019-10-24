@@ -149,7 +149,7 @@ async function runOsX() {
 
   // While rosdep and vcs are available as a Debian package on Ubuntu, they need
   // to be installed through pip on OS X.
-  return exec.exec(
+  await exec.exec(
    "sudo", ["pip3", "install", "--upgrade", "rosdep", "vcstool"])
   // Initializes rosdep
   await exec.exec("sudo", ["rosdep", "init"])
