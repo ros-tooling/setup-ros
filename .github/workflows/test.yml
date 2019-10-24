@@ -13,7 +13,7 @@ on:
       # PR needs to be open or not, and as such we need
       # to whitelist those branches for CI run here.
       # See also https://greenkeeper.io/faq#no-initial-pr
-      - 'greenkeeper*'
+      - 'greenkeeper**'
 
 jobs:
   test:
