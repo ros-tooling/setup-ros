@@ -85,7 +85,7 @@ async function runLinux() {
   // base building packages are not pulled by rosdep, so
   // they are also installed during this stage.
   await runAptGetInstall(
-  ["build-essential", "cmake", "git",
+  ["build-essential", "clang", "cmake", "git",
    "python3-colcon-common-extensions", "python3-lark-parser", "python3-pip",
    "python3-rosdep", "python3-vcstool", "wget"])
 
