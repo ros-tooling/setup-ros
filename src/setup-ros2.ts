@@ -112,6 +112,7 @@ async function runOsX() {
   await runBrew([
     "asio",
     "assimp",
+    "cmake",
     "console_bridge",
     "cppcheck",
     "eigen",
