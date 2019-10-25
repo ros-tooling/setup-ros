@@ -1,17 +1,17 @@
 {
-  "name": "setup-ros2",
+  "name": "setup-ros",
   "version": "0.0.0",
   "description": "GitHub Action to setup a ROS2 development environment",
   "main": "lib/main.js",
   "scripts": {
-    "build": "ncc build src/setup-ros2.ts -o dist",
+    "build": "ncc build src/setup-ros.ts -o dist",
     "lint": "eslint src/**.ts src/*/*.ts",
     "prettier": "prettier --write src/*.ts src/*/*.ts",
     "test": "eslint src/*.ts src/*/*.ts && jest --coverage"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ros-tooling/setup-ros2.git"
+    "url": "git+https://github.com/ros-tooling/setup-ros.git"
   },
   "keywords": [
     "actions",
@@ -27,7 +27,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/ros-tooling/setup-ros2/issues"
+    "url": "https://github.com/ros-tooling/setup-ros/issues"
   },
   "dependencies": {
     "@actions/core": "^1.2.0",

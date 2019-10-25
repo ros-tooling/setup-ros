@@ -1,5 +1,6 @@
-name: 'Setup ROS2 environment'
-description: 'Install ROS 2 from source on the host machine'
+name: 'Setup ROS environment'
+description: |
+    Install system dependencies required to build ROS and ROS 2 packages
 author: 'ROS Tooling Working Group'
 branding:
   icon: 'box'
