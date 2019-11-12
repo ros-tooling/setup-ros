@@ -23,6 +23,7 @@ async function installPython3Dependencies(): Promise<number> {
     "argcomplete",
     "catkin_pkg",
     "colcon-common-extensions",
+    "colcon-lcov-result",
     "colcon-mixin",
     "coverage",
     "cryptography",
@@ -85,7 +86,7 @@ async function runLinux() {
   // base building packages are not pulled by rosdep, so
   // they are also installed during this stage.
   await runAptGetInstall(
-  ["build-essential", "clang", "cmake", "git",
+  ["build-essential", "clang", "cmake", "git", "lcov",
    "python3-colcon-common-extensions", "python3-lark-parser", "python3-pip",
    "python3-rosdep", "python3-vcstool", "wget"])
 
