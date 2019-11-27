@@ -873,9 +873,15 @@ const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 function runAptGetInstall(packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return exec.exec("sudo", ["DEBIAN_FRONTEND=noninteractive", "RTI_NC_LICENSE_ACCEPTED=yes",
-            "apt-get", "install", "--no-install-recommends", "--quiet",
-            "--yes"].concat(packages));
+        return exec.exec("sudo", [
+            "DEBIAN_FRONTEND=noninteractive",
+            "RTI_NC_LICENSE_ACCEPTED=yes",
+            "apt-get",
+            "install",
+            "--no-install-recommends",
+            "--quiet",
+            "--yes"
+        ].concat(packages));
     });
 }
 function runBrew(packages) {
@@ -885,7 +891,10 @@ function runBrew(packages) {
 }
 function installPython3Dependencies() {
     return __awaiter(this, void 0, void 0, function* () {
-        return exec.exec("sudo", ["pip3", "install", "--upgrade",
+        return exec.exec("sudo", [
+            "pip3",
+            "install",
+            "--upgrade",
             "argcomplete",
             "catkin_pkg",
             "colcon-common-extensions",
@@ -917,7 +926,9 @@ function installPython3Dependencies() {
             "pytest-repeat",
             "pytest-rerunfailures",
             "pytest-runner",
-            "setuptools", "wheel"]);
+            "setuptools",
+            "wheel"
+        ]);
     });
 }
 function runLinux() {
@@ -925,26 +936,50 @@ function runLinux() {
         yield exec.exec("sudo", ["apt-get", "update"]);
         // Select a locale supporting Unicode.
         yield exec.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
-        core.exportVariable('LANG', 'en_US.UTF-8');
+        core.exportVariable("LANG", "en_US.UTF-8");
         // Enforce UTC time for consistency.
         yield exec.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-        yield exec.exec("sudo", ["ln", "-sf", "/usr/share/zoneinfo/Etc/UTC", "/etc/localtime"]);
+        yield exec.exec("sudo", [
+            "ln",
+            "-sf",
+            "/usr/share/zoneinfo/Etc/UTC",
+            "/etc/localtime"
+        ]);
         yield runAptGetInstall(["tzdata"]);
         // OSRF APT repository is necessary, even when building
         // from source to install colcon, vcs, etc.
         yield runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
-        yield exec.exec("sudo", ["apt-key", "adv", "--keyserver", "hkp://keyserver.ubuntu.com:80",
-            "--recv-keys", "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"]);
-        yield exec.exec("sudo", ["bash", "-c",
-            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`]);
+        yield exec.exec("sudo", [
+            "apt-key",
+            "adv",
+            "--keyserver",
+            "hkp://keyserver.ubuntu.com:80",
+            "--recv-keys",
+            "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
+        ]);
+        yield exec.exec("sudo", [
+            "bash",
+            "-c",
+            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
+        ]);
         yield exec.exec("sudo", ["apt-get", "update"]);
         // Install colcon, rosdep, and vcs.
         // colcon and vcs dependencies (e.g. git), as well as
         // base building packages are not pulled by rosdep, so
         // they are also installed during this stage.
-        yield runAptGetInstall(["build-essential", "clang", "cmake", "git", "lcov",
-            "python3-colcon-common-extensions", "python3-lark-parser", "python3-pip",
-            "python3-rosdep", "python3-vcstool", "wget"]);
+        yield runAptGetInstall([
+            "build-essential",
+            "clang",
+            "cmake",
+            "git",
+            "lcov",
+            "python3-colcon-common-extensions",
+            "python3-lark-parser",
+            "python3-pip",
+            "python3-rosdep",
+            "python3-vcstool",
+            "wget"
+        ]);
         // FastRTPS dependencies
         yield runAptGetInstall(["libasio-dev", "libtinyxml2-dev"]);
         // Install OpenSplice
@@ -983,22 +1018,28 @@ function runOsX() {
         yield exec.exec("sudo", [
             "bash",
             "-c",
-            "echo \"export OPENSSL_ROOT_DIR=$(brew --prefix openssl)\" >> ~/.bashrc"
+            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
         ]);
         yield exec.exec("sudo", [
             "bash",
             "-c",
-            "echo \"export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt\" >> ~/.bashrc"
+            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
         ]);
         yield exec.exec("sudo", [
             "bash",
             "-c",
-            "echo \"export PATH=$PATH:/usr/local/opt/qt/bin\" >> ~/.bashrc"
+            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
         ]);
         yield installPython3Dependencies();
         // While rosdep and vcs are available as a Debian package on Ubuntu, they need
         // to be installed through pip on OS X.
-        yield exec.exec("sudo", ["pip3", "install", "--upgrade", "rosdep", "vcstool"]);
+        yield exec.exec("sudo", [
+            "pip3",
+            "install",
+            "--upgrade",
+            "rosdep",
+            "vcstool"
+        ]);
         // Initializes rosdep
         yield exec.exec("sudo", ["rosdep", "init"]);
     });
@@ -1022,7 +1063,7 @@ function run() {
                 yield runLinux();
             }
             else {
-                core.setFailed(`unsupport platform ${platform}`);
+                core.setFailed(`Unsupported platform ${platform}`);
             }
         }
         catch (error) {
