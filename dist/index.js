@@ -624,6 +624,91 @@ class ExecState extends events.EventEmitter {
 
 /***/ }),
 
+/***/ 77:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils = __importStar(__webpack_require__(163));
+const aptCommandLine = [
+    "DEBIAN_FRONTEND=noninteractive",
+    "RTI_NC_LICENSE_ACCEPTED=yes",
+    "apt-get",
+    "install",
+    "--no-install-recommends",
+    "--quiet",
+    "--yes"
+];
+const aptDependencies = [
+    "build-essential",
+    "clang",
+    "cmake",
+    "git",
+    "lcov",
+    "python3-colcon-common-extensions",
+    "python3-lark-parser",
+    "python3-pip",
+    "python3-rosdep",
+    "python3-vcstool",
+    "wget",
+    // FastRTPS dependencies
+    "libasio-dev",
+    "libtinyxml2-dev",
+    // OpenSplice
+    "libopensplice69",
+    // RTI Connext - required to ensure the installation in non-blocking
+    "rti-connext-dds-5.3.1"
+];
+/**
+ * Run apt-get install on list of specified packages.
+ *
+ * This invokation guarantees that APT install will be non-blocking.
+ *
+ * In particular, it automatically accepts the RTI Connext license, which would block forever otherwise.
+ * Skipping the license agreement page requires RTI_NC_LICENSE_ACCEPTED to be set to "yes".
+ * This package would normally be installed automatically by rosdep, but
+ * there is no way to pass RTI_NC_LICENSE_ACCEPTED through rosdep.
+ *
+ * @param   packages        list of Debian pacakges to be installed
+ * @returns Promise<number> exit code
+ */
+function runAptGetInstall(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("sudo", aptCommandLine.concat(packages));
+    });
+}
+exports.runAptGetInstall = runAptGetInstall;
+/**
+ * Run ROS 2 APT dependencies.
+ *
+ * @returns Promise<number> exit code
+ */
+function installAptDependencies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return runAptGetInstall(aptDependencies);
+    });
+}
+exports.installAptDependencies = installAptDependencies;
+
+
+/***/ }),
+
 /***/ 87:
 /***/ (function(module) {
 
@@ -635,6 +720,338 @@ module.exports = require("os");
 /***/ (function(module) {
 
 module.exports = require("child_process");
+
+/***/ }),
+
+/***/ 163:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const actions_exec = __importStar(__webpack_require__(986));
+const core = __importStar(__webpack_require__(470));
+// eslint-disable-line @typescript-eslint/no-unused-vars
+/**
+ * Execute a command and wrap the output in a log group.
+ *
+ * @param   commandLine     command to execute (can include additional args). Must be correctly escaped.
+ * @param   args            optional arguments for tool. Escaping is handled by the lib.
+ * @param   options         optional exec options.  See ExecOptions
+ * @param   log_message     log group title.
+ * @returns Promise<number> exit code
+ */
+function exec(commandLine, args, options, log_message) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const argsAsString = (args || []).join(' ');
+        const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
+        return core.group(message, () => __awaiter(this, void 0, void 0, function* () {
+            return actions_exec.exec(commandLine, args, options);
+        }));
+    });
+}
+exports.exec = exec;
+
+
+/***/ }),
+
+/***/ 230:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils = __importStar(__webpack_require__(163));
+const pip3Packages = [
+    "argcomplete",
+    "catkin_pkg",
+    "colcon-common-extensions",
+    "colcon-lcov-result",
+    "colcon-mixin",
+    "coverage",
+    "cryptography",
+    "empy",
+    "flake8",
+    "flake8-blind-except",
+    "flake8-builtins",
+    "flake8-class-newline",
+    "flake8-comprehensions",
+    "flake8-deprecated",
+    "flake8-docstrings",
+    "flake8-import-order",
+    "flake8-quotes",
+    "ifcfg",
+    "lark-parser",
+    "mock",
+    "mypy",
+    "nose",
+    "pep8",
+    "pydocstyle",
+    "pyparsing",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-repeat",
+    "pytest-rerunfailures",
+    "pytest-runner",
+    "setuptools",
+    "wheel"
+];
+const pip3CommandLine = ["pip3", "install", "--upgrade"];
+/**
+ * Run Python3 pip install on a list of specified packages.
+ *
+ * @param   packages        list of pip packages to be installed
+ * @returns Promise<number> exit code
+ */
+function runPython3PipInstall(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("sudo", pip3CommandLine.concat(packages));
+    });
+}
+exports.runPython3PipInstall = runPython3PipInstall;
+/**
+ * Run Python3 pip install on a list of specified packages.
+ *
+ * @returns Promise<number> exit code
+ */
+function installPython3Dependencies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return runPython3PipInstall(pip3Packages);
+    });
+}
+exports.installPython3Dependencies = installPython3Dependencies;
+
+
+/***/ }),
+
+/***/ 232:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils = __importStar(__webpack_require__(163));
+const brewDependencies = [
+    "asio",
+    "assimp",
+    "console_bridge",
+    "cppcheck",
+    "eigen",
+    "freetype",
+    "log4cxx",
+    "opencv",
+    "openssl",
+    "pcre",
+    "poco",
+    "python3",
+    "qt",
+    "tinyxml",
+    "tinyxml2",
+    "wget"
+];
+/**
+ * Run brew install on a list of specified packages.
+ *
+ * @param   packages        list of Homebrew packages to be installed
+ * @returns Promise<number> exit code
+ */
+function runBrew(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("brew", ["install"].concat(packages));
+    });
+}
+exports.runBrew = runBrew;
+/**
+ * Run ROS 2 Homebrew dependencies.
+ *
+ * @returns Promise<number> exit code
+ */
+function installBrewDependencies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return runBrew(brewDependencies);
+    });
+}
+exports.installBrewDependencies = installBrewDependencies;
+
+
+/***/ }),
+
+/***/ 298:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const exec = __importStar(__webpack_require__(986));
+const brew = __importStar(__webpack_require__(232));
+const pip = __importStar(__webpack_require__(230));
+/**
+ * Install ROS 2 on a OS X worker.
+ */
+function runOsX() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield brew.installBrewDependencies();
+        yield exec.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
+        ]);
+        yield exec.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
+        ]);
+        yield exec.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
+        ]);
+        yield pip.installPython3Dependencies();
+        // While rosdep and vcs are available as a Debian package on Ubuntu, they need
+        // to be installed through pip on OS X.
+        yield pip.runPython3PipInstall(["rosdep", "vcstool"]);
+        // Initializes rosdep
+        yield exec.exec("sudo", ["rosdep", "init"]);
+    });
+}
+exports.runOsX = runOsX;
+
+
+/***/ }),
+
+/***/ 384:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const apt = __importStar(__webpack_require__(77));
+const pip = __importStar(__webpack_require__(230));
+const utils = __importStar(__webpack_require__(163));
+/**
+ * Install ROS 2 on a Linux worker.
+ */
+function runLinux() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", ["apt-get", "update"]);
+        // Select a locale supporting Unicode.
+        yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
+        core.exportVariable("LANG", "en_US.UTF-8");
+        // Enforce UTC time for consistency.
+        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        yield utils.exec("sudo", [
+            "ln",
+            "-sf",
+            "/usr/share/zoneinfo/Etc/UTC",
+            "/etc/localtime"
+        ]);
+        yield apt.runAptGetInstall(["tzdata"]);
+        // OSRF APT repository is necessary, even when building
+        // from source to install colcon, vcs, etc.
+        yield apt.runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
+        yield utils.exec("sudo", [
+            "apt-key",
+            "adv",
+            "--keyserver",
+            "hkp://keyserver.ubuntu.com:80",
+            "--recv-keys",
+            "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
+        ]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
+        ]);
+        yield utils.exec("sudo", ["apt-get", "update"]);
+        // Install colcon, rosdep, and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
+        // colcon and vcs dependencies (e.g. git), as well as
+        // base building packages are not pulled by rosdep, so
+        // they are also installed during this stage.
+        yield apt.installAptDependencies();
+        yield pip.installPython3Dependencies();
+        // Initializes rosdep
+        yield utils.exec("sudo", ["rosdep", "init"]);
+    });
+}
+exports.runLinux = runLinux;
+
 
 /***/ }),
 
@@ -653,18 +1070,18 @@ const os = __webpack_require__(87);
  *
  * Examples:
  *   ##[warning]This is the user warning message
- *   ##[set-secret name=mypassword]definatelyNotAPassword!
+ *   ##[set-secret name=mypassword]definitelyNotAPassword!
  */
 function issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
     process.stdout.write(cmd.toString() + os.EOL);
 }
 exports.issueCommand = issueCommand;
-function issue(name, message) {
+function issue(name, message = '') {
     issueCommand(name, {}, message);
 }
 exports.issue = issue;
-const CMD_PREFIX = '##[';
+const CMD_STRING = '::';
 class Command {
     constructor(command, properties, message) {
         if (!command) {
@@ -675,7 +1092,7 @@ class Command {
         this.message = message;
     }
     toString() {
-        let cmdStr = CMD_PREFIX + this.command;
+        let cmdStr = CMD_STRING + this.command;
         if (this.properties && Object.keys(this.properties).length > 0) {
             cmdStr += ' ';
             for (const key in this.properties) {
@@ -684,12 +1101,12 @@ class Command {
                     if (val) {
                         // safely append the val - avoid blowing up when attempting to
                         // call .replace() if message is not a string for some reason
-                        cmdStr += `${key}=${escape(`${val || ''}`)};`;
+                        cmdStr += `${key}=${escape(`${val || ''}`)},`;
                     }
                 }
             }
         }
-        cmdStr += ']';
+        cmdStr += CMD_STRING;
         // safely append the message - avoid blowing up when attempting to
         // call .replace() if message is not a string for some reason
         const message = `${this.message || ''}`;
@@ -716,8 +1133,18 @@ function escape(s) {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const command_1 = __webpack_require__(431);
+const os = __webpack_require__(87);
 const path = __webpack_require__(622);
 /**
  * The code to exit an action
@@ -737,7 +1164,7 @@ var ExitCode;
 // Variables
 //-----------------------------------------------------------------------
 /**
- * sets env variable for this action and future actions in the job
+ * Sets env variable for this action and future actions in the job
  * @param name the name of the variable to set
  * @param val the value of the variable
  */
@@ -747,15 +1174,13 @@ function exportVariable(name, val) {
 }
 exports.exportVariable = exportVariable;
 /**
- * exports the variable and registers a secret which will get masked from logs
- * @param name the name of the variable to set
- * @param val value of the secret
+ * Registers a secret which will get masked from logs
+ * @param secret value of the secret
  */
-function exportSecret(name, val) {
-    exportVariable(name, val);
-    command_1.issueCommand('set-secret', {}, val);
+function setSecret(secret) {
+    command_1.issueCommand('add-mask', {}, secret);
 }
-exports.exportSecret = exportSecret;
+exports.setSecret = setSecret;
 /**
  * Prepends inputPath to the PATH (for this action and future actions)
  * @param inputPath
@@ -773,7 +1198,7 @@ exports.addPath = addPath;
  * @returns   string
  */
 function getInput(name, options) {
-    const val = process.env[`INPUT_${name.replace(' ', '_').toUpperCase()}`] || '';
+    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
     if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
     }
@@ -830,6 +1255,77 @@ function warning(message) {
     command_1.issue('warning', message);
 }
 exports.warning = warning;
+/**
+ * Writes info to log with console.log.
+ * @param message info message
+ */
+function info(message) {
+    process.stdout.write(message + os.EOL);
+}
+exports.info = info;
+/**
+ * Begin an output group.
+ *
+ * Output until the next `groupEnd` will be foldable in this group
+ *
+ * @param name The name of the output group
+ */
+function startGroup(name) {
+    command_1.issue('group', name);
+}
+exports.startGroup = startGroup;
+/**
+ * End an output group.
+ */
+function endGroup() {
+    command_1.issue('endgroup');
+}
+exports.endGroup = endGroup;
+/**
+ * Wrap an asynchronous function call in a group.
+ *
+ * Returns the same type as the function itself.
+ *
+ * @param name The name of the group
+ * @param fn The function to wrap in the group
+ */
+function group(name, fn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        startGroup(name);
+        let result;
+        try {
+            result = yield fn();
+        }
+        finally {
+            endGroup();
+        }
+        return result;
+    });
+}
+exports.group = group;
+//-----------------------------------------------------------------------
+// Wrapper action state
+//-----------------------------------------------------------------------
+/**
+ * Saves state for current action, the state can only be retrieved by this action's post job execution.
+ *
+ * @param     name     name of the state to store
+ * @param     value    value to store
+ */
+function saveState(name, value) {
+    command_1.issueCommand('save-state', { name }, value);
+}
+exports.saveState = saveState;
+/**
+ * Gets the value of an state set by this action's main execution.
+ *
+ * @param     name     name of the state to get
+ * @returns   string
+ */
+function getState(name) {
+    return process.env[`STATE_${name}`] || '';
+}
+exports.getState = getState;
 //# sourceMappingURL=core.js.map
 
 /***/ }),
@@ -870,197 +1366,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
-const exec = __importStar(__webpack_require__(986));
-function runAptGetInstall(packages) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return exec.exec("sudo", [
-            "DEBIAN_FRONTEND=noninteractive",
-            "RTI_NC_LICENSE_ACCEPTED=yes",
-            "apt-get",
-            "install",
-            "--no-install-recommends",
-            "--quiet",
-            "--yes"
-        ].concat(packages));
-    });
-}
-function runBrew(packages) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return exec.exec("brew", ["install"].concat(packages));
-    });
-}
-function installPython3Dependencies() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return exec.exec("sudo", [
-            "pip3",
-            "install",
-            "--upgrade",
-            "argcomplete",
-            "catkin_pkg",
-            "colcon-common-extensions",
-            "colcon-lcov-result",
-            "colcon-mixin",
-            "coverage",
-            "cryptography",
-            "empy",
-            "flake8",
-            "flake8-blind-except",
-            "flake8-builtins",
-            "flake8-class-newline",
-            "flake8-comprehensions",
-            "flake8-deprecated",
-            "flake8-docstrings",
-            "flake8-import-order",
-            "flake8-quotes",
-            "ifcfg",
-            "lark-parser",
-            "mock",
-            "mypy",
-            "nose",
-            "pep8",
-            "pydocstyle",
-            "pyparsing",
-            "pytest",
-            "pytest-cov",
-            "pytest-mock",
-            "pytest-repeat",
-            "pytest-rerunfailures",
-            "pytest-runner",
-            "setuptools",
-            "wheel"
-        ]);
-    });
-}
-function runLinux() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield exec.exec("sudo", ["apt-get", "update"]);
-        // Select a locale supporting Unicode.
-        yield exec.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
-        core.exportVariable("LANG", "en_US.UTF-8");
-        // Enforce UTC time for consistency.
-        yield exec.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-        yield exec.exec("sudo", [
-            "ln",
-            "-sf",
-            "/usr/share/zoneinfo/Etc/UTC",
-            "/etc/localtime"
-        ]);
-        yield runAptGetInstall(["tzdata"]);
-        // OSRF APT repository is necessary, even when building
-        // from source to install colcon, vcs, etc.
-        yield runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
-        yield exec.exec("sudo", [
-            "apt-key",
-            "adv",
-            "--keyserver",
-            "hkp://keyserver.ubuntu.com:80",
-            "--recv-keys",
-            "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
-        ]);
-        yield exec.exec("sudo", [
-            "bash",
-            "-c",
-            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
-        ]);
-        yield exec.exec("sudo", ["apt-get", "update"]);
-        // Install colcon, rosdep, and vcs.
-        // colcon and vcs dependencies (e.g. git), as well as
-        // base building packages are not pulled by rosdep, so
-        // they are also installed during this stage.
-        yield runAptGetInstall([
-            "build-essential",
-            "clang",
-            "cmake",
-            "git",
-            "lcov",
-            "python3-colcon-common-extensions",
-            "python3-lark-parser",
-            "python3-pip",
-            "python3-rosdep",
-            "python3-vcstool",
-            "wget"
-        ]);
-        // FastRTPS dependencies
-        yield runAptGetInstall(["libasio-dev", "libtinyxml2-dev"]);
-        // Install OpenSplice
-        yield runAptGetInstall(["libopensplice69"]);
-        // Install RTI Connext in a non-interactive way.
-        // Skipping the license agreement page requires RTI_NC_LICENSE_ACCEPTED to be
-        // set to "yes".
-        // This package would normally be installed automatically by rosdep, but
-        // there is no way to pass RTI_NC_LICENSE_ACCEPTED through rosdep.
-        yield runAptGetInstall(["rti-connext-dds-5.3.1"]);
-        yield installPython3Dependencies();
-        // Initializes rosdep
-        yield exec.exec("sudo", ["rosdep", "init"]);
-    });
-}
-function runOsX() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield runBrew([
-            "asio",
-            "assimp",
-            "console_bridge",
-            "cppcheck",
-            "eigen",
-            "freetype",
-            "log4cxx",
-            "opencv",
-            "openssl",
-            "pcre",
-            "poco",
-            "python3",
-            "qt",
-            "tinyxml",
-            "tinyxml2",
-            "wget"
-        ]);
-        yield exec.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
-        ]);
-        yield exec.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
-        ]);
-        yield exec.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
-        ]);
-        yield installPython3Dependencies();
-        // While rosdep and vcs are available as a Debian package on Ubuntu, they need
-        // to be installed through pip on OS X.
-        yield exec.exec("sudo", [
-            "pip3",
-            "install",
-            "--upgrade",
-            "rosdep",
-            "vcstool"
-        ]);
-        // Initializes rosdep
-        yield exec.exec("sudo", ["rosdep", "init"]);
-    });
-}
-function runWindows() {
-    return __awaiter(this, void 0, void 0, function* () {
-        core.setFailed("Windows is not yet supported");
-    });
-}
+const linux = __importStar(__webpack_require__(384));
+const osx = __importStar(__webpack_require__(298));
+const windows = __importStar(__webpack_require__(891));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const platform = process.platform;
             if (platform === "darwin") {
-                yield runOsX();
+                yield osx.runOsX();
             }
             else if (platform === "win32") {
-                yield runWindows();
+                yield windows.runWindows();
             }
             else if (platform === "linux") {
-                yield runLinux();
+                yield linux.runLinux();
             }
             else {
                 core.setFailed(`Unsupported platform ${platform}`);
@@ -1072,6 +1392,41 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 891:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+/**
+ * Install ROS 2 on a Windows worker.
+ */
+function runWindows() {
+    return __awaiter(this, void 0, void 0, function* () {
+        core.setFailed("Windows is not yet supported");
+    });
+}
+exports.runWindows = runWindows;
 
 
 /***/ }),
