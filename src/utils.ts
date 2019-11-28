@@ -20,8 +20,8 @@ export async function exec(
 	options?: im.ExecOptions,
 	log_message?: string
 ): Promise<number> {
-    const argsAsString = (args || []).join(' ');
-    const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
+	const argsAsString = (args || []).join(" ");
+	const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
 	return core.group(message, async () => {
 		return actions_exec.exec(commandLine, args, options);
 	});

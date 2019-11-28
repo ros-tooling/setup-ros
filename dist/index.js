@@ -630,10 +630,11 @@ class ExecState extends events.EventEmitter {
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -729,10 +730,11 @@ module.exports = require("child_process");
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -758,7 +760,7 @@ const core = __importStar(__webpack_require__(470));
  */
 function exec(commandLine, args, options, log_message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const argsAsString = (args || []).join(' ');
+        const argsAsString = (args || []).join(" ");
         const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
         return core.group(message, () => __awaiter(this, void 0, void 0, function* () {
             return actions_exec.exec(commandLine, args, options);
@@ -776,10 +778,11 @@ exports.exec = exec;
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -832,22 +835,31 @@ const pip3CommandLine = ["pip3", "install", "--upgrade"];
  * Run Python3 pip install on a list of specified packages.
  *
  * @param   packages        list of pip packages to be installed
+ * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function runPython3PipInstall(packages) {
+function runPython3PipInstall(packages, run_with_sudo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.exec("sudo", pip3CommandLine.concat(packages));
+        const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
+        const args = pip3CommandLine.concat(packages);
+        if (sudo_enabled) {
+            return utils.exec("sudo", pip3CommandLine.concat(packages));
+        }
+        else {
+            return utils.exec(args[0], args.splice(1));
+        }
     });
 }
 exports.runPython3PipInstall = runPython3PipInstall;
 /**
  * Run Python3 pip install on a list of specified packages.
  *
+ * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function installPython3Dependencies() {
+function installPython3Dependencies(run_with_sudo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return runPython3PipInstall(pip3Packages);
+        return runPython3PipInstall(pip3Packages, run_with_sudo);
     });
 }
 exports.installPython3Dependencies = installPython3Dependencies;
@@ -861,10 +873,11 @@ exports.installPython3Dependencies = installPython3Dependencies;
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -928,10 +941,11 @@ exports.installBrewDependencies = installBrewDependencies;
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -986,10 +1000,11 @@ exports.runOsX = runOsX;
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -1330,6 +1345,86 @@ exports.getState = getState;
 
 /***/ }),
 
+/***/ 510:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils = __importStar(__webpack_require__(163));
+const chocoCommandLine = ["install", "--limit-output", "--yes"];
+const chocoDependencies = ["patch", "cppcheck", "python", "wget"];
+const ros2ChocolateyPackagesUrl = [
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/eigen.3.3.4.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/log4cxx.0.10.0-2.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml-usestl.2.6.2.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg"
+];
+const ros2ChocolateyPackages = [
+    "asio",
+    "cunit",
+    "eigen",
+    "log4cxx",
+    "tinyxml-usestl",
+    "tinyxml2"
+];
+/**
+ * Run choco install on the list of specified packages.
+ *
+ * @param   packages        list of Chocolatey pacakges to be installed
+ * @returns Promise<number> exit code
+ */
+function runChocoInstall(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("choco", chocoCommandLine.concat(packages));
+    });
+}
+exports.runChocoInstall = runChocoInstall;
+/**
+ * Install ROS 2 Chocolatey dependencies.
+ *
+ * @returns Promise<number> exit code
+ */
+function installChocoDependencies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return runChocoInstall(chocoDependencies);
+    });
+}
+exports.installChocoDependencies = installChocoDependencies;
+/**
+ * Download Open Robotics maintained packages from GitHub and install them.
+ *
+ * @returns Promise<number> exit code
+ */
+function downloadAndInstallRos2NugetPackages() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
+        return utils.exec("choco", ["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages));
+    });
+}
+exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackages;
+
+
+/***/ }),
+
 /***/ 614:
 /***/ (function(module) {
 
@@ -1350,10 +1445,11 @@ module.exports = require("path");
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -1402,10 +1498,11 @@ run();
 "use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -1418,12 +1515,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
+const chocolatey = __importStar(__webpack_require__(510));
+const pip = __importStar(__webpack_require__(230));
+const utils = __importStar(__webpack_require__(163));
+const rosdepBin = "c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts\\rosdep";
 /**
  * Install ROS 2 on a Windows worker.
  */
 function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
-        core.setFailed("Windows is not yet supported");
+        yield chocolatey.installChocoDependencies();
+        yield chocolatey.downloadAndInstallRos2NugetPackages();
+        yield pip.installPython3Dependencies(false);
+        yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
+        core.addPath("c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts");
+        return utils.exec(`py ${rosdepBin}`, ["init"]);
     });
 }
 exports.runWindows = runWindows;

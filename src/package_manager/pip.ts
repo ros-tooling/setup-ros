@@ -42,19 +42,30 @@ const pip3CommandLine: string[] = ["pip3", "install", "--upgrade"];
  * Run Python3 pip install on a list of specified packages.
  *
  * @param   packages        list of pip packages to be installed
+ * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
 export async function runPython3PipInstall(
-	packages: string[]
+	packages: string[],
+	run_with_sudo?: boolean
 ): Promise<number> {
-	return utils.exec("sudo", pip3CommandLine.concat(packages));
+	const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
+	const args = pip3CommandLine.concat(packages);
+	if (sudo_enabled) {
+		return utils.exec("sudo", pip3CommandLine.concat(packages));
+	} else {
+		return utils.exec(args[0], args.splice(1));
+	}
 }
 
 /**
  * Run Python3 pip install on a list of specified packages.
  *
+ * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-export async function installPython3Dependencies(): Promise<number> {
-	return runPython3PipInstall(pip3Packages);
+export async function installPython3Dependencies(
+	run_with_sudo?: boolean
+): Promise<number> {
+	return runPython3PipInstall(pip3Packages, run_with_sudo);
 }
