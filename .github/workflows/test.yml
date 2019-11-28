@@ -33,4 +33,6 @@ jobs:
     - uses: ./ # Uses an action in the root directory
 
     # Verify whether ROS tools are actually available.
-    - run: which colcon && which rosdep && which vcs
+    - run: which colcon
+    - run: which rosdep
+    - run: which vcs

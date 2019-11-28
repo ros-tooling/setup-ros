@@ -4,10 +4,10 @@
   "description": "GitHub Action to setup a ROS2 development environment",
   "main": "lib/main.js",
   "scripts": {
-    "build": "ncc build src/*.ts -o dist",
-    "lint": "eslint src/*.ts",
-    "prettier": "prettier --write 'src/*.ts'",
-    "test": "eslint src/*.ts && jest --coverage"
+    "build": "ncc build src/setup-ros2.ts -o dist",
+    "lint": "eslint src/**.ts src/*/*.ts",
+    "prettier": "prettier --write src/*.ts src/*/*.ts",
+    "test": "eslint src/*.ts src/*/*.ts && jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "url": "https://github.com/ros-tooling/setup-ros2/issues"
   },
   "dependencies": {
-    "@actions/core": "^1.0.0",
+    "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1",
     "npm-ci": "0.0.2"
   },
@@ -44,7 +44,7 @@
     "eslint": "^6.5.1",
     "jest": "^24.8.0",
     "jest-circus": "^24.7.1",
-    "prettier": "1.19.0",
+    "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.1"
   }
