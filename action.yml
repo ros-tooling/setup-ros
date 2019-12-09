@@ -4,6 +4,28 @@ author: 'ROS Tooling Working Group'
 branding:
   icon: 'box'
   color: 'gray-dark'
+inputs:
+  required-ros-distributions:
+    description: |
+        List of binary ROS distributions to be installed.
+
+        Support for non-Linux platform is not implemented yet, so this
+        parameter is ignored on Mac OS X and Windows.
+
+        Allowed ROS distributions
+        - "" (no value) - no ROS binary installation
+        - kinetic
+        - melodic
+        - dashing
+        - eloquent
+        - source
+
+        Multiple values can be passed using a whitespace delimited list
+        "melodic dashing".
+
+        For each passed ROS distribution, its desktop variant will be installed.
+    required: false
+    default: ""
 runs:
   using: 'node12'
   main: 'dist/index.js'
