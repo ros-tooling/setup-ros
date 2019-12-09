@@ -36,3 +36,22 @@ jobs:
     - run: which colcon
     - run: which rosdep
     - run: which vcs
+
+  test_binary_install:
+    name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: melodic dashing
+    - run: test -f /opt/ros/dashing/setup.sh
+      name: "Check that dashing setup.sh has been installed."
+    - run: test -f /opt/ros/melodic/setup.sh
+      name: "Check that melodic setup.sh has been installed."

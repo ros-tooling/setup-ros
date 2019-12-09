@@ -38,6 +38,11 @@ export async function runLinux() {
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
+		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
+	]);
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
 		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
 	]);
 	await utils.exec("sudo", ["apt-get", "update"]);
@@ -50,4 +55,14 @@ export async function runLinux() {
 	await pip.installPython3Dependencies();
 	// Initializes rosdep
 	await utils.exec("sudo", ["rosdep", "init"]);
+
+	const requiredRosDistributions = core.getInput("required-ros-distributions");
+	if (requiredRosDistributions) {
+		const requiredRosDistributionsList = requiredRosDistributions.split(
+			RegExp("\\s")
+		);
+		for (let rosDistro of requiredRosDistributionsList) {
+			await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
+		}
+	}
 }

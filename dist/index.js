@@ -1052,6 +1052,11 @@ function runLinux() {
         yield utils.exec("sudo", [
             "bash",
             "-c",
+            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
+        ]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
             `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
@@ -1063,6 +1068,13 @@ function runLinux() {
         yield pip.installPython3Dependencies();
         // Initializes rosdep
         yield utils.exec("sudo", ["rosdep", "init"]);
+        const requiredRosDistributions = core.getInput("required-ros-distributions");
+        if (requiredRosDistributions) {
+            const requiredRosDistributionsList = requiredRosDistributions.split(RegExp("\\s"));
+            for (let rosDistro of requiredRosDistributionsList) {
+                yield apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
+            }
+        }
     });
 }
 exports.runLinux = runLinux;
