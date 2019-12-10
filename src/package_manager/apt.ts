@@ -16,6 +16,7 @@ const aptDependencies: string[] = [
 	"cmake",
 	"git",
 	"lcov",
+	"libc++-dev",
 	"python3-colcon-common-extensions",
 	"python3-lark-parser",
 	"python3-pip",
