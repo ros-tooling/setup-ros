@@ -663,6 +663,7 @@ const aptDependencies = [
     "git",
     "lcov",
     "libc++-dev",
+    "libc++abi-dev",
     "python3-colcon-common-extensions",
     "python3-lark-parser",
     "python3-pip",
