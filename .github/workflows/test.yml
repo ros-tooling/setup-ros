@@ -1,4 +1,4 @@
-name: "Test setup-ros2"
+name: "Test setup-ros"
 on:
   pull_request:
   push:

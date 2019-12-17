@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 
-import * as linux from "./setup-ros2-linux";
-import * as osx from "./setup-ros2-osx";
-import * as windows from "./setup-ros2-windows";
+import * as linux from "./setup-ros-linux";
+import * as osx from "./setup-ros-osx";
+import * as windows from "./setup-ros-windows";
 
 async function run() {
 	try {
