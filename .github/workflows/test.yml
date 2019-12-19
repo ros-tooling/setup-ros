@@ -55,3 +55,79 @@ jobs:
       name: "Check that dashing setup.sh has been installed."
     - run: test -f /opt/ros/melodic/setup.sh
       name: "Check that melodic setup.sh has been installed."
+
+
+  # ROS distributions which did not reach end-of-life:
+  # Kinetic Kame (May 2016 - May 2021)
+  # Melodic Morenia (May 2018 - May 2023)
+  #
+  # https://www.ros.org/reps/rep-0003.html
+
+  # ROS Kinetic Kame
+  test_kinetic:
+    name: "ROS Kinetic Kame"
+    container:
+      image: ubuntu:xenial
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: kinetic
+    - run: test -f /opt/ros/kinetic/setup.sh
+      name: "Check that kinetic setup.sh has been installed."
+
+  # ROS 2 distributions which did not reach end-of-life:
+  # Dashing Diademata (May 2019 - May 2021)
+  # Eloquent Elusor (November 2019 - November 2020)
+  #
+  # https://www.ros.org/reps/rep-2000.html
+
+  # ROS Dashing Diademata
+  test_dashing:
+    name: "ROS Dashing Diademata"
+    container:
+      image: ubuntu:bionic
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: melodic
+    - run: test -f /opt/ros/melodic/setup.sh
+      name: "Check that melodic setup.sh has been installed."
+
+  # ROS Eloquent Elusor
+  test_eloquent:
+    name: "ROS Eloquent Elusor"
+    container:
+      image: ubuntu:bionic
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: eloquent
+    - run: test -f /opt/ros/eloquent/setup.sh
+      name: "Check that eloquent setup.sh has been installed."
