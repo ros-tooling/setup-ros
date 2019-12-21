@@ -83,6 +83,26 @@ jobs:
     - run: test -f /opt/ros/kinetic/setup.sh
       name: "Check that kinetic setup.sh has been installed."
 
+  # ROS Melodic Morenia
+  test_melodic:
+    name: "ROS Melodic Morenia"
+    container:
+      image: ubuntu:bionic
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: melodic
+    - run: test -f /opt/ros/melodic/setup.sh
+      name: "Check that melodic setup.sh has been installed."
+
   # ROS 2 distributions which did not reach end-of-life:
   # Dashing Diademata (May 2019 - May 2021)
   # Eloquent Elusor (November 2019 - November 2020)
