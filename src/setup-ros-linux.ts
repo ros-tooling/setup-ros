@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import * as io from "@actions/io";
 
 import * as apt from "./package_manager/apt";
 import * as pip from "./package_manager/pip";
@@ -8,7 +9,27 @@ import * as utils from "./utils";
  * Install ROS 2 on a Linux worker.
  */
 export async function runLinux() {
+	// When this action runs in a Docker image, sudo may be missing.
+	// This installs sudo to avoid having to handle both cases (action runs as
+	// root, action does not run as root) everywhere in the action.
+	try {
+		await io.which("sudo", true);
+	} catch (err) {
+		await utils.exec("apt-get", ["update"]);
+		await utils.exec("apt-get", [
+			"install",
+			"--no-install-recommends",
+			"--quiet",
+			"--yes",
+			"sudo"
+		]);
+	}
+
+	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
 	await utils.exec("sudo", ["apt-get", "update"]);
+
+	// Install tools required to configure the worker system.
+	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
@@ -26,7 +47,6 @@ export async function runLinux() {
 
 	// OSRF APT repository is necessary, even when building
 	// from source to install colcon, vcs, etc.
-	await apt.runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
 	await utils.exec("sudo", [
 		"apt-key",
 		"adv",
@@ -52,7 +72,12 @@ export async function runLinux() {
 	// base building packages are not pulled by rosdep, so
 	// they are also installed during this stage.
 	await apt.installAptDependencies();
+
+	// pip3 dependencies need to be installed after the APT ones, as pip3
+	// modules such as cryptography requires python-dev to be installed,
+	// because they rely on Python C headers.
 	await pip.installPython3Dependencies();
+
 	// Initializes rosdep
 	await utils.exec("sudo", ["rosdep", "init"]);
 

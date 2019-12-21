@@ -32,6 +32,7 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1",
+    "@actions/io": "^1.0.1",
     "npm-ci": "0.0.2"
   },
   "devDependencies": {

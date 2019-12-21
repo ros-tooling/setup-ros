@@ -11,6 +11,8 @@ const aptCommandLine: string[] = [
 ];
 
 const aptDependencies: string[] = [
+	"libssl-dev", // required for pip3 cryptography module
+	"python3-dev", // required for pip3 cryptography module
 	"build-essential",
 	"clang",
 	"cmake",
