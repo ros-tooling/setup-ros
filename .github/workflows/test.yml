@@ -77,7 +77,6 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
     - uses: ./ # Uses an action in the root directory
       with:
         required-ros-distributions: kinetic
@@ -104,7 +103,6 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
     - uses: ./ # Uses an action in the root directory
       with:
         required-ros-distributions: melodic
@@ -125,7 +123,6 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-    - run: apt-get update && apt-get install -y libssl-dev locales sudo python3-dev
     - uses: ./ # Uses an action in the root directory
       with:
         required-ros-distributions: eloquent
