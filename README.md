@@ -12,7 +12,8 @@ that:
 * [ROS 2 latest development branch][ros2_latest_development_setup] builds from
   source,
 * non-EOL (End Of Life) distribution of ROS 2 builds from source,
-* any ROS 2 package depending on non-EOL distribution builds from source
+* any ROS, and ROS 2 package depending on non-EOL distribution builds from
+  source
 
 ## Supported platforms
 
