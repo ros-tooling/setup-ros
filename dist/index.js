@@ -1005,9 +1005,8 @@ function runLinux() {
             `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
-        // Install colcon, rosdep, and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
-        // colcon and vcs dependencies (e.g. git), as well as
-        // base building packages are not pulled by rosdep, so
+        // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
+        // vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
         // they are also installed during this stage.
         yield apt.installAptDependencies();
         // pip3 dependencies need to be installed after the APT ones, as pip3
@@ -1071,7 +1070,6 @@ const aptDependencies = [
     "lcov",
     "libc++-dev",
     "libc++abi-dev",
-    "python3-colcon-common-extensions",
     "python3-lark-parser",
     "python3-pip",
     "python3-rosdep",
@@ -1257,9 +1255,27 @@ const utils = __importStar(__webpack_require__(163));
 const pip3Packages = [
     "argcomplete",
     "catkin_pkg",
-    "colcon-common-extensions",
-    "colcon-lcov-result",
-    "colcon-mixin",
+    "colcon-bash==0.4.1",
+    "colcon-cd==0.1.1",
+    "colcon-cmake==0.2.16",
+    "colcon-common-extensions==0.2.1",
+    "colcon-core==0.4.3",
+    "colcon-defaults==0.2.2",
+    "colcon-lcov-result==0.2.0",
+    "colcon-library-path==0.2.1",
+    "colcon-metadata==0.2.2",
+    "colcon-mixin==0.1.6",
+    "colcon-notification==0.2.10",
+    "colcon-output==0.2.6",
+    "colcon-package-information==0.3.0",
+    "colcon-package-selection==0.2.5",
+    "colcon-parallel-executor==0.2.4",
+    "colcon-pkg-config==0.1.0",
+    "colcon-powershell==0.3.6",
+    "colcon-python-setup-py==0.2.2",
+    "colcon-recursive-crawl==0.2.0",
+    "colcon-ros==0.3.13",
+    "colcon-test-result==0.3.8",
     "coverage",
     "cryptography",
     "empy",
