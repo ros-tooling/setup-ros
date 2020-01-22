@@ -33,6 +33,7 @@
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.2",
+    "husky": "^4.2.0",
     "npm-ci": "0.0.2"
   },
   "devDependencies": {
@@ -48,5 +49,10 @@
     "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build && git add dist/index.js"
+    }
   }
 }
