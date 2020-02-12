@@ -80,13 +80,7 @@ export async function runLinux() {
 	// Initializes rosdep
 	await utils.exec("sudo", ["rosdep", "init"]);
 
-	const requiredRosDistributions = core.getInput("required-ros-distributions");
-	if (requiredRosDistributions) {
-		const requiredRosDistributionsList = requiredRosDistributions.split(
-			RegExp("\\s")
-		);
-		for (let rosDistro of requiredRosDistributionsList) {
-			await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
-		}
+	for (let rosDistro of utils.getRequiredRosDistributions()) {
+		await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
 	}
 }

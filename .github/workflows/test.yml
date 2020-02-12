@@ -152,3 +152,27 @@ jobs:
         required-ros-distributions: eloquent
     - run: test -f /opt/ros/eloquent/setup.sh
       name: "Check that eloquent setup.sh has been installed."
+
+  # ROS Eloquent Elusor (Windows)
+  test_eloquent_windows:
+    name: "ROS Eloquent Elusor (Windows)"
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm ci
+    - run: npm run build
+
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: eloquent
+    - run: if not exist c:\\dev\\eloquent\\ros2-windows\\local_setup.bat exit 1
+      name: "Check that eloquent local_setup.bat has been installed."
+      shell: cmd
+    - run: |
+        call c:\\dev\\eloquent\\ros2-windows\\local_setup.bat
+        ros2 pkg list
+      name: "List installed ROS 2 packages."
+      shell: cmd

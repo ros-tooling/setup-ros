@@ -1015,12 +1015,8 @@ function runLinux() {
         yield pip.installPython3Dependencies();
         // Initializes rosdep
         yield utils.exec("sudo", ["rosdep", "init"]);
-        const requiredRosDistributions = core.getInput("required-ros-distributions");
-        if (requiredRosDistributions) {
-            const requiredRosDistributionsList = requiredRosDistributions.split(RegExp("\\s"));
-            for (let rosDistro of requiredRosDistributionsList) {
-                yield apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
-            }
+        for (let rosDistro of utils.getRequiredRosDistributions()) {
+            yield apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
         }
     });
 }
@@ -1226,6 +1222,15 @@ function exec(commandLine, args, options, log_message) {
     });
 }
 exports.exec = exec;
+function getRequiredRosDistributions() {
+    let requiredRosDistributionsList = [];
+    const requiredRosDistributions = core.getInput("required-ros-distributions");
+    if (requiredRosDistributions) {
+        requiredRosDistributionsList = requiredRosDistributions.split(RegExp("\\s"));
+    }
+    return requiredRosDistributionsList;
+}
+exports.getRequiredRosDistributions = getRequiredRosDistributions;
 
 
 /***/ }),
@@ -1441,18 +1446,53 @@ const core = __importStar(__webpack_require__(470));
 const chocolatey = __importStar(__webpack_require__(510));
 const pip = __importStar(__webpack_require__(230));
 const utils = __importStar(__webpack_require__(163));
-const rosdepBin = "c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts\\rosdep";
+const python37 = "C:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
+const binaryReleases = {
+    "dashing": "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
+    "eloquent": "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
+};
+const pip3Packages = [
+    "numpy",
+    "netifaces",
+    "lxml"
+];
 /**
- * Install ROS 2 on a Windows worker.
+ * Install ROS 2 build tools.
  */
-function runWindows() {
+function prepareRos2BuildEnvironment() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec(`cmd /c mklink /d c:\\python37 ${python37}`);
+        core.exportVariable("PYTHONHOME", "c:\\Python37");
+        core.addPath("c:\\Python37");
+        core.addPath("c:\\Python37\\Scripts");
         yield chocolatey.installChocoDependencies();
         yield chocolatey.downloadAndInstallRos2NugetPackages();
         yield pip.installPython3Dependencies(false);
+        yield pip.runPython3PipInstall(pip3Packages, false);
         yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-        core.addPath("c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts");
-        return utils.exec(`py ${rosdepBin}`, ["init"]);
+        return utils.exec(`python c:\\Python37\\Scripts\\rosdep`, ["init"]);
+    });
+}
+/**
+ * Install ROS 2 binary releases.
+ */
+function prepareRos2BinaryReleases() {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let rosDistro of utils.getRequiredRosDistributions()) {
+            if (rosDistro in binaryReleases) {
+                yield utils.exec("wget", ["--quiet", binaryReleases[rosDistro], "-O", `${rosDistro}.zip`]);
+                yield utils.exec("7z", ["x", `${rosDistro}.zip`, "-y", `-oc:\\dev\\${rosDistro}`]);
+            }
+        }
+    });
+}
+/**
+ * Install build environment on a Windows worker.
+ */
+function runWindows() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prepareRos2BuildEnvironment();
+        return prepareRos2BinaryReleases();
     });
 }
 exports.runWindows = runWindows;
@@ -1758,7 +1798,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const chocoCommandLine = ["install", "--limit-output", "--yes"];
-const chocoDependencies = ["patch", "cppcheck", "python", "wget"];
+const chocoDependencies = ["patch", "cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
