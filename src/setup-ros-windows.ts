@@ -16,5 +16,5 @@ export async function runWindows() {
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
 	core.addPath("c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts");
-	return utils.lib.exec(`py ${rosdepBin}`, ["init"]);
+	return utils.exec(`py ${rosdepBin}`, ["init"]);
 }

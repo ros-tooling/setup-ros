@@ -4,6 +4,8 @@ const chocoCommandLine: string[] = ["install", "--limit-output", "--yes"];
 
 const chocoDependencies: string[] = ["patch", "cppcheck", "python", "wget"];
 
+const chocoPythonRuntime: string[] = ["python", "--version=3.7.6"]
+
 const ros2ChocolateyPackagesUrl: string[] = [
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
@@ -28,7 +30,7 @@ const ros2ChocolateyPackages: string[] = [
  * @returns Promise<number> exit code
  */
 export async function runChocoInstall(packages: string[]): Promise<number> {
-	return utils.lib.exec("choco", chocoCommandLine.concat(packages));
+	return utils.exec("choco", chocoCommandLine.concat(packages));
 }
 
 /**
@@ -37,6 +39,7 @@ export async function runChocoInstall(packages: string[]): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function installChocoDependencies(): Promise<number> {
+	await runChocoInstall(chocoPythonRuntime);
 	return runChocoInstall(chocoDependencies);
 }
 
@@ -46,8 +49,8 @@ export async function installChocoDependencies(): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function downloadAndInstallRos2NugetPackages(): Promise<number> {
-	await utils.lib.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
-	return utils.lib.exec(
+	await utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
+	return utils.exec(
 		"choco",
 		["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages)
 	);

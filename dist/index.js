@@ -959,8 +959,8 @@ function runLinux() {
             yield io.which("sudo", true);
         }
         catch (err) {
-            yield utils.lib.exec("apt-get", ["update"]);
-            yield utils.lib.exec("apt-get", [
+            yield utils.exec("apt-get", ["update"]);
+            yield utils.exec("apt-get", [
                 "install",
                 "--no-install-recommends",
                 "--quiet",
@@ -968,16 +968,16 @@ function runLinux() {
                 "sudo"
             ]);
         }
-        yield utils.lib.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-        yield utils.lib.exec("sudo", ["apt-get", "update"]);
+        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
         yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
         // Select a locale supporting Unicode.
-        yield utils.lib.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
+        yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
         // Enforce UTC time for consistency.
-        yield utils.lib.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        yield utils.exec("sudo", [
             "ln",
             "-sf",
             "/usr/share/zoneinfo/Etc/UTC",
@@ -986,7 +986,7 @@ function runLinux() {
         yield apt.runAptGetInstall(["tzdata"]);
         // OSRF APT repository is necessary, even when building
         // from source to install colcon, vcs, etc.
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "apt-key",
             "adv",
             "--keyserver",
@@ -994,17 +994,17 @@ function runLinux() {
             "--recv-keys",
             "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
         ]);
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "bash",
             "-c",
             `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
         ]);
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "bash",
             "-c",
             `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
         ]);
-        yield utils.lib.exec("sudo", ["apt-get", "update"]);
+        yield utils.exec("sudo", ["apt-get", "update"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
         // vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
         // they are also installed during this stage.
@@ -1014,7 +1014,7 @@ function runLinux() {
         // because they rely on Python C headers.
         yield pip.installPython3Dependencies();
         // Initializes rosdep
-        yield utils.lib.exec("sudo", ["rosdep", "init"]);
+        yield utils.exec("sudo", ["rosdep", "init"]);
         const requiredRosDistributions = core.getInput("required-ros-distributions");
         if (requiredRosDistributions) {
             const requiredRosDistributionsList = requiredRosDistributions.split(RegExp("\\s"));
@@ -1098,7 +1098,7 @@ const aptDependencies = [
  */
 function runAptGetInstall(packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.lib.exec("sudo", aptCommandLine.concat(packages));
+        return utils.exec("sudo", aptCommandLine.concat(packages));
     });
 }
 exports.runAptGetInstall = runAptGetInstall;
@@ -1226,9 +1226,6 @@ function exec(commandLine, args, options, log_message) {
     });
 }
 exports.exec = exec;
-exports.lib = {
-    exec,
-};
 
 
 /***/ }),
@@ -1321,10 +1318,10 @@ function runPython3PipInstall(packages, run_with_sudo) {
         const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
         const args = pip3CommandLine.concat(packages);
         if (sudo_enabled) {
-            return utils.lib.exec("sudo", pip3CommandLine.concat(packages));
+            return utils.exec("sudo", pip3CommandLine.concat(packages));
         }
         else {
-            return utils.lib.exec(args[0], args.splice(1));
+            return utils.exec(args[0], args.splice(1));
         }
     });
 }
@@ -1393,7 +1390,7 @@ const brewDependencies = [
  */
 function runBrew(packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.lib.exec("brew", ["install"].concat(packages));
+        return utils.exec("brew", ["install"].concat(packages));
     });
 }
 exports.runBrew = runBrew;
@@ -1455,7 +1452,7 @@ function runWindows() {
         yield pip.installPython3Dependencies(false);
         yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
         core.addPath("c:\\hostedtoolcache\\windows\\python\\3.6.8\\x64\\scripts");
-        return utils.lib.exec(`py ${rosdepBin}`, ["init"]);
+        return utils.exec(`py ${rosdepBin}`, ["init"]);
     });
 }
 exports.runWindows = runWindows;
@@ -1762,6 +1759,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const chocoCommandLine = ["install", "--limit-output", "--yes"];
 const chocoDependencies = ["patch", "cppcheck", "python", "wget"];
+const chocoPythonRuntime = ["python", "--version=3.7.6"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
@@ -1786,7 +1784,7 @@ const ros2ChocolateyPackages = [
  */
 function runChocoInstall(packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return utils.lib.exec("choco", chocoCommandLine.concat(packages));
+        return utils.exec("choco", chocoCommandLine.concat(packages));
     });
 }
 exports.runChocoInstall = runChocoInstall;
@@ -1797,6 +1795,7 @@ exports.runChocoInstall = runChocoInstall;
  */
 function installChocoDependencies() {
     return __awaiter(this, void 0, void 0, function* () {
+        yield runChocoInstall(chocoPythonRuntime);
         return runChocoInstall(chocoDependencies);
     });
 }
@@ -1808,8 +1807,8 @@ exports.installChocoDependencies = installChocoDependencies;
  */
 function downloadAndInstallRos2NugetPackages() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield utils.lib.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
-        return utils.lib.exec("choco", ["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages));
+        yield utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
+        return utils.exec("choco", ["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages));
     });
 }
 exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackages;
@@ -2121,17 +2120,17 @@ const pip = __importStar(__webpack_require__(230));
 function runOsX() {
     return __awaiter(this, void 0, void 0, function* () {
         yield brew.installBrewDependencies();
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "bash",
             "-c",
             'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
         ]);
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "bash",
             "-c",
             'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
         ]);
-        yield utils.lib.exec("sudo", [
+        yield utils.exec("sudo", [
             "bash",
             "-c",
             'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
@@ -2141,7 +2140,7 @@ function runOsX() {
         // to be installed through pip on OS X.
         yield pip.runPython3PipInstall(["rosdep", "vcstool"]);
         // Initializes rosdep
-        yield utils.lib.exec("sudo", ["rosdep", "init"]);
+        yield utils.exec("sudo", ["rosdep", "init"]);
     });
 }
 exports.runOsX = runOsX;
