@@ -48,7 +48,7 @@ const aptDependencies: string[] = [
  * @returns Promise<number> exit code
  */
 export async function runAptGetInstall(packages: string[]): Promise<number> {
-	return utils.exec("sudo", aptCommandLine.concat(packages));
+	return utils.lib.exec("sudo", aptCommandLine.concat(packages));
 }
 
 /**

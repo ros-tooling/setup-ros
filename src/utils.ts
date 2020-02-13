@@ -26,3 +26,7 @@ export async function exec(
 		return actions_exec.exec(commandLine, args, options);
 	});
 }
+
+export const lib = {
+	exec,
+};
