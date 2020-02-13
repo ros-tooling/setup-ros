@@ -15,8 +15,8 @@ export async function runLinux() {
 	try {
 		await io.which("sudo", true);
 	} catch (err) {
-		await utils.exec("apt-get", ["update"]);
-		await utils.exec("apt-get", [
+		await utils.lib.exec("apt-get", ["update"]);
+		await utils.lib.exec("apt-get", [
 			"install",
 			"--no-install-recommends",
 			"--quiet",
@@ -25,19 +25,19 @@ export async function runLinux() {
 		]);
 	}
 
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-	await utils.exec("sudo", ["apt-get", "update"]);
+	await utils.lib.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+	await utils.lib.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.
 	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
 
 	// Select a locale supporting Unicode.
-	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
+	await utils.lib.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
 	core.exportVariable("LANG", "en_US.UTF-8");
 
 	// Enforce UTC time for consistency.
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-	await utils.exec("sudo", [
+	await utils.lib.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+	await utils.lib.exec("sudo", [
 		"ln",
 		"-sf",
 		"/usr/share/zoneinfo/Etc/UTC",
@@ -47,7 +47,7 @@ export async function runLinux() {
 
 	// OSRF APT repository is necessary, even when building
 	// from source to install colcon, vcs, etc.
-	await utils.exec("sudo", [
+	await utils.lib.exec("sudo", [
 		"apt-key",
 		"adv",
 		"--keyserver",
@@ -55,17 +55,17 @@ export async function runLinux() {
 		"--recv-keys",
 		"C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
 	]);
-	await utils.exec("sudo", [
+	await utils.lib.exec("sudo", [
 		"bash",
 		"-c",
 		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
 	]);
-	await utils.exec("sudo", [
+	await utils.lib.exec("sudo", [
 		"bash",
 		"-c",
 		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
 	]);
-	await utils.exec("sudo", ["apt-get", "update"]);
+	await utils.lib.exec("sudo", ["apt-get", "update"]);
 
 	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
 	// vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
@@ -78,7 +78,7 @@ export async function runLinux() {
 	await pip.installPython3Dependencies();
 
 	// Initializes rosdep
-	await utils.exec("sudo", ["rosdep", "init"]);
+	await utils.lib.exec("sudo", ["rosdep", "init"]);
 
 	const requiredRosDistributions = core.getInput("required-ros-distributions");
 	if (requiredRosDistributions) {
