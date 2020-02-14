@@ -1758,7 +1758,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const chocoCommandLine = ["install", "--limit-output", "--yes"];
-const chocoDependencies = ["patch", "cppcheck", "python", "wget"];
+const chocoDependencies = ["patch", "cppcheck", "wget"];
 const chocoPythonRuntime = ["python", "--version=3.7.6"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",

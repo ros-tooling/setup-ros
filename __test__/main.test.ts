@@ -1,33 +1,16 @@
 import * as core from "@actions/core";
-import * as im from "@actions/exec/lib/interfaces";
+import * as actions_exec from "@actions/exec";
 
 import * as linux from "../src/setup-ros-linux";
 import * as osx from "../src/setup-ros-osx";
 import * as windows from "../src/setup-ros-windows";
-import * as utils from "../src/utils";
 
 
 describe('basic workflow tests', () => {
-    let linesOfExec: string[] = [];
     beforeAll(() => {
         jest
-            .spyOn(utils, 'exec')
-            .mockImplementation(async (
-                commandLine: string,
-                args?: string[],
-                options?: im.ExecOptions,
-                log_message?: string) => {
-                    let flatArgs = ''
-                    if (args) {
-                        flatArgs = args.map(i => i).join(' ')
-                    }
-                    linesOfExec.push(`${commandLine} ${flatArgs}`)
-                    return 0;
-                });
-    })
-
-    beforeEach(() => {
-        linesOfExec = [];
+            .spyOn(actions_exec, 'exec')
+            .mockImplementation(jest.fn());
     })
 
     afterAll(() => {
@@ -35,46 +18,26 @@ describe('basic workflow tests', () => {
     })
 
     it('run Linux workflow', async () => {
-        await linux.runLinux();
-        console.log(linesOfExec);
+        await expect(linux.runLinux()).resolves.toBeUndefined();
     })
 
     it('run Windows workflow', async () => {
-        await windows.runWindows();
-        console.log(linesOfExec);
+        await expect(windows.runWindows()).resolves.toBeUndefined();
     })
 
     it('run macOS workflow', async () => {
-        await osx.runOsX();
-        console.log(linesOfExec);
+        await expect(osx.runOsX()).resolves.toBeUndefined();
     })
 })
 
 describe('required-ros-distributions workflow tests', () => {
-    let linesOfExec: string[] = [];
-
     beforeAll(() => {
         jest
-            .spyOn(utils, 'exec')
-            .mockImplementation(async (
-                commandLine: string,
-                args?: string[],
-                options?: im.ExecOptions,
-                log_message?: string) => {
-                    let flatArgs = ''
-                    if (args) {
-                        flatArgs = args.map(i => i).join(' ')
-                    }
-                    linesOfExec.push(`${commandLine} ${flatArgs}`)
-                    return 0;
-                });
+            .spyOn(actions_exec, 'exec')
+            .mockImplementation(jest.fn());
         jest
             .spyOn(core, 'getInput')
-            .mockReturnValue('melodic')
-    })
-
-    beforeEach(() => {
-        linesOfExec = [];
+            .mockReturnValue('melodic');
     })
 
     afterAll(() => {
@@ -82,21 +45,14 @@ describe('required-ros-distributions workflow tests', () => {
     })
 
     it('run Linux workflow', async () => {
-        await linux.runLinux();
-        console.log(linesOfExec);
-        expect(linesOfExec)
-            .toContain('sudo DEBIAN_FRONTEND=noninteractive RTI_NC_LICENSE_ACCEPTED=yes apt-get install --no-install-recommends --quiet --yes ros-melodic-desktop')
+        await expect(linux.runLinux()).resolves.toBeUndefined();
     })
 
     it('run Windows workflow', async () => {
-        await windows.runWindows();
-        console.log(linesOfExec);
-        expect(linesOfExec)
-            .toContain('choco install --limit-output --yes python --version=3.7.6')
+        await expect(windows.runWindows()).resolves.toBeUndefined();
     })
 
     it('run macOS workflow', async () => {
-        await osx.runOsX();
-        console.log(linesOfExec);
+        await expect(osx.runOsX()).resolves.toBeUndefined();
     })
 })
