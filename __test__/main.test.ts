@@ -30,7 +30,7 @@ describe('basic workflow tests', () => {
     })
 })
 
-describe('required-ros-distributions workflow tests', () => {
+describe('required-ros-distributions/melodic workflow tests', () => {
     beforeAll(() => {
         jest
             .spyOn(actions_exec, 'exec')
