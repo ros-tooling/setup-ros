@@ -1758,8 +1758,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const chocoCommandLine = ["install", "--limit-output", "--yes"];
-const chocoDependencies = ["patch", "cppcheck", "wget"];
-const chocoPythonRuntime = ["python", "--version=3.7.6"];
+const chocoDependencies = ["patch", "cppcheck", "python", "wget"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
@@ -1795,7 +1794,6 @@ exports.runChocoInstall = runChocoInstall;
  */
 function installChocoDependencies() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield runChocoInstall(chocoPythonRuntime);
         return runChocoInstall(chocoDependencies);
     });
 }
