@@ -18,15 +18,15 @@ describe('basic workflow tests', () => {
     })
 
     it('run Linux workflow', async () => {
-        await expect(linux.runLinux()).resolves.toBeUndefined();
+        await expect(linux.runLinux()).resolves.not.toThrow();
     })
 
     it('run Windows workflow', async () => {
-        await expect(windows.runWindows()).resolves.toBeUndefined();
+        await expect(windows.runWindows()).resolves.not.toThrow();
     })
 
     it('run macOS workflow', async () => {
-        await expect(osx.runOsX()).resolves.toBeUndefined();
+        await expect(osx.runOsX()).resolves.not.toThrow();
     })
 })
 
@@ -45,14 +45,14 @@ describe('required-ros-distributions workflow tests', () => {
     })
 
     it('run Linux workflow', async () => {
-        await expect(linux.runLinux()).resolves.toBeUndefined();
+        await expect(linux.runLinux()).resolves.not.toThrow();
     })
 
     it('run Windows workflow', async () => {
-        await expect(windows.runWindows()).resolves.toBeUndefined();
+        await expect(windows.runWindows()).resolves.not.toThrow();
     })
 
     it('run macOS workflow', async () => {
-        await expect(osx.runOsX()).resolves.toBeUndefined();
+        await expect(osx.runOsX()).resolves.not.toThrow();
     })
 })
