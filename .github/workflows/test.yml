@@ -29,6 +29,7 @@ jobs:
         node-version: '12.x'
     - run: npm ci
     - run: npm run build
+    - run: npm test
 
     - uses: ./ # Uses an action in the root directory
 

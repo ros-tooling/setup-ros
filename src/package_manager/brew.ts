@@ -26,7 +26,7 @@ const brewDependencies: string[] = [
  * @returns Promise<number> exit code
  */
 export async function runBrew(packages: string[]): Promise<number> {
-	return utils.lib.exec("brew", ["install"].concat(packages));
+	return utils.exec("brew", ["install"].concat(packages));
 }
 
 /**

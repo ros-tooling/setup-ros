@@ -1,31 +1,58 @@
 import * as core from "@actions/core";
-import * as im from "@actions/exec/lib/interfaces";
+import * as actions_exec from "@actions/exec";
 
 import * as linux from "../src/setup-ros-linux";
 import * as osx from "../src/setup-ros-osx";
 import * as windows from "../src/setup-ros-windows";
-import * as utils from "../src/utils";
 
-utils.lib.exec = jest.fn(async (commandLine: string,
-    args?: string[],
-    options?: im.ExecOptions,
-    log_message?: string) => 
-    {
-        const argsAsString = (args || []).join(" ");
-        const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
-        return core.group(message, async () => {
-            return 0;
-        });
-    });
 
-test('run Windows workflow', async () => {
-    return windows.runWindows();
+describe('basic workflow tests', () => {
+    beforeAll(() => {
+        jest
+            .spyOn(actions_exec, 'exec')
+            .mockImplementation(jest.fn());
+    })
+
+    afterAll(() => {
+        jest.restoreAllMocks();
+    })
+
+    it('run Linux workflow', async () => {
+        await expect(linux.runLinux()).resolves.not.toThrow();
+    })
+
+    it('run Windows workflow', async () => {
+        await expect(windows.runWindows()).resolves.not.toThrow();
+    })
+
+    it('run macOS workflow', async () => {
+        await expect(osx.runOsX()).resolves.not.toThrow();
+    })
 })
 
-test('run Linux workflow', async () => {
-    return linux.runLinux();
-})
+describe('required-ros-distributions/melodic workflow tests', () => {
+    beforeAll(() => {
+        jest
+            .spyOn(actions_exec, 'exec')
+            .mockImplementation(jest.fn());
+        jest
+            .spyOn(core, 'getInput')
+            .mockReturnValue('melodic');
+    })
 
-test('run macOS workflow', async () => {
-    return osx.runOsX();
+    afterAll(() => {
+        jest.restoreAllMocks();
+    })
+
+    it('run Linux workflow', async () => {
+        await expect(linux.runLinux()).resolves.not.toThrow();
+    })
+
+    it('run Windows workflow', async () => {
+        await expect(windows.runWindows()).resolves.not.toThrow();
+    })
+
+    it('run macOS workflow', async () => {
+        await expect(osx.runOsX()).resolves.not.toThrow();
+    })
 })
