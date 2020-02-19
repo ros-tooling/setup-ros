@@ -14,7 +14,6 @@ on:
       # to whitelist those branches for CI run here.
       # See also https://greenkeeper.io/faq#no-initial-pr
       - 'greenkeeper**'
-      - 'seanyen**'
   schedule:
     # Run the CI automatically every hour to look for flakyness.
     - cron:  '0 * * * *'
