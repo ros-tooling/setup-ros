@@ -5,7 +5,7 @@ import * as pip from "./package_manager/pip";
 import * as utils from "./utils";
 
 const python37: string =
-	"C:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
+	"c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
 
 const binaryReleases: { [index: string]: string; } =
 	{
@@ -14,9 +14,9 @@ const binaryReleases: { [index: string]: string; } =
 	};
 
 const pip3Packages: string[] = [
-	"numpy",
+	"lxml",
 	"netifaces",
-	"lxml"
+	"numpy",
 ];
 
 /**
@@ -24,15 +24,15 @@ const pip3Packages: string[] = [
  */
 async function prepareRos2BuildEnvironment() {
 	await utils.exec(`cmd /c mklink /d c:\\python37 ${python37}`);
-	core.exportVariable("PYTHONHOME", "c:\\Python37");
-	core.addPath("c:\\Python37");
-	core.addPath("c:\\Python37\\Scripts");
+	core.exportVariable("PYTHONHOME", "c:\\python37");
+	core.addPath("c:\\python37");
+	core.addPath("c:\\python37\\scripts");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
 	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-	return utils.exec(`python c:\\Python37\\Scripts\\rosdep`, ["init"]);
+	return utils.exec(`python c:\\python37\\scripts\\rosdep`, ["init"]);
 }
 
 /**

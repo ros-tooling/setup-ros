@@ -1446,15 +1446,15 @@ const core = __importStar(__webpack_require__(470));
 const chocolatey = __importStar(__webpack_require__(510));
 const pip = __importStar(__webpack_require__(230));
 const utils = __importStar(__webpack_require__(163));
-const python37 = "C:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
+const python37 = "c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
 const binaryReleases = {
     "dashing": "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
     "eloquent": "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
 };
 const pip3Packages = [
-    "numpy",
+    "lxml",
     "netifaces",
-    "lxml"
+    "numpy",
 ];
 /**
  * Install ROS 2 build tools.
@@ -1462,15 +1462,15 @@ const pip3Packages = [
 function prepareRos2BuildEnvironment() {
     return __awaiter(this, void 0, void 0, function* () {
         yield utils.exec(`cmd /c mklink /d c:\\python37 ${python37}`);
-        core.exportVariable("PYTHONHOME", "c:\\Python37");
-        core.addPath("c:\\Python37");
-        core.addPath("c:\\Python37\\Scripts");
+        core.exportVariable("PYTHONHOME", "c:\\python37");
+        core.addPath("c:\\python37");
+        core.addPath("c:\\python37\\scripts");
         yield chocolatey.installChocoDependencies();
         yield chocolatey.downloadAndInstallRos2NugetPackages();
         yield pip.installPython3Dependencies(false);
         yield pip.runPython3PipInstall(pip3Packages, false);
         yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-        return utils.exec(`python c:\\Python37\\Scripts\\rosdep`, ["init"]);
+        return utils.exec(`python c:\\python37\\scripts\\rosdep`, ["init"]);
     });
 }
 /**
