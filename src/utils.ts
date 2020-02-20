@@ -26,3 +26,14 @@ export async function exec(
 		return actions_exec.exec(commandLine, args, options);
 	});
 }
+
+export function getRequiredRosDistributions(): string[] {
+	let requiredRosDistributionsList: string[] = [];
+	const requiredRosDistributions = core.getInput("required-ros-distributions");
+	if (requiredRosDistributions) {
+		requiredRosDistributionsList = requiredRosDistributions.split(
+			RegExp("\\s")
+		);
+	}
+	return requiredRosDistributionsList;
+}
