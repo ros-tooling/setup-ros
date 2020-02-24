@@ -20,7 +20,7 @@ const aptDependencies: string[] = [
 	"lcov",
 	"libc++-dev",
 	"libc++abi-dev",
-	"python3-lark-parser",
+	"python3-catkin-pkg-modules",
 	"python3-pip",
 	"python3-rosdep",
 	"python3-vcstool",
