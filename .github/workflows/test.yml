@@ -40,6 +40,8 @@ jobs:
     - run: which colcon
     - run: which rosdep
     - run: which vcs
+    - if: runner.os != 'Linux'
+      run: which cppcheck
 
   test_binary_install:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
