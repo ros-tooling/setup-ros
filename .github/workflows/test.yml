@@ -40,6 +40,8 @@ jobs:
     - run: which colcon
     - run: which rosdep
     - run: which vcs
+
+    # FIXME: cppcheck existence test failed at Linux.
     - if: runner.os != 'Linux'
       run: which cppcheck
 
