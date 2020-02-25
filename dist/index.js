@@ -1066,7 +1066,7 @@ const aptDependencies = [
     "lcov",
     "libc++-dev",
     "libc++abi-dev",
-    "python3-lark-parser",
+    "python3-catkin-pkg-modules",
     "python3-pip",
     "python3-rosdep",
     "python3-vcstool",
@@ -1259,7 +1259,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const pip3Packages = [
     "argcomplete",
-    "catkin_pkg",
     "colcon-bash==0.4.1",
     "colcon-cd==0.1.1",
     "colcon-cmake==0.2.16",
