@@ -41,6 +41,10 @@ jobs:
     - run: which rosdep
     - run: which vcs
 
+    # FIXME: cppcheck existence test failed at Linux.
+    - if: runner.os != 'Linux'
+      run: which cppcheck
+
   test_binary_install:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
     runs-on: ubuntu-18.04
