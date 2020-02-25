@@ -27,6 +27,7 @@ async function prepareRos2BuildEnvironment() {
 	core.exportVariable("PYTHONHOME", "c:\\python37");
 	core.addPath("c:\\python37");
 	core.addPath("c:\\python37\\scripts");
+	core.addPath("c:\\program files\\cppcheck");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();
 	await pip.installPython3Dependencies(false);
