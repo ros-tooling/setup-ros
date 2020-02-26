@@ -5,7 +5,7 @@ const pip3Packages: string[] = [
 	"colcon-bash==0.4.1",
 	"colcon-cd==0.1.1",
 	"colcon-cmake==0.2.16",
-	"colcon-common-extensions==0.2.1",
+//	"colcon-common-extensions==0.2.1",
 	"colcon-core==0.4.3",
 	"colcon-defaults==0.2.2",
 	"colcon-lcov-result==0.2.0",
