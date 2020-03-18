@@ -2,7 +2,7 @@ import * as utils from "../utils";
 
 const chocoCommandLine: string[] = ["install", "--limit-output", "--yes"];
 
-const chocoDependencies: string[] = ["patch", "cppcheck", "wget", "7zip"];
+const chocoDependencies: string[] = ["cmake", "patch", "cppcheck", "wget", "7zip"];
 
 const ros2ChocolateyPackagesUrl: string[] = [
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",

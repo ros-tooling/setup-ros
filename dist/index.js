@@ -1467,6 +1467,7 @@ function prepareRos2BuildEnvironment() {
         core.addPath("c:\\python37\\scripts");
         core.addPath("c:\\program files\\cppcheck");
         yield chocolatey.installChocoDependencies();
+        core.addPath("c:\\Program Files\\CMake\\bin");
         yield chocolatey.downloadAndInstallRos2NugetPackages();
         yield pip.installPython3Dependencies(false);
         yield pip.runPython3PipInstall(pip3Packages, false);
@@ -1799,7 +1800,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
 const chocoCommandLine = ["install", "--limit-output", "--yes"];
-const chocoDependencies = ["patch", "cppcheck", "wget", "7zip"];
+const chocoDependencies = ["cmake", "patch", "cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
