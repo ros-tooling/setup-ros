@@ -19,7 +19,6 @@ inputs:
         - melodic
         - dashing
         - eloquent
-        - source
 
         Multiple values can be passed using a whitespace delimited list
         "melodic dashing".
