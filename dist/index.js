@@ -1068,8 +1068,6 @@ const aptDependencies = [
     "libc++abi-dev",
     "python3-catkin-pkg-modules",
     "python3-pip",
-    "python3-rosdep",
-    "python3-rosinstall-generator",
     "python3-vcstool",
     "wget",
     // FastRTPS dependencies
@@ -1078,7 +1076,8 @@ const aptDependencies = [
     // OpenSplice
     "libopensplice69",
     // RTI Connext - required to ensure the installation in non-blocking
-    "rti-connext-dds-5.3.1"
+    "rti-connext-dds-5.3.1",
+    "python-rosdep"
 ];
 /**
  * Run apt-get install on list of specified packages.
