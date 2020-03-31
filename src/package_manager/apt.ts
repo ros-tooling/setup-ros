@@ -27,10 +27,6 @@ const aptDependencies: string[] = [
 	// FastRTPS dependencies
 	"libasio-dev",
 	"libtinyxml2-dev",
-	// OpenSplice
-	"libopensplice69",
-	// RTI Connext - required to ensure the installation in non-blocking
-	"rti-connext-dds-5.3.1",
 
 	// python3-rosdep is conflicting with ros-melodic-desktop-full,
 	// and should not be used here. See ros-tooling/setup-ros#74
