@@ -65,13 +65,13 @@ This action is under active developement, and compatibility between releases
 is not yet guaranteed.
 Please do not use `ros-tooling/setup-ros@master`.
 Instead, pin your workflows to a particular release:
-`ros-tooling/setup-ros@0.0.11`.
+`ros-tooling/setup-ros@0.0.16`.
 
 ### Setting up the worker, and installing the system dependencies
 
 ```yaml
 steps:
-- uses: ros-tooling/setup-ros@0.0.11
+- uses: ros-tooling/setup-ros@0.0.16
 - run: vcs --help
 ```
 
@@ -87,7 +87,7 @@ jobs:
           os: [macOS-latest, ubuntu-18.04, windows-latest]
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.11
+        uses: ros-tooling/setup-ros@0.0.16
       - run: vcs --help
 ```
 
@@ -97,7 +97,7 @@ See [action.yml](action.yml):
 
 ```yaml
 steps:
-- uses: ros-tooling/setup-ros@0.0.11
+- uses: ros-tooling/setup-ros@0.0.16
   with:
     required-ros-distributions: melodic dashing
 - run: "source /opt/ros/dashing/setup.bash && ros run --help"

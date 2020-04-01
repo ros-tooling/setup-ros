@@ -1068,8 +1068,6 @@ const aptDependencies = [
     "libc++abi-dev",
     "python3-catkin-pkg-modules",
     "python3-pip",
-    "python3-rosdep",
-    "python3-rosinstall-generator",
     "python3-vcstool",
     "wget",
     // FastRTPS dependencies
@@ -1078,7 +1076,10 @@ const aptDependencies = [
     // OpenSplice
     "libopensplice69",
     // RTI Connext - required to ensure the installation in non-blocking
-    "rti-connext-dds-5.3.1"
+    "rti-connext-dds-5.3.1",
+    // python3-rosdep is conflicting with ros-melodic-desktop-full,
+    // and should not be used here. See ros-tooling/setup-ros#74
+    "python-rosdep"
 ];
 /**
  * Run apt-get install on list of specified packages.
@@ -1448,14 +1449,10 @@ const pip = __importStar(__webpack_require__(230));
 const utils = __importStar(__webpack_require__(163));
 const python37 = "c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
 const binaryReleases = {
-    "dashing": "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
-    "eloquent": "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
+    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
+    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
 };
-const pip3Packages = [
-    "lxml",
-    "netifaces",
-    "numpy",
-];
+const pip3Packages = ["lxml", "netifaces", "numpy"];
 /**
  * Install ROS 2 build tools.
  */
@@ -1481,8 +1478,18 @@ function prepareRos2BinaryReleases() {
     return __awaiter(this, void 0, void 0, function* () {
         for (let rosDistro of utils.getRequiredRosDistributions()) {
             if (rosDistro in binaryReleases) {
-                yield utils.exec("wget", ["--quiet", binaryReleases[rosDistro], "-O", `${rosDistro}.zip`]);
-                yield utils.exec("7z", ["x", `${rosDistro}.zip`, "-y", `-oc:\\dev\\${rosDistro}`]);
+                yield utils.exec("wget", [
+                    "--quiet",
+                    binaryReleases[rosDistro],
+                    "-O",
+                    `${rosDistro}.zip`
+                ]);
+                yield utils.exec("7z", [
+                    "x",
+                    `${rosDistro}.zip`,
+                    "-y",
+                    `-oc:\\dev\\${rosDistro}`
+                ]);
             }
         }
     });
