@@ -2,8 +2,7 @@
 
 [![GitHub Action
 Status](https://github.com/ros-tooling/setup-ros/workflows/Test%20setup-ros/badge.svg)](https://github.com/ros-tooling/setup-ros)
-[![Greenkeeper
-badge](https://badges.greenkeeper.io/ros-tooling/setup-ros.svg)](https://greenkeeper.io/)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=ros-tooling/setup-ros)](https://dependabot.com)
 ![GitHub](https://img.shields.io/github/license/ros-tooling/setup-ros)
 
 This action sets up a [ROS] and ROS 2 environment for use in actions, so
