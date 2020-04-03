@@ -30,7 +30,7 @@
     "url": "https://github.com/ros-tooling/setup-ros/issues"
   },
   "dependencies": {
-    "@actions/core": "^1.2.0",
+    "@actions/core": "^1.2.3",
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.2",
     "husky": "^4.2.3",
