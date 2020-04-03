@@ -33,7 +33,7 @@
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1",
     "@actions/io": "^1.0.2",
-    "husky": "^4.2.0",
+    "husky": "^4.2.3",
     "npm-ci": "0.0.2"
   },
   "devDependencies": {
