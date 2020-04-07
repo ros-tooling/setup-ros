@@ -941,12 +941,57 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const io = __importStar(__webpack_require__(1));
 const apt = __importStar(__webpack_require__(77));
 const pip = __importStar(__webpack_require__(230));
 const utils = __importStar(__webpack_require__(163));
+const path = __importStar(__webpack_require__(622));
+const fs_1 = __importDefault(__webpack_require__(747));
+// Open Robotics APT Repository public GPG key, as retrieved by
+//
+// $ apt-key adv --refresh-keys --keyserver hkp://keyserver.ubuntu.com:80 \
+//     C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+// See also http://packages.ros.org/ros.asc (caution, this is an HTTP URL)
+//
+// Unfortunately, usin apt-key adv is slow, and is failing sometimes, causing
+// spurious pipelines failures. The action is hard-coding the key here to
+// mitigate this issue.
+const openRoboticsAptPublicGpgKey = `
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBFzvJpYBEADY8l1YvO7iYW5gUESyzsTGnMvVUmlV3XarBaJz9bGRmgPXh7jc
+VFrQhE0L/HV7LOfoLI9H2GWYyHBqN5ERBlcA8XxG3ZvX7t9nAZPQT2Xxe3GT3tro
+u5oCR+SyHN9xPnUwDuqUSvJ2eqMYb9B/Hph3OmtjG30jSNq9kOF5bBTk1hOTGPH4
+K/AY0jzT6OpHfXU6ytlFsI47ZKsnTUhipGsKucQ1CXlyirndZ3V3k70YaooZ55rG
+aIoAWlx2H0J7sAHmqS29N9jV9mo135d+d+TdLBXI0PXtiHzE9IPaX+ctdSUrPnp+
+TwR99lxglpIG6hLuvOMAaxiqFBB/Jf3XJ8OBakfS6nHrWH2WqQxRbiITl0irkQoz
+pwNEF2Bv0+Jvs1UFEdVGz5a8xexQHst/RmKrtHLct3iOCvBNqoAQRbvWvBhPjO/p
+V5cYeUljZ5wpHyFkaEViClaVWqa6PIsyLqmyjsruPCWlURLsQoQxABcL8bwxX7UT
+hM6CtH6tGlYZ85RIzRifIm2oudzV5l+8oRgFr9yVcwyOFT6JCioqkwldW52P1pk/
+/SnuexC6LYqqDuHUs5NnokzzpfS6QaWfTY5P5tz4KHJfsjDIktly3mKVfY0fSPVV
+okdGpcUzvz2hq1fqjxB6MlB/1vtk0bImfcsoxBmF7H+4E9ZN1sX/tSb0KQARAQAB
+tCZPcGVuIFJvYm90aWNzIDxpbmZvQG9zcmZvdW5kYXRpb24ub3JnPokCVAQTAQoA
+PhYhBMHPbjHmut6IaLFytPQu1vurF8ZUBQJc7yaWAhsDBQkDwmcABQsJCAcCBhUK
+CQgLAgQWAgMBAh4BAheAAAoJEPQu1vurF8ZUkhIP/RbZY1ErvCEUy8iLJm9aSpLQ
+nDZl5xILOxyZlzpg+Ml5bb0EkQDr92foCgcvLeANKARNCaGLyNIWkuyDovPV0xZJ
+rEy0kgBrDNb3++NmdI/+GA92pkedMXXioQvqdsxUagXAIB/sNGByJEhs37F05AnF
+vZbjUhceq3xTlvAMcrBWrgB4NwBivZY6IgLvl/CRQpVYwANShIQdbvHvZSxRonWh
+NXr6v/Wcf8rsp7g2VqJ2N2AcWT84aa9BLQ3Oe/SgrNx4QEhA1y7rc3oaqPVu5ZXO
+K+4O14JrpbEZ3Xs9YEjrcOuEDEpYktA8qqUDTdFyZrxb9S6BquUKrA6jZgT913kj
+J4e7YAZobC4rH0w4u0PrqDgYOkXA9Mo7L601/7ZaDJob80UcK+Z12ZSw73IgBix6
+DiJVfXuWkk5PM2zsFn6UOQXUNlZlDAOj5NC01V0fJ8P0v6GO9YOSSQx0j5UtkUbR
+fp/4W7uCPFvwAatWEHJhlM3sQNiMNStJFegr56xQu1a/cbJH7GdbseMhG/f0BaKQ
+qXCI3ffB5y5AOLc9Hw7PYiTFQsuY1ePRhE+J9mejgWRZxkjAH/FlAubqXkDgterC
+h+sLkzGf+my2IbsMCuc+3aeNMJ5Ej/vlXefCH/MpPWAHCqpQhe2DET/jRSaM53US
+AHNx8kw4MPUkxExgI7Sd
+=4Ofr
+-----END PGP PUBLIC KEY BLOCK-----
+`;
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -986,14 +1031,10 @@ function runLinux() {
         yield apt.runAptGetInstall(["tzdata"]);
         // OSRF APT repository is necessary, even when building
         // from source to install colcon, vcs, etc.
-        yield utils.exec("sudo", [
-            "apt-key",
-            "adv",
-            "--keyserver",
-            "hkp://keyserver.ubuntu.com:80",
-            "--recv-keys",
-            "C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654"
-        ]);
+        const workspace = process.env.GITHUB_WORKSPACE;
+        const keyFilePath = path.join(workspace, "ros.key");
+        fs_1.default.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
+        yield utils.exec("sudo", ["apt-key", "add", keyFilePath]);
         yield utils.exec("sudo", [
             "bash",
             "-c",
