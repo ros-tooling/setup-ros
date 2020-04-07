@@ -29,7 +29,7 @@ async function prepareRos2BuildEnvironment() {
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
 	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-	return utils.exec(`python c:\\python37\\scripts\\rosdep`, ["init"]);
+	return utils.exec(`rosdep`, ["init"]);
 }
 
 /**

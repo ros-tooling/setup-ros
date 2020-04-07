@@ -1468,7 +1468,7 @@ function prepareRos2BuildEnvironment() {
         yield pip.installPython3Dependencies(false);
         yield pip.runPython3PipInstall(pip3Packages, false);
         yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-        return utils.exec(`python c:\\python37\\scripts\\rosdep`, ["init"]);
+        return utils.exec(`rosdep`, ["init"]);
     });
 }
 /**
