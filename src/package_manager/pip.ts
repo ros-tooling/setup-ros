@@ -8,7 +8,7 @@ const pip3Packages: string[] = [
 	"colcon-common-extensions==0.2.1",
 	"colcon-core==0.5.5",
 	"colcon-defaults==0.2.4",
-	"colcon-lcov-result==0.3.0",
+	"colcon-lcov-result==0.4.0",
 	"colcon-library-path==0.2.1",
 	"colcon-metadata==0.2.4",
 	"colcon-mixin==0.1.6",
