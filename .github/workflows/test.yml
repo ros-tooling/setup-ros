@@ -45,7 +45,6 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - run: ls ${{ github.worksapce }}
     - run: .github/workflows/build-and-test.sh
     - uses: ./ # Uses an action in the root directory
     - run: .github/workflows/check-environment.sh
