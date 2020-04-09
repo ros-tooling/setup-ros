@@ -9,6 +9,9 @@ on:
     # Run the CI automatically every hour to look for flakyness.
     - cron:  '0 * * * *'
 
+env:
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
 jobs:
   test_environment:
     name: 'Check development tools'
