@@ -14,6 +14,8 @@ that:
 * non-EOL (End Of Life) distribution of ROS 2 builds from source,
 * any ROS, and ROS 2 package depending on non-EOL distribution builds from
   source
+  
+ :warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors. It is recommended to run `setup-ros` in a Docker container. See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
 
 ## Supported platforms
 
