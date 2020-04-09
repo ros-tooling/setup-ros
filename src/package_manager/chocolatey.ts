@@ -10,7 +10,7 @@ const ros2ChocolateyPackagesUrl: string[] = [
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/eigen.3.3.4.nupkg",
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/log4cxx.0.10.0-2.nupkg",
 	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml-usestl.2.6.2.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg"
+	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg",
 ];
 const ros2ChocolateyPackages: string[] = [
 	"asio",
@@ -18,7 +18,7 @@ const ros2ChocolateyPackages: string[] = [
 	"eigen",
 	"log4cxx",
 	"tinyxml-usestl",
-	"tinyxml2"
+	"tinyxml2",
 ];
 
 /**

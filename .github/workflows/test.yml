@@ -10,165 +10,152 @@ on:
     - cron:  '0 * * * *'
 
 jobs:
-  test:
+  test_environment:
+    name: 'Check development tools'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-          os: [macOS-latest, ubuntu-18.04, windows-latest]
+          os: [macOS-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-
+    - run: .github/workflows/build-and-test.sh
+      shell: bash  # Ensure bash is used on Windows platform too
     - uses: ./ # Uses an action in the root directory
+    - run: .github/workflows/check-environment.sh
+      shell: bash  # Ensure bash is used on Windows platform too
 
-    # Verify whether ROS tools are actually available.
-    - run: which colcon
-    - run: which rosdep
-    - run: which vcs
+  test_environment_linux:
+    name: 'Check development tools'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+          docker_image: ['ubuntu:bionic', 'ubuntu:xenial']
+    container:
+      image: ${{ matrix.docker_image }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: ls ${{ github.worksapce }}
+    - run: .github/workflows/build-and-test.sh
+    - uses: ./ # Uses an action in the root directory
+    - run: .github/workflows/check-environment.sh
 
-    # FIXME: cppcheck existence test failed at Linux.
-    - if: runner.os != 'Linux'
-      run: which cppcheck
+  # Validates that once setup-ros finished, the ROS distribution
+  # setup.sh / local_setup.bat can be sourced, and the ROS distribution is
+  # functional.
+  test_ros_binary_install:
+    name: 'Check ROS distribution'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        # TODO(ros-tooling/setup-ros#107): Add OS X support
+        # - macOS-latest
+        - windows-latest
+        ros_distribution:
+          # Dashing Diademata (May 2019 - May 2021)
+          - dashing
 
-  test_binary_install:
+          # Eloquent Elusor (November 2019 - November 2020)
+          - eloquent
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: .github/workflows/build-and-test.sh
+      shell: bash  # Ensure bash is used on Windows platform too
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: ${{ matrix.ros_distribution }}
+    - run: .github/workflows/check-environment.sh
+      shell: bash  # Ensure bash is used on Windows platform too
+    - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
+      if: matrix.os != 'windows-latest'
+    - env:
+        ROSDISTRO: ${{ matrix.ros_distribution }}
+      run: .github/workflows/check-ros2-distribution-win.bat
+      shell: cmd
+      if: matrix.os == 'windows-latest'
+
+  test_ros_binary_install_ubuntu:
+    name: 'Check ROS distribution'
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution:
+          - kinetic
+          - melodic
+          - dashing
+          - eloquent
+
+        # Define the Docker image(s) associated with each ROS distribution.
+        # The include syntax allows additional variables to be defined, like
+        # docker_image in this case. See documentation:
+        # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-including-configurations-in-a-matrix-build
+        #
+        # Platforms are defined in REP 3: https://ros.org/reps/rep-0003.html
+        include:
+          # Kinetic Kame (May 2016 - May 2021)
+          - docker_image: ubuntu:xenial
+            ros_distribution: kinetic
+            ros_version: 1
+
+          # Melodic Morenia (May 2018 - May 2023)
+          - docker_image: ubuntu:bionic
+            ros_distribution: melodic
+            ros_version: 1
+
+          # Dashing Diademata (May 2019 - May 2021)
+          - docker_image: ubuntu:bionic
+            ros_distribution: dashing
+            ros_version: 2
+
+          # Eloquent Elusor (November 2019 - November 2020)
+          - docker_image: ubuntu:bionic
+            ros_distribution: eloquent
+            ros_version: 2
+
+    # ROS 1 tests only run on Ubuntu
+    container:
+      image: ${{ matrix.docker_image }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: .github/workflows/build-and-test.sh
+    - uses: ./ # Uses an action in the root directory
+      with:
+        required-ros-distributions: ${{ matrix.ros_distribution }}
+    - run: .github/workflows/check-environment.sh
+    - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
+      if: matrix.ros_version == 1
+    - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
+      if: matrix.ros_version == 2
+
+  test_multiple_ros_installations:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
+    - run: .github/workflows/build-and-test.sh
     - uses: ./ # Uses an action in the root directory
       with:
         required-ros-distributions: melodic dashing
-    - run: test -f /opt/ros/dashing/setup.sh
-      name: "Check that dashing setup.sh has been installed."
-    - run: test -f /opt/ros/melodic/setup.sh
-      name: "Check that melodic setup.sh has been installed."
-
-  test_binary_install_windows:
-    name: "ROS 2 Binary Install Test Suite (Windows only)"
-    runs-on: windows-latest
-    strategy:
-      matrix:
-          rosdistro: [dashing, eloquent]
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: ${{ matrix.rosdistro }}
-    - env:
-        ROSDISTRO: ${{ matrix.rosdistro }}
-      run: |
-        if not exist c:\\dev\\%ROSDISTRO%\\ros2-windows\\local_setup.bat exit 1
-        call c:\\dev\\%ROSDISTRO%\\ros2-windows\\local_setup.bat
-        ros2 pkg list
-      name: "Check that ${{ matrix.rosdistro }} local_setup.bat has been installed."
-      shell: cmd
-
-  # ROS distributions which did not reach end-of-life:
-  # Kinetic Kame (May 2016 - May 2021)
-  # Melodic Morenia (May 2018 - May 2023)
-  #
-  # https://www.ros.org/reps/rep-0003.html
-
-  # ROS Kinetic Kame
-  test_kinetic:
-    name: "ROS Kinetic Kame"
-    container:
-      image: ubuntu:xenial
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: kinetic
-    - run: test -f /opt/ros/kinetic/setup.sh
-      name: "Check that kinetic setup.sh has been installed."
-
-  # ROS Melodic Morenia
-  test_melodic:
-    name: "ROS Melodic Morenia"
-    container:
-      image: ubuntu:bionic
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: melodic
-    - run: test -f /opt/ros/melodic/setup.sh
-      name: "Check that melodic setup.sh has been installed."
-
-  # ROS 2 distributions which did not reach end-of-life:
-  # Dashing Diademata (May 2019 - May 2021)
-  # Eloquent Elusor (November 2019 - November 2020)
-  #
-  # https://www.ros.org/reps/rep-2000.html
-
-  # ROS Dashing Diademata
-  test_dashing:
-    name: "ROS Dashing Diademata"
-    container:
-      image: ubuntu:bionic
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: melodic
-    - run: test -f /opt/ros/melodic/setup.sh
-      name: "Check that melodic setup.sh has been installed."
-
-  # ROS Eloquent Elusor
-  test_eloquent:
-    name: "ROS Eloquent Elusor"
-    container:
-      image: ubuntu:bionic
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm ci
-    - run: npm run build
-
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: eloquent
-    - run: test -f /opt/ros/eloquent/setup.sh
-      name: "Check that eloquent setup.sh has been installed."
+    - run: .github/workflows/check-ros2-distribution.sh dashing
+    - run: .github/workflows/check-ros-distribution.sh melodic

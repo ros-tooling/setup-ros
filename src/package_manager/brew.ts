@@ -16,7 +16,7 @@ const brewDependencies: string[] = [
 	"qt",
 	"tinyxml",
 	"tinyxml2",
-	"wget"
+	"wget",
 ];
 
 /**

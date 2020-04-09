@@ -11,17 +11,17 @@ export async function runOsX() {
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
+		'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc',
 	]);
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
+		'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc',
 	]);
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
+		'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc',
 	]);
 	await pip.installPython3Dependencies();
 

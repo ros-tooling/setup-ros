@@ -10,7 +10,7 @@ const binaryReleases: { [index: string]: string } = {
 	dashing:
 		"https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
 	eloquent:
-		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
+		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces", "numpy"];
@@ -42,13 +42,13 @@ async function prepareRos2BinaryReleases() {
 				"--quiet",
 				binaryReleases[rosDistro],
 				"-O",
-				`${rosDistro}.zip`
+				`${rosDistro}.zip`,
 			]);
 			await utils.exec("7z", [
 				"x",
 				`${rosDistro}.zip`,
 				"-y",
-				`-oc:\\dev\\${rosDistro}`
+				`-oc:\\dev\\${rosDistro}`,
 			]);
 		}
 	}

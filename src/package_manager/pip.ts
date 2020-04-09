@@ -50,7 +50,7 @@ const pip3Packages: string[] = [
 	"pytest-rerunfailures",
 	"pytest-runner",
 	"setuptools",
-	"wheel"
+	"wheel",
 ];
 
 const pip3CommandLine: string[] = ["pip3", "install", "--upgrade"];
