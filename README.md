@@ -2,6 +2,7 @@
 
 [![GitHub Action
 Status](https://github.com/ros-tooling/setup-ros/workflows/Test%20setup-ros/badge.svg)](https://github.com/ros-tooling/setup-ros)
+[![codecov](https://codecov.io/gh/ros-tooling/setup-ros/branch/master/graph/badge.svg)](https://codecov.io/gh/ros-tooling/setup-ros)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=ros-tooling/setup-ros)](https://dependabot.com)
 ![GitHub](https://img.shields.io/github/license/ros-tooling/setup-ros)
 
