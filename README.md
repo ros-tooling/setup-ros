@@ -20,7 +20,7 @@ The action will not install ROS, or ROS 2, by default. To install a ROS binary d
  :warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors.
  It is recommended to run `setup-ros` in a Docker container.
  See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
-An alternative approach is to edit APT sources on the bare metal worker (see #80 for details).
+An alternative approach is to edit APT sources on the bare metal worker (see [#80](https://github.com/ros-tooling/setup-ros/issues/80) for details).
 
 ## Supported platforms
 
