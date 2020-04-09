@@ -86,7 +86,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          os: [macOS-latest, ubuntu-18.04, windows-latest]
+          os: [macOS-latest, windows-latest]
+    steps:
+      - name: Setup ROS
+        uses: ros-tooling/setup-ros@0.0.16
+      - run: vcs --help
+
+  build_docker:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@0.0.16
