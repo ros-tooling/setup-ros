@@ -186,8 +186,9 @@ jobs:
           # Kinetic Kame (May 2016 - May 2021)
           - docker_image: ubuntu:xenial
             ros_distribution: kinetic
-            # Setting the ros_version is helpful to enable/disable part of workflow on ROS 1, or ROS 2.
-            # This variable can be safely removed, if not used by the workflow (see 'if: ros_version ==' below).
+            # Setting ros_version is helpful to customize the workflow
+            # depending on whether a ROS 1, or ROS 2 is being tested.
+            # See 'if: ros_version ==' below for an example.
             ros_version: 1
 
           # Melodic Morenia (May 2018 - May 2023)
