@@ -1010,7 +1010,7 @@ function runLinux() {
                 "--no-install-recommends",
                 "--quiet",
                 "--yes",
-                "sudo"
+                "sudo",
             ]);
         }
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
@@ -1026,7 +1026,7 @@ function runLinux() {
             "ln",
             "-sf",
             "/usr/share/zoneinfo/Etc/UTC",
-            "/etc/localtime"
+            "/etc/localtime",
         ]);
         yield apt.runAptGetInstall(["tzdata"]);
         // OSRF APT repository is necessary, even when building
@@ -1038,12 +1038,12 @@ function runLinux() {
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
+            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
         ]);
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
+            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
@@ -1095,7 +1095,7 @@ const aptCommandLine = [
     "install",
     "--no-install-recommends",
     "--quiet",
-    "--yes"
+    "--yes",
 ];
 const aptDependencies = [
     "libssl-dev",
@@ -1107,6 +1107,7 @@ const aptDependencies = [
     "lcov",
     "libc++-dev",
     "libc++abi-dev",
+    "python",
     "python3-catkin-pkg-modules",
     "python3-pip",
     "python3-vcstool",
@@ -1120,7 +1121,7 @@ const aptDependencies = [
     "rti-connext-dds-5.3.1",
     // python3-rosdep is conflicting with ros-melodic-desktop-full,
     // and should not be used here. See ros-tooling/setup-ros#74
-    "python-rosdep"
+    "python-rosdep",
 ];
 /**
  * Run apt-get install on list of specified packages.
@@ -1308,7 +1309,7 @@ const pip3Packages = [
     "colcon-common-extensions==0.2.1",
     "colcon-core==0.5.5",
     "colcon-defaults==0.2.4",
-    "colcon-lcov-result==0.3.0",
+    "colcon-lcov-result==0.4.0",
     "colcon-library-path==0.2.1",
     "colcon-metadata==0.2.4",
     "colcon-mixin==0.1.6",
@@ -1350,7 +1351,7 @@ const pip3Packages = [
     "pytest-rerunfailures",
     "pytest-runner",
     "setuptools",
-    "wheel"
+    "wheel",
 ];
 const pip3CommandLine = ["pip3", "install", "--upgrade"];
 /**
@@ -1427,7 +1428,7 @@ const brewDependencies = [
     "qt",
     "tinyxml",
     "tinyxml2",
-    "wget"
+    "wget",
 ];
 /**
  * Run brew install on a list of specified packages.
@@ -1491,7 +1492,7 @@ const utils = __importStar(__webpack_require__(163));
 const python37 = "c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
 const binaryReleases = {
     dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
-    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip"
+    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
 };
 const pip3Packages = ["lxml", "netifaces", "numpy"];
 /**
@@ -1523,13 +1524,13 @@ function prepareRos2BinaryReleases() {
                     "--quiet",
                     binaryReleases[rosDistro],
                     "-O",
-                    `${rosDistro}.zip`
+                    `${rosDistro}.zip`,
                 ]);
                 yield utils.exec("7z", [
                     "x",
                     `${rosDistro}.zip`,
                     "-y",
-                    `-oc:\\dev\\${rosDistro}`
+                    `-oc:\\dev\\${rosDistro}`,
                 ]);
             }
         }
@@ -1854,7 +1855,7 @@ const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/eigen.3.3.4.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/log4cxx.0.10.0-2.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml-usestl.2.6.2.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg"
+    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg",
 ];
 const ros2ChocolateyPackages = [
     "asio",
@@ -1862,7 +1863,7 @@ const ros2ChocolateyPackages = [
     "eigen",
     "log4cxx",
     "tinyxml-usestl",
-    "tinyxml2"
+    "tinyxml2",
 ];
 /**
  * Run choco install on the list of specified packages.
@@ -2210,17 +2211,17 @@ function runOsX() {
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc'
+            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc',
         ]);
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc'
+            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc',
         ]);
         yield utils.exec("sudo", [
             "bash",
             "-c",
-            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc'
+            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc',
         ]);
         yield pip.installPython3Dependencies();
         // While rosdep and vcs are available as a Debian package on Ubuntu, they need

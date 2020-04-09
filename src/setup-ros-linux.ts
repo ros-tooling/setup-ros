@@ -65,7 +65,7 @@ export async function runLinux() {
 			"--no-install-recommends",
 			"--quiet",
 			"--yes",
-			"sudo"
+			"sudo",
 		]);
 	}
 
@@ -85,7 +85,7 @@ export async function runLinux() {
 		"ln",
 		"-sf",
 		"/usr/share/zoneinfo/Etc/UTC",
-		"/etc/localtime"
+		"/etc/localtime",
 	]);
 	await apt.runAptGetInstall(["tzdata"]);
 
@@ -99,12 +99,12 @@ export async function runLinux() {
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`
+		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
 	]);
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`
+		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
 	]);
 	await utils.exec("sudo", ["apt-get", "update"]);
 

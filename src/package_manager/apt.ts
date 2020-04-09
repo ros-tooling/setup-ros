@@ -7,7 +7,7 @@ const aptCommandLine: string[] = [
 	"install",
 	"--no-install-recommends",
 	"--quiet",
-	"--yes"
+	"--yes",
 ];
 
 const aptDependencies: string[] = [
@@ -20,6 +20,7 @@ const aptDependencies: string[] = [
 	"lcov",
 	"libc++-dev",
 	"libc++abi-dev",
+	"python", // required for sourcing setup.sh
 	"python3-catkin-pkg-modules",
 	"python3-pip",
 	"python3-vcstool",
@@ -34,7 +35,7 @@ const aptDependencies: string[] = [
 
 	// python3-rosdep is conflicting with ros-melodic-desktop-full,
 	// and should not be used here. See ros-tooling/setup-ros#74
-	"python-rosdep"
+	"python-rosdep",
 ];
 
 /**
