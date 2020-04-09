@@ -15,7 +15,12 @@ that:
 * any ROS, and ROS 2 package depending on non-EOL distribution builds from
   source
   
- :warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors. It is recommended to run `setup-ros` in a Docker container. See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
+The action will not install ROS, or ROS 2, by default. To install a ROS binary distribution, pass a value to `required-ros-distributions` (see example below).
+  
+ :warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors.
+ It is recommended to run `setup-ros` in a Docker container.
+ See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
+An alternative approach is to edit APT sources on the bare metal worker (see #80 for details).
 
 ## Supported platforms
 
@@ -71,6 +76,10 @@ Instead, pin your workflows to a particular release:
 
 ### Setting up the worker, and installing the system dependencies
 
+The default behavior is to only install development tools.
+No ROS binary distribution is installed in this case.
+This setup should be used when ROS is build entirely from source.
+
 ```yaml
 steps:
 - uses: ros-tooling/setup-ros@0.0.16
@@ -78,6 +87,10 @@ steps:
 ```
 
 ### Setting up the worker, and installing system dependencies on all OSes
+
+It is possible to iterate on OS X, and Windows from the same job (`build`).
+Ubuntu requires its own separate workflow as additional configuration is
+required for Docker.
 
 ```yaml
 jobs:
@@ -104,14 +117,101 @@ jobs:
 
 ### Setting up the worker, installing system dependencies, and ROS (Linux)
 
-See [action.yml](action.yml):
+One or more ROS distributions can be installed simultaneously
+by passing multiple values to `required-ros-distributions`.
+This setup is necessary to use the ROS1/ROS2 bridge:
+[ros1_bridge](https://github.com/ros2/ros1_bridge).
 
 ```yaml
-steps:
-- uses: ros-tooling/setup-ros@0.0.16
-  with:
-    required-ros-distributions: melodic dashing
-- run: "source /opt/ros/dashing/setup.bash && ros run --help"
+  build_docker:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
+    steps:
+    - uses: ros-tooling/setup-ros@0.0.16
+      with:
+        required-ros-distributions: melodic dashing
+    - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
+    - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
+```
+
+### Iterating on all ROS distributions, for all platforms
+
+This workflow illustrates how to spawn one job per ROS release, for
+every supported platform.
+
+The workflow `test` is iterating on all ROS 2 distributions, on OS X, and Windows.
+
+The workflow `test_docker` is iterating on all ROS, and ROS 2 distributions, for all
+supported Ubuntu distributions, using Docker.
+The test matrix associates each distribution with one Docker image.
+This is required to ensure that the appropriate Ubuntu container is used.
+For instance, Kinetic requires `xenial`, but all other distributions require `bionic`.
+
+```yaml
+jobs:
+  test:  # Docker is not supported on OS X, and Windows.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest]]
+        ros_distribution:  # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
+        - dashing
+        - eloquent
+    steps:
+      - uses: ros-tooling/setup-ros@0.0.16
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+      - run: vcs --help
+
+  test_docker:  # On Linux, iterates on all ROS 1, and ROS 2 distributions.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ros_distribution:
+        - kinetic
+        - melodic
+        - dashing
+        - eloquent
+
+        # Define the Docker image(s) associated with each ROS distribution.
+        # The include syntax allows additional variables to be defined, like
+        # docker_image in this case. See documentation:
+        # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-including-configurations-in-a-matrix-build
+        #
+        # Platforms are defined in REP 3, and REP 2000:
+        # https://ros.org/reps/rep-0003.html
+        # https://ros.org/reps/rep-2000.html
+        include:
+          # Kinetic Kame (May 2016 - May 2021)
+          - docker_image: ubuntu:xenial
+            ros_distribution: kinetic
+            # Setting the ros_version is helpful to enable/disable part of workflow on ROS 1, or ROS 2.
+            # This variable can be safely removed, if not used by the workflow (see 'if: ros_version ==' below).
+            ros_version: 1
+
+          # Melodic Morenia (May 2018 - May 2023)
+          - docker_image: ubuntu:bionic
+            ros_distribution: melodic
+            ros_version: 1
+
+          # Dashing Diademata (May 2019 - May 2021)
+          - docker_image: ubuntu:bionic
+            ros_distribution: dashing
+            ros_version: 2
+
+          # Eloquent Elusor (November 2019 - November 2020)
+          - docker_image: ubuntu:bionic
+            ros_distribution: eloquent
+            ros_version: 2
+    steps:
+      - uses: ros-tooling/setup-ros@0.0.16
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+      - run: "source /opt/ros/${{ matrix.ros_distribution }}/setup.bash && rosnode --help"
+        if: ros_version == 1
+      - run: "source /opt/ros/${{ matrix.ros_distribution }}/setup.bash && ros2 run --help"
+        if: ros_version == 2
 ```
 
 ## Alternative to `setup-ros`
