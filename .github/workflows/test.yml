@@ -30,6 +30,15 @@ jobs:
     - uses: ./ # Uses an action in the root directory
     - run: .github/workflows/check-environment.sh
       shell: bash  # Ensure bash is used on Windows platform too
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: always()
+    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+      if: always()
 
   test_environment_linux:
     name: 'Check development tools'
@@ -48,6 +57,15 @@ jobs:
     - run: .github/workflows/build-and-test.sh
     - uses: ./ # Uses an action in the root directory
     - run: .github/workflows/check-environment.sh
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: always()
+    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+      if: always()
 
   # Validates that once setup-ros finished, the ROS distribution
   # setup.sh / local_setup.bat can be sourced, and the ROS distribution is
@@ -87,6 +105,15 @@ jobs:
       run: .github/workflows/check-ros2-distribution-win.bat
       shell: cmd
       if: matrix.os == 'windows-latest'
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: always()
+    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+      if: always()
 
   test_ros_binary_install_ubuntu:
     name: 'Check ROS distribution'
@@ -144,6 +171,15 @@ jobs:
       if: matrix.ros_version == 1
     - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
       if: matrix.ros_version == 2
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: always()
+    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+      if: always()
 
   test_multiple_ros_installations:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
@@ -161,3 +197,12 @@ jobs:
         required-ros-distributions: melodic dashing
     - run: .github/workflows/check-ros2-distribution.sh dashing
     - run: .github/workflows/check-ros-distribution.sh melodic
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: always()
+    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+      if: always()
