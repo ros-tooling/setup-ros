@@ -9,6 +9,10 @@ on:
     # Run the CI automatically every hour to look for flakyness.
     - cron:  '0 * * * *'
 
+defaults:
+  run:
+    shell: bash
+
 env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -26,19 +30,8 @@ jobs:
       with:
         node-version: '12.x'
     - run: .github/workflows/build-and-test.sh
-      shell: bash  # Ensure bash is used on Windows platform too
     - uses: ./ # Uses an action in the root directory
     - run: .github/workflows/check-environment.sh
-      shell: bash  # Ensure bash is used on Windows platform too
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-      if: always()
-    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      if: always()
 
   test_environment_linux:
     name: 'Check development tools'
@@ -57,15 +50,6 @@ jobs:
     - run: .github/workflows/build-and-test.sh
     - uses: ./ # Uses an action in the root directory
     - run: .github/workflows/check-environment.sh
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-      if: always()
-    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      if: always()
 
   # Validates that once setup-ros finished, the ROS distribution
   # setup.sh / local_setup.bat can be sourced, and the ROS distribution is
@@ -92,12 +76,10 @@ jobs:
       with:
         node-version: '12.x'
     - run: .github/workflows/build-and-test.sh
-      shell: bash  # Ensure bash is used on Windows platform too
     - uses: ./ # Uses an action in the root directory
       with:
         required-ros-distributions: ${{ matrix.ros_distribution }}
     - run: .github/workflows/check-environment.sh
-      shell: bash  # Ensure bash is used on Windows platform too
     - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
       if: matrix.os != 'windows-latest'
     - env:
@@ -105,15 +87,6 @@ jobs:
       run: .github/workflows/check-ros2-distribution-win.bat
       shell: cmd
       if: matrix.os == 'windows-latest'
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-      if: always()
-    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      if: always()
 
   test_ros_binary_install_ubuntu:
     name: 'Check ROS distribution'
@@ -171,15 +144,6 @@ jobs:
       if: matrix.ros_version == 1
     - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
       if: matrix.ros_version == 2
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-      if: always()
-    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      if: always()
 
   test_multiple_ros_installations:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
@@ -197,12 +161,36 @@ jobs:
         required-ros-distributions: melodic dashing
     - run: .github/workflows/check-ros2-distribution.sh dashing
     - run: .github/workflows/check-ros-distribution.sh melodic
+
+  log_workflow_status_to_cloudwatch:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
+    needs:
+    - test_environment
+    - test_environment_linux
+    - test_multiple_ros_installations
+    - test_ros_binary_install_ubuntu
+    if: always()  # run even if the dependent jobs have failed to log failures
+    # Allow build reports to fail on pull requests.
+    # When a contribution is made on a fork, the secrets will not be available,
+    # and this step will be failing. This is acceptable.
+    # On the other end, we want to be notified if this happens on merge, or
+    # on schedule.
+    continue-on-error: ${{ github.event_name == 'pull_request'}}
+    steps:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-      if: always()
     - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      if: always()
+      with:
+        # Checks if any of the jobs have failed.
+        #
+        # needs.*.result is returns the list of all success statuses as an
+        # array, i.e. ['success', 'failure, 'success']
+        # join() converts the array to a string 'successfailuresuccess'
+        # contains() checks whether the string contains failure
+        metric-value: ${{ ! contains(join(needs.*.result, ''), 'failure') && ! contains(join(needs.*.result, ''), 'cancelled') }}
