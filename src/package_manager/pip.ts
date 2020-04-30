@@ -50,6 +50,7 @@ const pip3Packages: string[] = [
 	"pytest-repeat",
 	"pytest-rerunfailures",
 	"pytest-runner",
+	"rosdep",
 	"setuptools",
 	"wheel",
 ];
