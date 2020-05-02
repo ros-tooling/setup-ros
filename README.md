@@ -154,7 +154,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest]]
+        os: [macOS-latest, windows-latest]
         ros_distribution:  # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
         - dashing
         - eloquent
