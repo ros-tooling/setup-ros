@@ -23,6 +23,7 @@ const aptDependencies: string[] = [
 	"python", // required for sourcing setup.sh
 	"python3-catkin-pkg-modules",
 	"python3-pip",
+	"python3-rosdep",
 	"python3-vcstool",
 	"wget",
 	// FastRTPS dependencies
@@ -32,10 +33,6 @@ const aptDependencies: string[] = [
 	"libopensplice69",
 	// RTI Connext - required to ensure the installation in non-blocking
 	"rti-connext-dds-5.3.1",
-
-	// python3-rosdep is conflicting with ros-melodic-desktop-full,
-	// and should not be used here. See ros-tooling/setup-ros#74
-	"python-rosdep",
 ];
 
 /**

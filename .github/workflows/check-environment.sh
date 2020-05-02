@@ -4,6 +4,11 @@ set -euxo pipefail
 env
 uname
 
+ls /usr/bin
+
+dpkg -S python3-rosdep
+
+
 which colcon
 which rosdep
 which vcs
