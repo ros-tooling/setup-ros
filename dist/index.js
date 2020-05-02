@@ -3912,7 +3912,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(__webpack_require__(163));
-const chocoCommandLine = ["install", "--limit-output", "--yes"];
+const chocoCommandLine = ["install", "--limit-output", "--no-progress", "--yes"];
 const chocoDependencies = ["cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
@@ -3961,7 +3961,7 @@ exports.installChocoDependencies = installChocoDependencies;
 function downloadAndInstallRos2NugetPackages() {
     return __awaiter(this, void 0, void 0, function* () {
         yield utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
-        return utils.exec("choco", ["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages));
+        return utils.exec("choco", chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages));
     });
 }
 exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackages;

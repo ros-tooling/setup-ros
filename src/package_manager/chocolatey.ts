@@ -1,6 +1,6 @@
 import * as utils from "../utils";
 
-const chocoCommandLine: string[] = ["install", "--limit-output", "--yes"];
+const chocoCommandLine: string[] = ["install", "--limit-output", "--no-progress", "--yes"];
 
 const chocoDependencies: string[] = ["cppcheck", "wget", "7zip"];
 
@@ -49,6 +49,6 @@ export async function downloadAndInstallRos2NugetPackages(): Promise<number> {
 	await utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
 	return utils.exec(
 		"choco",
-		["install", "-s", ".", "-y"].concat(ros2ChocolateyPackages)
+		chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages)
 	);
 }
