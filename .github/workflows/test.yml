@@ -39,7 +39,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          docker_image: ['ubuntu:bionic', 'ubuntu:xenial']
+          docker_image:
+          - 'ubuntu:bionic'
+          - 'ubuntu:focal'
+          - 'ubuntu:xenial'
     container:
       image: ${{ matrix.docker_image }}
     steps:

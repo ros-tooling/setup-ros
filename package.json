@@ -33,8 +33,7 @@
     "@actions/core": "^1.2.4",
     "@actions/exec": "^1.0.4",
     "@actions/io": "^1.0.2",
-    "husky": "^4.2.5",
-    "npm-ci": "0.0.2"
+    "husky": "^4.2.5"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
@@ -42,7 +41,6 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@zeit/ncc": "^0.22.1",
-    "acorn": "^7.1.1",
     "eslint": "^6.8.0",
     "jest": "^25.5.4",
     "jest-circus": "^25.5.4",
