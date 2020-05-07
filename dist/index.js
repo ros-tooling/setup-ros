@@ -1102,6 +1102,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const exec = __importStar(__webpack_require__(986));
 const utils = __importStar(__webpack_require__(163));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
@@ -1130,14 +1131,30 @@ const aptDependencies = [
     // FastRTPS dependencies
     "libasio-dev",
     "libtinyxml2-dev",
-    // OpenSplice
-    "libopensplice69",
     // RTI Connext - required to ensure the installation in non-blocking
     "rti-connext-dds-5.3.1",
-    // python3-rosdep is conflicting with ros-melodic-desktop-full,
-    // and should not be used here. See ros-tooling/setup-ros#74
-    "python-rosdep",
 ];
+const distributionSpecificAptDependencies = {
+    bionic: [
+        // OpenSplice
+        "libopensplice69",
+        // python3-rosdep is conflicting with ros-melodic-desktop-full,
+        // and should not be used here. See ros-tooling/setup-ros#74
+        "python-rosdep",
+    ],
+    focal: [
+        // python-rosdep does not exist on Focal, so python3-rosdep is used.
+        // The issue with ros-melodic-desktop-full is also non-applicable.
+        "python3-rosdep",
+    ],
+    xenial: [
+        // OpenSplice
+        "libopensplice69",
+        // python3-rosdep is conflicting with ros-melodic-desktop-full,
+        // and should not be used here. See ros-tooling/setup-ros#74
+        "python-rosdep",
+    ],
+};
 /**
  * Run apt-get install on list of specified packages.
  *
@@ -1158,13 +1175,38 @@ function runAptGetInstall(packages) {
 }
 exports.runAptGetInstall = runAptGetInstall;
 /**
+ * Determines the Ubuntu distribution codename.
+ *
+ * This function directly source /etc/lsb-release instead of invoking
+ * lsb-release as the package may not be installed.
+ *
+ * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
+ */
+function determineDistribCodename() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let distribCodename = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                distribCodename += data.toString();
+            },
+        };
+        yield exec.exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
+        return distribCodename;
+    });
+}
+/**
  * Run ROS 2 APT dependencies.
  *
  * @returns Promise<number> exit code
  */
 function installAptDependencies() {
     return __awaiter(this, void 0, void 0, function* () {
-        return runAptGetInstall(aptDependencies);
+        let aptPackages = aptDependencies;
+        const distribCodename = yield determineDistribCodename();
+        const additionalAptPackages = distributionSpecificAptDependencies[distribCodename] || [];
+        aptPackages = aptPackages.concat(additionalAptPackages);
+        return runAptGetInstall(aptPackages);
     });
 }
 exports.installAptDependencies = installAptDependencies;
