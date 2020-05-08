@@ -1332,9 +1332,9 @@ function exec(commandLine, args, options, log_message) {
     return __awaiter(this, void 0, void 0, function* () {
         const argsAsString = (args || []).join(" ");
         const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
-        return core.group(message, () => __awaiter(this, void 0, void 0, function* () {
-            return yield actions_exec.exec(commandLine, args, options);
-        }));
+        return core.group(message, () => {
+            return actions_exec.exec(commandLine, args, options);
+        });
     });
 }
 exports.exec = exec;

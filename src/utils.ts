@@ -22,8 +22,8 @@ export async function exec(
 ): Promise<number> {
 	const argsAsString = (args || []).join(" ");
 	const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
-	return core.group(message, async () => {
-		return await actions_exec.exec(commandLine, args, options);
+	return core.group(message, () => {
+		return actions_exec.exec(commandLine, args, options);
 	});
 }
 
