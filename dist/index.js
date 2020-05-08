@@ -1728,7 +1728,7 @@ const pip3Packages = [
     "setuptools",
     "wheel",
 ];
-const pip3CommandLine = ["pip3", "install", "--upgrade"];
+const pip3CommandLine = ["python3", "-m", "pip", "install", "--upgrade"];
 /**
  * Run Python3 pip install on a list of specified packages.
  *
