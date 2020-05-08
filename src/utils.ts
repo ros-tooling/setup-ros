@@ -23,7 +23,7 @@ export async function exec(
 	const argsAsString = (args || []).join(" ");
 	const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
 	return core.group(message, async () => {
-		return actions_exec.exec(commandLine, args, options);
+		return await actions_exec.exec(commandLine, args, options);
 	});
 }
 
