@@ -4,8 +4,6 @@ import * as chocolatey from "./package_manager/chocolatey";
 import * as pip from "./package_manager/pip";
 import * as utils from "./utils";
 
-const python37: string = "c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
-
 const binaryReleases: { [index: string]: string } = {
 	dashing:
 		"https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
@@ -19,10 +17,15 @@ const pip3Packages: string[] = ["lxml", "netifaces"];
  * Install ROS 2 build tools.
  */
 async function prepareRos2BuildEnvironment() {
-	await utils.exec(`cmd /c mklink /d c:\\python37 ${python37}`);
-	core.exportVariable("PYTHONHOME", "c:\\python37");
-	core.addPath("c:\\python37");
-	core.addPath("c:\\python37\\scripts");
+	let python_scripts='';
+	await utils.exec(`python3`,
+	 [`-c`, `import sysconfig; print(sysconfig.get_path('scripts'))`],
+	{
+		listeners: {
+			stdout: (data: Buffer) => { python_scripts += data.toString(); }
+		}
+	});
+	core.addPath(python_scripts.trim());
 	core.addPath("c:\\program files\\cppcheck");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();
