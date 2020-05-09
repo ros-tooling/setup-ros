@@ -9,17 +9,17 @@ Status](https://github.com/ros-tooling/setup-ros/workflows/Test%20setup-ros/badg
 This action sets up a [ROS] and ROS 2 environment for use in actions, so
 that:
 
-* [ROS 2 latest development branch][ros2_latest_development_setup] builds from
+- [ROS 2 latest development branch][ros2_latest_development_setup] builds from
   source,
-* non-EOL (End Of Life) distribution of ROS 2 builds from source,
-* any ROS, and ROS 2 package depending on non-EOL distribution builds from
+- non-EOL (End Of Life) distribution of ROS 2 builds from source,
+- any ROS, and ROS 2 package depending on non-EOL distribution builds from
   source
-  
+
 The action will not install ROS, or ROS 2, by default. To install a ROS binary distribution, pass a value to `required-ros-distributions` (see example below).
-  
- :warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors.
- It is recommended to run `setup-ros` in a Docker container.
- See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
+
+:warning: `apt-get update` is flaky on bare metal GitHub actions Linux workers relying on the GitHub APT mirrors.
+It is recommended to run `setup-ros` in a Docker container.
+See [`jobs.<job_id>.container` documentation](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer).
 An alternative approach is to edit APT sources on the bare metal worker (see [#80](https://github.com/ros-tooling/setup-ros/issues/80) for details).
 
 ## Supported platforms
@@ -44,21 +44,21 @@ ensure that the action runs the Linux distribution specified by the REPs.
 
 The action installs the following command-line tools:
 
- * `colcon`
- * `rosdep`
- * `vcs`
+- `colcon`
+- `rosdep`
+- `vcs`
 
 It also performs the following actions:
 
-* On Linux:
-  * Setting the locale to `en_US.UTF-8` and, the timezone to UTC
-  * GCC and clang default APT packages
-  * Registering the Open Robotics APT repository
-  * Installing ROS, and ROS 2 system dependencies using APT
-* On macOS:
-  * Installing ROS, and ROS 2 system dependencies using [Homebrew] and [pip]
-* On Microsoft Windows:
-  * Installing ROS, and ROS 2 system dependencies using [Chocolatey]
+- On Linux:
+  - Setting the locale to `en_US.UTF-8` and, the timezone to UTC
+  - GCC and clang default APT packages
+  - Registering the Open Robotics APT repository
+  - Installing ROS, and ROS 2 system dependencies using APT
+- On macOS:
+  - Installing ROS, and ROS 2 system dependencies using [Homebrew] and [pip]
+- On Microsoft Windows:
+  - Installing ROS, and ROS 2 system dependencies using [Chocolatey]
 
 The dependencies installed by this package include ROS 2 DDS vendor packages,
 such as FastRTPS, OpenSplice, and RTI Connext.
@@ -82,8 +82,8 @@ This setup should be used when ROS is build entirely from source.
 
 ```yaml
 steps:
-- uses: ros-tooling/setup-ros@0.0.16
-- run: vcs --help
+  - uses: ros-tooling/setup-ros@0.0.16
+  - run: vcs --help
 ```
 
 ### Setting up the worker, and installing system dependencies on all OSes
@@ -99,7 +99,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          os: [macOS-latest, windows-latest]
+        os: [macOS-latest, windows-latest]
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@0.0.16
@@ -123,11 +123,11 @@ This setup is necessary to use the ROS1/ROS2 bridge:
 [ros1_bridge](https://github.com/ros2/ros1_bridge).
 
 ```yaml
-  build_docker:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:bionic
-    steps:
+build_docker:
+  runs-on: ubuntu-latest
+  container:
+    image: ubuntu:bionic
+  steps:
     - uses: ros-tooling/setup-ros@0.0.16
       with:
         required-ros-distributions: melodic dashing
@@ -150,29 +150,29 @@ For instance, Kinetic requires `xenial`, but all other distributions require `bi
 
 ```yaml
 jobs:
-  test:  # Docker is not supported on OS X, and Windows.
+  test: # Docker is not supported on OS X, and Windows.
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macOS-latest, windows-latest]
-        ros_distribution:  # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
-        - dashing
-        - eloquent
+        ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
+          - dashing
+          - eloquent
     steps:
       - uses: ros-tooling/setup-ros@0.0.16
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - run: vcs --help
 
-  test_docker:  # On Linux, iterates on all ROS 1, and ROS 2 distributions.
+  test_docker: # On Linux, iterates on all ROS 1, and ROS 2 distributions.
     runs-on: ubuntu-latest
     strategy:
       matrix:
         ros_distribution:
-        - kinetic
-        - melodic
-        - dashing
-        - eloquent
+          - kinetic
+          - melodic
+          - dashing
+          - eloquent
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -226,11 +226,11 @@ See [Open Robotics DockerHub page][dockerhub_osrf], for instance.
 The scripts and documentation in this project are released under the [Apache
 2](LICENSE)
 
-[Chocolatey]: https://chocolatey.org/
-[Homebrew]: https://brew.sh/
-[REP-2000]: https://www.ros.org/reps/rep-2000.html
-[REP-3]: https://www.ros.org/reps/rep-0003.html
-[ROS]: https://www.ros.org/
+[chocolatey]: https://chocolatey.org/
+[homebrew]: https://brew.sh/
+[rep-2000]: https://www.ros.org/reps/rep-2000.html
+[rep-3]: https://www.ros.org/reps/rep-0003.html
+[ros]: https://www.ros.org/
 [dockerhub_osrf]: https://hub.docker.com/r/osrf/ros/
 [github_hosted_runners]: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners
 [pip]: https://pip.pypa.io/en/stable/
