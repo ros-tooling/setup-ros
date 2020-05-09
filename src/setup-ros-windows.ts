@@ -19,22 +19,27 @@ const pip3Packages: string[] = ["lxml", "netifaces"];
  * Install ROS 2 build tools.
  */
 async function prepareRos2BuildEnvironment() {
-	let python_dir = tc.find('Python', '3.7');
+	let python_dir = tc.find("Python", "3.7");
 
-	await utils.exec( path.join(python_dir, 'python'),
-	['-c', "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))"],
-	{
-		listeners: {
-			stdline: (data: string) => {
-				const p = data.trim();
-				if (p) {
-					core.info('Prepending to path: ' + JSON.stringify(p));
-					core.addPath(p);
-				}
-			}
+	await utils.exec(
+		path.join(python_dir, "python"),
+		[
+			"-c",
+			"import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))",
+		],
+		{
+			listeners: {
+				stdline: (data: string) => {
+					const p = data.trim();
+					if (p) {
+						core.info("Prepending to path: " + JSON.stringify(p));
+						core.addPath(p);
+					}
+				},
+			},
 		}
-	});
-	
+	);
+
 	core.addPath("c:\\program files\\cppcheck");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();

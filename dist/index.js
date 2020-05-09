@@ -3500,17 +3500,20 @@ const pip3Packages = ["lxml", "netifaces"];
  */
 function prepareRos2BuildEnvironment() {
     return __awaiter(this, void 0, void 0, function* () {
-        let python_dir = tc.find('Python', '3.7');
-        yield utils.exec(path.join(python_dir, 'python'), ['-c', "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))"], {
+        let python_dir = tc.find("Python", "3.7");
+        yield utils.exec(path.join(python_dir, "python"), [
+            "-c",
+            "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))",
+        ], {
             listeners: {
                 stdline: (data) => {
                     const p = data.trim();
                     if (p) {
-                        core.info('Prepending to path: ' + JSON.stringify(p));
+                        core.info("Prepending to path: " + JSON.stringify(p));
                         core.addPath(p);
                     }
-                }
-            }
+                },
+            },
         });
         core.addPath("c:\\program files\\cppcheck");
         yield chocolatey.installChocoDependencies();
