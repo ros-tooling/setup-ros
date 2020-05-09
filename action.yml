@@ -1,31 +1,31 @@
-name: 'Setup ROS environment'
+name: "Setup ROS environment"
 description: |
-    Install system dependencies required to build ROS and ROS 2 packages
-author: 'ROS Tooling Working Group'
+  Install system dependencies required to build ROS and ROS 2 packages
+author: "ROS Tooling Working Group"
 branding:
-  icon: 'box'
-  color: 'gray-dark'
+  icon: "box"
+  color: "gray-dark"
 inputs:
   required-ros-distributions:
     description: |
-        List of binary ROS distributions to be installed.
+      List of binary ROS distributions to be installed.
 
-        Support for non-Linux platform is not implemented yet, so this
-        parameter is ignored on Mac OS X and Windows.
+      Support for non-Linux platform is not implemented yet, so this
+      parameter is ignored on Mac OS X and Windows.
 
-        Allowed ROS distributions
-        - "" (no value) - no ROS binary installation
-        - kinetic
-        - melodic
-        - dashing
-        - eloquent
+      Allowed ROS distributions
+      - "" (no value) - no ROS binary installation
+      - kinetic
+      - melodic
+      - dashing
+      - eloquent
 
-        Multiple values can be passed using a whitespace delimited list
-        "melodic dashing".
+      Multiple values can be passed using a whitespace delimited list
+      "melodic dashing".
 
-        For each passed ROS distribution, its desktop variant will be installed.
+      For each passed ROS distribution, its desktop variant will be installed.
     required: false
     default: ""
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"

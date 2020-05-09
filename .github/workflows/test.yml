@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - master
-      - 'releases/*'
+      - "releases/*"
   schedule:
     # Run the CI automatically every hour to look for flakyness.
-    - cron:  '0 * * * *'
+    - cron: "0 * * * *"
 
 defaults:
   run:
@@ -18,55 +18,55 @@ env:
 
 jobs:
   test_environment:
-    name: 'Check development tools'
+    name: "Check development tools"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-          os: [macOS-latest, windows-latest]
+        os: [macOS-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: .github/workflows/build-and-test.sh
-    - uses: ./ # Uses an action in the root directory
-    - run: .github/workflows/check-environment.sh
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./ # Uses an action in the root directory
+      - run: .github/workflows/check-environment.sh
 
   test_environment_linux:
-    name: 'Check development tools'
+    name: "Check development tools"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-          docker_image:
-          - 'ubuntu:bionic'
-          - 'ubuntu:focal'
-          - 'ubuntu:xenial'
+        docker_image:
+          - "ubuntu:bionic"
+          - "ubuntu:focal"
+          - "ubuntu:xenial"
     container:
       image: ${{ matrix.docker_image }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: .github/workflows/build-and-test.sh
-    - uses: ./ # Uses an action in the root directory
-    - run: .github/workflows/check-environment.sh
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./ # Uses an action in the root directory
+      - run: .github/workflows/check-environment.sh
 
   # Validates that once setup-ros finished, the ROS distribution
   # setup.sh / local_setup.bat can be sourced, and the ROS distribution is
   # functional.
   test_ros_binary_install:
-    name: 'Check ROS distribution'
+    name: "Check ROS distribution"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:
-        # TODO(ros-tooling/setup-ros#107): Add OS X support
-        # - macOS-latest
-        - windows-latest
+          # TODO(ros-tooling/setup-ros#107): Add OS X support
+          # - macOS-latest
+          - windows-latest
         ros_distribution:
           # Dashing Diademata (May 2019 - May 2021)
           - dashing
@@ -74,25 +74,25 @@ jobs:
           # Eloquent Elusor (November 2019 - November 2020)
           - eloquent
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: .github/workflows/build-and-test.sh
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: ${{ matrix.ros_distribution }}
-    - run: .github/workflows/check-environment.sh
-    - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
-      if: matrix.os != 'windows-latest'
-    - env:
-        ROSDISTRO: ${{ matrix.ros_distribution }}
-      run: .github/workflows/check-ros2-distribution-win.bat
-      shell: cmd
-      if: matrix.os == 'windows-latest'
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./ # Uses an action in the root directory
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+      - run: .github/workflows/check-environment.sh
+      - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
+        if: matrix.os != 'windows-latest'
+      - env:
+          ROSDISTRO: ${{ matrix.ros_distribution }}
+        run: .github/workflows/check-ros2-distribution-win.bat
+        shell: cmd
+        if: matrix.os == 'windows-latest'
 
   test_ros_binary_install_ubuntu:
-    name: 'Check ROS distribution'
+    name: "Check ROS distribution"
     strategy:
       fail-fast: false
       matrix:
@@ -134,19 +134,19 @@ jobs:
       image: ${{ matrix.docker_image }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: .github/workflows/build-and-test.sh
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: ${{ matrix.ros_distribution }}
-    - run: .github/workflows/check-environment.sh
-    - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
-      if: matrix.ros_version == 1
-    - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
-      if: matrix.ros_version == 2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./ # Uses an action in the root directory
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+      - run: .github/workflows/check-environment.sh
+      - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
+        if: matrix.ros_version == 1
+      - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
+        if: matrix.ros_version == 2
 
   test_multiple_ros_installations:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
@@ -154,27 +154,27 @@ jobs:
     container:
       image: ubuntu:bionic
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: .github/workflows/build-and-test.sh
-    - uses: ./ # Uses an action in the root directory
-      with:
-        required-ros-distributions: melodic dashing
-    - run: .github/workflows/check-ros2-distribution.sh dashing
-    - run: .github/workflows/check-ros-distribution.sh melodic
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./ # Uses an action in the root directory
+        with:
+          required-ros-distributions: melodic dashing
+      - run: .github/workflows/check-ros2-distribution.sh dashing
+      - run: .github/workflows/check-ros-distribution.sh melodic
 
   log_workflow_status_to_cloudwatch:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:bionic
     needs:
-    - test_environment
-    - test_environment_linux
-    - test_multiple_ros_installations
-    - test_ros_binary_install_ubuntu
-    if: always()  # run even if the dependent jobs have failed to log failures
+      - test_environment
+      - test_environment_linux
+      - test_multiple_ros_installations
+      - test_ros_binary_install_ubuntu
+    if: always() # run even if the dependent jobs have failed to log failures
     # Allow build reports to fail on pull requests.
     # When a contribution is made on a fork, the secrets will not be available,
     # and this step will be failing. This is acceptable.
@@ -182,18 +182,18 @@ jobs:
     # on schedule.
     continue-on-error: ${{ github.event_name == 'pull_request'}}
     steps:
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-    - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
-      with:
-        # Checks if any of the jobs have failed.
-        #
-        # needs.*.result is returns the list of all success statuses as an
-        # array, i.e. ['success', 'failure, 'success']
-        # join() converts the array to a string 'successfailuresuccess'
-        # contains() checks whether the string contains failure
-        metric-value: ${{ ! contains(join(needs.*.result, ''), 'failure') && ! contains(join(needs.*.result, ''), 'cancelled') }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - uses: ros-tooling/action-cloudwatch-metrics@0.0.4
+        with:
+          # Checks if any of the jobs have failed.
+          #
+          # needs.*.result is returns the list of all success statuses as an
+          # array, i.e. ['success', 'failure, 'success']
+          # join() converts the array to a string 'successfailuresuccess'
+          # contains() checks whether the string contains failure
+          metric-value: ${{ ! contains(join(needs.*.result, ''), 'failure') && ! contains(join(needs.*.result, ''), 'cancelled') }}
