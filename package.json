@@ -6,7 +6,7 @@
   "scripts": {
     "build": "ncc build src/setup-ros.ts -o dist",
     "lint": "eslint src/**.ts src/*/*.ts",
-    "prettier": "prettier --write src/*.ts src/*/*.ts",
+    "prettier": "prettier --write .",
     "test": "eslint src/*.ts src/*/*.ts && jest --coverage"
   },
   "repository": {
