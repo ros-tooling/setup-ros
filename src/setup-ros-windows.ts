@@ -1,10 +1,10 @@
 import * as core from "@actions/core";
+import * as tc from "@actions/tool-cache";
+import * as path from "path";
 
 import * as chocolatey from "./package_manager/chocolatey";
 import * as pip from "./package_manager/pip";
 import * as utils from "./utils";
-
-const python37: string = "c:\\hostedtoolcache\\windows\\Python\\3.7.6\\x64";
 
 const binaryReleases: { [index: string]: string } = {
 	dashing:
@@ -19,10 +19,22 @@ const pip3Packages: string[] = ["lxml", "netifaces"];
  * Install ROS 2 build tools.
  */
 async function prepareRos2BuildEnvironment() {
-	await utils.exec(`cmd /c mklink /d c:\\python37 ${python37}`);
-	core.exportVariable("PYTHONHOME", "c:\\python37");
-	core.addPath("c:\\python37");
-	core.addPath("c:\\python37\\scripts");
+	let python_dir = tc.find('Python', '3.7');
+
+	await utils.exec( path.join(python_dir, 'python'),
+	['-c', "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))"],
+	{
+		listeners: {
+			stdline: (data: string) => {
+				const p = data.trim();
+				if (p) {
+					core.info('Prepending to path: ' + JSON.stringify(p));
+					core.addPath(p);
+				}
+			}
+		}
+	});
+	
 	core.addPath("c:\\program files\\cppcheck");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();
