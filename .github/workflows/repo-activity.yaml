@@ -8,6 +8,7 @@ on:
 
 jobs:
   repo_activity:
+    if: ${{ ! github.event.repository.fork }}
     runs-on: ubuntu-latest
     container:
       image: ubuntu:bionic
