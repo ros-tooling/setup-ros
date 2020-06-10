@@ -68,7 +68,7 @@ See `src/package_manager/*.ts` for the complete list.
 
 See [action.yml](action.yml).
 
-This action is under active developement, and compatibility between releases
+This action is under active development, and compatibility between releases
 is not yet guaranteed.
 Please do not use `ros-tooling/setup-ros@master`.
 Instead, pin your workflows to a particular release:
@@ -78,7 +78,7 @@ Instead, pin your workflows to a particular release:
 
 The default behavior is to only install development tools.
 No ROS binary distribution is installed in this case.
-This setup should be used when ROS is build entirely from source.
+This setup should be used when ROS is built entirely from source.
 
 ```yaml
 steps:
