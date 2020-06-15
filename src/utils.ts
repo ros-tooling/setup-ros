@@ -34,6 +34,15 @@ export function getRequiredRosDistributions(): string[] {
 		requiredRosDistributionsList = requiredRosDistributions.split(
 			RegExp("\\s")
 		);
+	
+		for(var i = 0; i < requiredRosDistributionsList.length; i++){
+			if(requiredRosDistributionsList[i] != "foxy" && requiredRosDistributionsList[i] != "kinetic" && requiredRosDistributionsList[i] != "melodic" && requiredRosDistributionsList[i] != "dashing" && requiredRosDistributionsList[i] != "eloquent"){
+				console.log("\"" + requiredRosDistributionsList[i] + "\" is not a valid configuration!");
+				var x: number = +i;
+				requiredRosDistributionsList.splice(x,1);
+				i--;
+			}
+		}
 	}
 	return requiredRosDistributionsList;
 }
