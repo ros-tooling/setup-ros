@@ -36,26 +36,22 @@ export function getRequiredRosDistributions(): string[] {
 		);
 	}
 
-	if(!validateDistro(requiredRosDistributionsList)){
+	if (!validateDistro(requiredRosDistributionsList)) {
 		throw new Error("Input has invalid distribution names.");
 	}
-	
+
 	return requiredRosDistributionsList;
 }
 
 //list of valid linux distributions
-const validDistro: string[] = [
-	"kinetic",
-	"dashing",
-	"foxy",
-];
+const validDistro: string[] = ["kinetic", "dashing", "foxy"];
 
 //go through requiredRosDistributionsList and validate every linux distribution input
 function validateDistro(requiredRosDistributionsList: string[]): boolean {
 	for (let rosDistro of requiredRosDistributionsList) {
 		//If the validDistro string array doesn't contain the existing input
 		//Return false
-		if(validDistro.indexOf(rosDistro) <= -1){
+		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;
 		}
 	}
