@@ -34,15 +34,31 @@ export function getRequiredRosDistributions(): string[] {
 		requiredRosDistributionsList = requiredRosDistributions.split(
 			RegExp("\\s")
 		);
+	}
+
+	if(!validateDistro(requiredRosDistributionsList)){
+		throw new Error("Input has invalid distribution names.");
+	}
 	
-		for(var i = 0; i < requiredRosDistributionsList.length; i++){
-			if(requiredRosDistributionsList[i] != "foxy" && requiredRosDistributionsList[i] != "kinetic" && requiredRosDistributionsList[i] != "melodic" && requiredRosDistributionsList[i] != "dashing" && requiredRosDistributionsList[i] != "eloquent"){
-				console.log("\"" + requiredRosDistributionsList[i] + "\" is not a valid configuration!");
-				var x: number = +i;
-				requiredRosDistributionsList.splice(x,1);
-				i--;
-			}
+	return requiredRosDistributionsList;
+}
+
+//list of valid linux distributions
+const validDistro: string[] = [
+	"kinetic",
+	"dashing",
+	"foxy",
+];
+
+//go through requiredRosDistributionsList and validate every linux distribution input
+function validateDistro(requiredRosDistributionsList: string[]): boolean {
+	for (let rosDistro of requiredRosDistributionsList) {
+		//If the validDistro string array doesn't contain the existing input
+		//Return false
+		if(validDistro.indexOf(rosDistro) <= -1){
+			return false;
 		}
 	}
-	return requiredRosDistributionsList;
+
+	return true;
 }
