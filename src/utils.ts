@@ -54,11 +54,9 @@ const validDistro: string[] = [
 	"foxy",
 ];
 
-//go through requiredRosDistributionsList and validate every linux distribution input
+//Determine whether all inputs name supported ROS distributions.
 function validateDistro(requiredRosDistributionsList: string[]): boolean {
 	for (let rosDistro of requiredRosDistributionsList) {
-		//If the validDistro string array doesn't contain the existing input
-		//Return false
 		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;
 		}

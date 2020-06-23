@@ -1824,11 +1824,9 @@ const validDistro = [
     "eloquent",
     "foxy",
 ];
-//go through requiredRosDistributionsList and validate every linux distribution input
+//Determine whether all inputs name supported ROS distributions.
 function validateDistro(requiredRosDistributionsList) {
     for (let rosDistro of requiredRosDistributionsList) {
-        //If the validDistro string array doesn't contain the existing input
-        //Return false
         if (validDistro.indexOf(rosDistro) <= -1) {
             return false;
         }
@@ -4158,12 +4156,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.downloadAndInstallRos2NugetPackages = exports.installChocoDependencies = exports.runChocoInstall = void 0;
 const utils = __importStar(__webpack_require__(163));
-const chocoCommandLine = [
-    "install",
-    "--limit-output",
-    "--no-progress",
-    "--yes",
-];
+const chocoCommandLine = ["install", "--limit-output", "--no-progress", "--yes"];
 const chocoDependencies = ["cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
