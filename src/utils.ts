@@ -35,5 +35,34 @@ export function getRequiredRosDistributions(): string[] {
 			RegExp("\\s")
 		);
 	}
+
+	if (!validateDistro(requiredRosDistributionsList)) {
+		throw new Error("Input has invalid distribution names.");
+	}
+
 	return requiredRosDistributionsList;
+}
+
+//list of valid linux distributions
+const validDistro: string[] = [
+	"kinetic",
+	"lunar",
+	"melodic",
+	"noetic",
+	"dashing",
+	"eloquent",
+	"foxy",
+];
+
+//Determine whether all inputs name supported ROS distributions.
+export function validateDistro(
+	requiredRosDistributionsList: string[]
+): boolean {
+  for (const rosDistro of requiredRosDistributionsList) {
+		if (validDistro.indexOf(rosDistro) <= -1) {
+			return false;
+		}
+	}
+
+	return true;
 }
