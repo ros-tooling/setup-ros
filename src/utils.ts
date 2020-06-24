@@ -55,7 +55,9 @@ const validDistro: string[] = [
 ];
 
 //Determine whether all inputs name supported ROS distributions.
-function validateDistro(requiredRosDistributionsList: string[]): boolean {
+export function validateDistro(
+	requiredRosDistributionsList: string[]
+): boolean {
 	for (let rosDistro of requiredRosDistributionsList) {
 		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;

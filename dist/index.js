@@ -1779,7 +1779,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequiredRosDistributions = exports.exec = void 0;
+exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
 const actions_exec = __importStar(__webpack_require__(986));
 const core = __importStar(__webpack_require__(470));
 // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -1833,6 +1833,7 @@ function validateDistro(requiredRosDistributionsList) {
     }
     return true;
 }
+exports.validateDistro = validateDistro;
 
 
 /***/ }),
@@ -4156,7 +4157,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.downloadAndInstallRos2NugetPackages = exports.installChocoDependencies = exports.runChocoInstall = void 0;
 const utils = __importStar(__webpack_require__(163));
-const chocoCommandLine = ["install", "--limit-output", "--no-progress", "--yes"];
+const chocoCommandLine = [
+    "install",
+    "--limit-output",
+    "--no-progress",
+    "--yes",
+];
 const chocoDependencies = ["cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
