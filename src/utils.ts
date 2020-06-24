@@ -58,7 +58,7 @@ const validDistro: string[] = [
 export function validateDistro(
 	requiredRosDistributionsList: string[]
 ): boolean {
-	for (let rosDistro of requiredRosDistributionsList) {
+  for (const rosDistro of requiredRosDistributionsList) {
 		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;
 		}
