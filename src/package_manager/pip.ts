@@ -40,7 +40,7 @@ const pip3Packages: string[] = [
 	"mock",
 	"mypy",
 	"nose",
-	"numpy",
+	"numpy==1.18.0",
 	"pep8",
 	"pydocstyle",
 	"pyparsing",
