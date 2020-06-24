@@ -1894,6 +1894,8 @@ const pip3Packages = [
     "flake8-import-order",
     "flake8-quotes",
     "ifcfg",
+    'importlib-metadata',
+    'importlib-resources',
     "lark-parser",
     "mock",
     "mypy",
