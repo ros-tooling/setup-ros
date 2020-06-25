@@ -1779,7 +1779,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequiredRosDistributions = exports.exec = void 0;
+exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
 const actions_exec = __importStar(__webpack_require__(986));
 const core = __importStar(__webpack_require__(470));
 // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -1808,9 +1808,32 @@ function getRequiredRosDistributions() {
     if (requiredRosDistributions) {
         requiredRosDistributionsList = requiredRosDistributions.split(RegExp("\\s"));
     }
+    if (!validateDistro(requiredRosDistributionsList)) {
+        throw new Error("Input has invalid distribution names.");
+    }
     return requiredRosDistributionsList;
 }
 exports.getRequiredRosDistributions = getRequiredRosDistributions;
+//list of valid linux distributions
+const validDistro = [
+    "kinetic",
+    "lunar",
+    "melodic",
+    "noetic",
+    "dashing",
+    "eloquent",
+    "foxy",
+];
+//Determine whether all inputs name supported ROS distributions.
+function validateDistro(requiredRosDistributionsList) {
+    for (let rosDistro of requiredRosDistributionsList) {
+        if (validDistro.indexOf(rosDistro) <= -1) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.validateDistro = validateDistro;
 
 
 /***/ }),
@@ -1894,6 +1917,8 @@ const pip3Packages = [
     "flake8-import-order",
     "flake8-quotes",
     "ifcfg",
+    'importlib-metadata',
+    'importlib-resources',
     "lark-parser",
     "mock",
     "mypy",
