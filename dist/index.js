@@ -4208,6 +4208,13 @@ exports.installChocoDependencies = installChocoDependencies;
 function downloadAndInstallRos2NugetPackages() {
     return __awaiter(this, void 0, void 0, function* () {
         yield utils.exec("wget", ["--quiet"].concat(ros2ChocolateyPackagesUrl));
+        // The ROS 2 NUGET Chocolatey packages expect a registry entry of
+        // HKCU\SOFTWARE\Kitware\CMake to exist; if it doesn't, they don't
+        // properly register themselves with CMake and thus downstream software
+        // can't properly find them.  The Windows image that is currently available
+        // to GitHub actions (https://github.com/actions/virtual-environments/blob/win19/20200608.1/images/win/Windows2019-Readme.md)
+        // doesn't seem to have this key, so add it by hand here.
+        yield utils.exec("reg", ["add", "HKCU\\SOFTWARE\\Kitware\\CMake", "/f"]);
         return utils.exec("choco", chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages));
     });
 }
