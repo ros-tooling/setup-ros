@@ -17,8 +17,11 @@ inputs:
       - "" (no value) - no ROS binary installation
       - kinetic
       - melodic
+      - noetic
       - dashing
       - eloquent
+      - foxy
+      - rolling
 
       Multiple values can be passed using a whitespace delimited list
       "melodic dashing".
