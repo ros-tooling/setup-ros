@@ -175,6 +175,7 @@ jobs:
         ros_distribution:
           - kinetic
           - melodic
+          - noetic
           - dashing
           - eloquent
           - foxy
@@ -199,6 +200,11 @@ jobs:
           # Melodic Morenia (May 2018 - May 2023)
           - docker_image: ubuntu:bionic
             ros_distribution: melodic
+            ros_version: 1
+
+          # Noetic Ninjemys (May 2020 - May 2025)
+          - docker_image: ubuntu:focal
+            ros_distribution: noetic
             ros_version: 1
 
           # Dashing Diademata (May 2019 - May 2021)
