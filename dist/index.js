@@ -3726,8 +3726,9 @@ const chocolatey = __importStar(__webpack_require__(510));
 const pip = __importStar(__webpack_require__(230));
 const utils = __importStar(__webpack_require__(163));
 const binaryReleases = {
-    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20191213/ros2-dashing-20191213-windows-amd64.zip",
+    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20200722/ros2-dashing-20200722-windows-amd64.zip",
     eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
+    foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20200710/ros2-foxy-20200710-windows-release-amd64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**
