@@ -158,11 +158,15 @@ jobs:
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
           - dashing
           - eloquent
+          - foxy
     steps:
-      - uses: ros-tooling/setup-ros@0.0.16
+      - uses: ros-tooling/setup-ros@0.0.25
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
-      - run: vcs --help
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.0.17
+        with:
+          package-name: YOUR_PACKAGE_NAME
 
   test_docker: # On Linux, iterates on all ROS 1, and ROS 2 distributions.
     runs-on: ubuntu-latest
@@ -171,8 +175,10 @@ jobs:
         ros_distribution:
           - kinetic
           - melodic
+          - noetic
           - dashing
           - eloquent
+          - foxy
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -196,6 +202,11 @@ jobs:
             ros_distribution: melodic
             ros_version: 1
 
+          # Noetic Ninjemys (May 2020 - May 2025)
+          - docker_image: ubuntu:focal
+            ros_distribution: noetic
+            ros_version: 1
+
           # Dashing Diademata (May 2019 - May 2021)
           - docker_image: ubuntu:bionic
             ros_distribution: dashing
@@ -205,14 +216,23 @@ jobs:
           - docker_image: ubuntu:bionic
             ros_distribution: eloquent
             ros_version: 2
+            
+          # Foxy Fitzroy (June 2020 - May 2023)
+          - docker_image: ubuntu:focal
+            ros_distribution: foxy
+            ros_version: 2
+
+    container:
+      image: ${{ matrix.docker_image }}
     steps:
-      - uses: ros-tooling/setup-ros@0.0.16
+      - name: setup ROS environment
+        uses: ros-tooling/setup-ros@0.0.25
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
-      - run: "source /opt/ros/${{ matrix.ros_distribution }}/setup.bash && rosnode --help"
-        if: ros_version == 1
-      - run: "source /opt/ros/${{ matrix.ros_distribution }}/setup.bash && ros2 run --help"
-        if: ros_version == 2
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.0.17
+        with:
+          package-name: YOUR_PACKAGE_NAME
 ```
 
 ## Alternative to `setup-ros`
