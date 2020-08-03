@@ -52,6 +52,7 @@ const validDistro: string[] = [
 	"dashing",
 	"eloquent",
 	"foxy",
+	"rolling"
 ];
 
 //Determine whether all inputs name supported ROS distributions.
