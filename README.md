@@ -154,6 +154,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        package: [YOUR_PACKAGE, OR_PACKAGES]  # <-- Fill in the name of your package(s)
         os: [macOS-latest, windows-latest]
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
           - dashing
@@ -166,12 +167,13 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.0.17
         with:
-          package-name: YOUR_PACKAGE_NAME
+          package-name: ${{ matrix.package }}
 
   test_docker: # On Linux, iterates on all ROS 1, and ROS 2 distributions.
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        package: [YOUR_PACKAGE, OR_PACKAGES]  # <-- Fill in the name of your package(s)
         ros_distribution:
           - kinetic
           - melodic
@@ -232,7 +234,7 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.0.17
         with:
-          package-name: YOUR_PACKAGE_NAME
+          package-name: ${{ matrix.package }}
 ```
 
 ## Alternative to `setup-ros`
