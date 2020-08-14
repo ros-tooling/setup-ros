@@ -165,10 +165,11 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
-        uses: ros-tooling/action-ros-ci@0.0.18
+        uses: ros-tooling/action-ros-ci@0.0.19
         with:
           package-name: ${{ matrix.package }}
           target-ros2-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
 
   test_docker: # On Linux, iterates on all ROS 1, and ROS 2 distributions.
     runs-on: ubuntu-latest
@@ -234,16 +235,18 @@ jobs:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test ROS1
         if: ${{ matrix.ros_version == 1 }}
-        uses: ros-tooling/action-ros-ci@0.0.18
+        uses: ros-tooling/action-ros-ci@0.0.19
         with:
           package-name: ${{ matrix.package }}
           target-ros1-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
       - name: build and test ROS2
         if: ${{ matrix.ros_version == 2 }}
-        uses: ros-tooling/action-ros-ci@0.0.18
+        uses: ros-tooling/action-ros-ci@0.0.19
         with:
           package-name: ${{ matrix.package }}
           target-ros2-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
 ```
 
 ## Alternative to `setup-ros`
