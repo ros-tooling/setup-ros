@@ -18,9 +18,10 @@ const binaryReleases: { [index: string]: string } = {
 const pip3Packages: string[] = ["lxml", "netifaces"];
 
 /**
- * Install ROS 2 build tools.
+ * Install build environment on a Windows worker.
  */
-async function prepareRos2BuildEnvironment() {
+export async function runWindows() {
+	
 	let python_dir = tc.find("Python", "3.7");
 
 	await utils.exec(
@@ -48,13 +49,9 @@ async function prepareRos2BuildEnvironment() {
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
 	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
-	return utils.exec(`rosdep`, ["init"]);
-}
-
-/**
- * Install ROS 2 binary releases.
- */
-async function prepareRos2BinaryReleases() {
+	await utils.exec(`rosdep`, ["init"]);
+	
+	// Install ROS 2 binary releases.
 	for (let rosDistro of utils.getRequiredRosDistributions()) {
 		if (rosDistro in binaryReleases) {
 			await utils.exec("wget", [
@@ -71,12 +68,4 @@ async function prepareRos2BinaryReleases() {
 			]);
 		}
 	}
-}
-
-/**
- * Install build environment on a Windows worker.
- */
-export async function runWindows() {
-	await prepareRos2BuildEnvironment();
-	return prepareRos2BinaryReleases();
 }
