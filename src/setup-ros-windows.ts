@@ -68,6 +68,8 @@ async function prepareRos2BinaryReleases() {
 				`${rosDistro}.zip`,
 				"-y",
 				`-oc:\\dev\\${rosDistro}`,
+                                "&&",
+                                "dir C:\\dev\\${rosDistro}"
 			]);
 		}
 	}
