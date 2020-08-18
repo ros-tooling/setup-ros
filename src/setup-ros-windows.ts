@@ -67,11 +67,11 @@ async function prepareRos2BinaryReleases() {
 				"x",
 				`${rosDistro}.zip`,
 				"-y",
-				`-oC:\\dev\\${rosDistro}`,
-                                "&&",
-                                "dir",
-                                `C:\\dev\\${rosDistro}`
+				`-oC:\\dev\\${rosDistro}`
 			]);
+                        await utils.exec("dir", [
+                                `C:\\dev\\${rosDistro}`
+                        ]);
 		}
 	}
 }

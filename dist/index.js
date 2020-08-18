@@ -3778,9 +3778,9 @@ function prepareRos2BinaryReleases() {
                     "x",
                     `${rosDistro}.zip`,
                     "-y",
-                    `-oC:\\dev\\${rosDistro}`,
-                    "&&",
-                    "dir",
+                    `-oC:\\dev\\${rosDistro}`
+                ]);
+                yield utils.exec("dir", [
                     `C:\\dev\\${rosDistro}`
                 ]);
             }
