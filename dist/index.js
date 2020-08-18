@@ -3778,9 +3778,10 @@ function prepareRos2BinaryReleases() {
                     "x",
                     `${rosDistro}.zip`,
                     "-y",
-                    `-oc:\\dev\\${rosDistro}`,
+                    `-oC:\\dev\\${rosDistro}`,
                     "&&",
-                    "dir C:\\dev\\${rosDistro}"
+                    "dir",
+                    `C:\\dev\\${rosDistro}`
                 ]);
             }
         }
