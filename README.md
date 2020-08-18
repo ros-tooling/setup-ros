@@ -154,7 +154,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        package: [YOUR_PACKAGE, OR_PACKAGES]  # <-- Fill in the name of your package(s)
         os: [macOS-latest, windows-latest]
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support OS X, and Windows.
           - dashing
@@ -167,7 +166,7 @@ jobs:
       - name: build and test
         uses: ros-tooling/action-ros-ci@0.0.19
         with:
-          package-name: ${{ matrix.package }}
+          package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
           vcs-repo-file-url: ""
 
@@ -175,7 +174,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [YOUR_PACKAGE, OR_PACKAGES]  # <-- Fill in the name of your package(s)
         ros_distribution:
           - kinetic
           - melodic
@@ -244,7 +242,7 @@ jobs:
         if: ${{ matrix.ros_version == 2 }}
         uses: ros-tooling/action-ros-ci@0.0.19
         with:
-          package-name: ${{ matrix.package }}
+          package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
           vcs-repo-file-url: ""
 ```
