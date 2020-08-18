@@ -72,7 +72,7 @@ This action is under active development, and compatibility between releases
 is not yet guaranteed.
 Please do not use `ros-tooling/setup-ros@master`.
 Instead, pin your workflows to a particular release:
-`ros-tooling/setup-ros@0.0.16`.
+`ros-tooling/setup-ros@0.0.25`.
 
 ### Setting up the worker, and installing the system dependencies
 
@@ -82,7 +82,7 @@ This setup should be used when ROS is built entirely from source.
 
 ```yaml
 steps:
-  - uses: ros-tooling/setup-ros@0.0.16
+  - uses: ros-tooling/setup-ros@0.0.25
   - run: vcs --help
 ```
 
@@ -102,7 +102,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.16
+        uses: ros-tooling/setup-ros@0.0.25
       - run: vcs --help
 
   build_docker:
@@ -111,7 +111,7 @@ jobs:
       image: ubuntu:bionic
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.16
+        uses: ros-tooling/setup-ros@0.0.25
       - run: vcs --help
 ```
 
@@ -128,7 +128,7 @@ build_docker:
   container:
     image: ubuntu:bionic
   steps:
-    - uses: ros-tooling/setup-ros@0.0.16
+    - uses: ros-tooling/setup-ros@0.0.25
       with:
         required-ros-distributions: melodic dashing
     - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
@@ -164,9 +164,11 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
-        uses: ros-tooling/action-ros-ci@0.0.17
+        uses: ros-tooling/action-ros-ci@0.0.19
         with:
-          package-name: YOUR_PACKAGE_NAME
+          package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
+          target-ros2-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
 
   test_docker: # On Linux, iterates on all ROS 1, and ROS 2 distributions.
     runs-on: ubuntu-latest
@@ -229,10 +231,20 @@ jobs:
         uses: ros-tooling/setup-ros@0.0.25
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
-      - name: build and test
-        uses: ros-tooling/action-ros-ci@0.0.17
+      - name: build and test ROS1
+        if: ${{ matrix.ros_version == 1 }}
+        uses: ros-tooling/action-ros-ci@0.0.19
         with:
-          package-name: YOUR_PACKAGE_NAME
+          package-name: ${{ matrix.package }}
+          target-ros1-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
+      - name: build and test ROS2
+        if: ${{ matrix.ros_version == 2 }}
+        uses: ros-tooling/action-ros-ci@0.0.19
+        with:
+          package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
+          target-ros2-distro: ${{ matrix.ros_distribution }}
+          vcs-repo-file-url: ""
 ```
 
 ## Alternative to `setup-ros`
