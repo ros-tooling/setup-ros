@@ -67,7 +67,7 @@ async function prepareRos2BinaryReleases() {
 				"x",
 				`${rosDistro}.zip`,
 				"-y",
-				`-oc:\\dev\\${rosDistro}`,
+				`-oC:\\dev\\${rosDistro}`
 			]);
 		}
 	}
@@ -78,5 +78,5 @@ async function prepareRos2BinaryReleases() {
  */
 export async function runWindows() {
 	await prepareRos2BuildEnvironment();
-	return prepareRos2BinaryReleases();
+	return await prepareRos2BinaryReleases();
 }

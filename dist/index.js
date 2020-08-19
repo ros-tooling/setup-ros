@@ -3778,7 +3778,7 @@ function prepareRos2BinaryReleases() {
                     "x",
                     `${rosDistro}.zip`,
                     "-y",
-                    `-oc:\\dev\\${rosDistro}`,
+                    `-oC:\\dev\\${rosDistro}`
                 ]);
             }
         }
@@ -3790,7 +3790,7 @@ function prepareRos2BinaryReleases() {
 function runWindows() {
     return __awaiter(this, void 0, void 0, function* () {
         yield prepareRos2BuildEnvironment();
-        return prepareRos2BinaryReleases();
+        return yield prepareRos2BinaryReleases();
     });
 }
 exports.runWindows = runWindows;
