@@ -1112,6 +1112,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runLinux = void 0;
 const core = __importStar(__webpack_require__(470));
+const exec = __importStar(__webpack_require__(986));
 const io = __importStar(__webpack_require__(1));
 const apt = __importStar(__webpack_require__(77));
 const pip = __importStar(__webpack_require__(230));
@@ -1179,7 +1180,9 @@ function runLinux() {
                 "sudo",
             ]);
         }
-        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        yield exec.exec("sudo", ["tee", "/etc/timezone"], {
+            input: Buffer.from("/etc/timezone"),
+        });
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
         yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
@@ -1794,11 +1797,14 @@ const core = __importStar(__webpack_require__(470));
  */
 function exec(commandLine, args, options, log_message) {
     return __awaiter(this, void 0, void 0, function* () {
+        options = Object.assign({}, (options || {}));
+        options.listeners = Object.assign({}, (options.listeners || {}));
+        options.listeners.debug = core.debug;
         const argsAsString = (args || []).join(" ");
         const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
-        return core.group(message, () => {
-            return actions_exec.exec(commandLine, args, options);
-        });
+        return yield core.group(message, () => __awaiter(this, void 0, void 0, function* () {
+            return yield actions_exec.exec(commandLine, args, options);
+        }));
     });
 }
 exports.exec = exec;
@@ -1823,7 +1829,7 @@ const validDistro = [
     "dashing",
     "eloquent",
     "foxy",
-    "rolling"
+    "rolling",
 ];
 //Determine whether all inputs name supported ROS distributions.
 function validateDistro(requiredRosDistributionsList) {
@@ -1919,8 +1925,8 @@ const pip3Packages = [
     "flake8-import-order",
     "flake8-quotes",
     "ifcfg",
-    'importlib-metadata',
-    'importlib-resources',
+    "importlib-metadata",
+    "importlib-resources",
     "lark-parser",
     "mock",
     "mypy",
@@ -3778,7 +3784,7 @@ function prepareRos2BinaryReleases() {
                     "x",
                     `${rosDistro}.zip`,
                     "-y",
-                    `-oC:\\dev\\${rosDistro}`
+                    `-oC:\\dev\\${rosDistro}`,
                 ]);
             }
         }
@@ -4162,7 +4168,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.downloadAndInstallRos2NugetPackages = exports.installChocoDependencies = exports.runChocoInstall = void 0;
 const utils = __importStar(__webpack_require__(163));
-const chocoCommandLine = ["install", "--limit-output", "--no-progress", "--yes"];
+const chocoCommandLine = [
+    "install",
+    "--limit-output",
+    "--no-progress",
+    "--yes",
+];
 const chocoDependencies = ["cppcheck", "wget", "7zip"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",

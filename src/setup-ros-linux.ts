@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import * as exec from "@actions/exec";
 import * as io from "@actions/io";
 
 import * as apt from "./package_manager/apt";
@@ -69,7 +70,10 @@ export async function runLinux() {
 		]);
 	}
 
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+	await exec.exec("sudo", ["tee", "/etc/timezone"], {
+		input: Buffer.from("/etc/timezone"),
+	});
+
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.

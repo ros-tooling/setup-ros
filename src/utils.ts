@@ -20,10 +20,14 @@ export async function exec(
 	options?: im.ExecOptions,
 	log_message?: string
 ): Promise<number> {
+	options = { ...(options || {}) };
+	options.listeners = { ...(options.listeners || {}) };
+	options.listeners.debug = core.debug;
+
 	const argsAsString = (args || []).join(" ");
 	const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
-	return core.group(message, () => {
-		return actions_exec.exec(commandLine, args, options);
+	return await core.group(message, async () => {
+		return await actions_exec.exec(commandLine, args, options);
 	});
 }
 
@@ -52,14 +56,14 @@ const validDistro: string[] = [
 	"dashing",
 	"eloquent",
 	"foxy",
-	"rolling"
+	"rolling",
 ];
 
 //Determine whether all inputs name supported ROS distributions.
 export function validateDistro(
 	requiredRosDistributionsList: string[]
 ): boolean {
-  for (const rosDistro of requiredRosDistributionsList) {
+	for (const rosDistro of requiredRosDistributionsList) {
 		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;
 		}

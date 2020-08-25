@@ -1,6 +1,11 @@
 import * as utils from "../utils";
 
-const chocoCommandLine: string[] = ["install", "--limit-output", "--no-progress", "--yes"];
+const chocoCommandLine: string[] = [
+	"install",
+	"--limit-output",
+	"--no-progress",
+	"--yes",
+];
 
 const chocoDependencies: string[] = ["cppcheck", "wget", "7zip"];
 
