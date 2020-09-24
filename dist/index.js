@@ -2038,6 +2038,7 @@ const brewDependencies = [
     "tinyxml",
     "tinyxml2",
     "wget",
+    "lcov",
 ];
 /**
  * Run brew install on a list of specified packages.
@@ -4174,7 +4175,7 @@ const chocoCommandLine = [
     "--no-progress",
     "--yes",
 ];
-const chocoDependencies = ["cppcheck", "wget", "7zip"];
+const chocoDependencies = ["cppcheck", "wget", "7zip", "lcov"];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",

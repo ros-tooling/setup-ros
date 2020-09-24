@@ -21,6 +21,7 @@ const brewDependencies: string[] = [
 	"tinyxml",
 	"tinyxml2",
 	"wget",
+	"lcov",
 ];
 
 /**

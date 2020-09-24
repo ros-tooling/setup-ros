@@ -235,7 +235,7 @@ jobs:
         if: ${{ matrix.ros_version == 1 }}
         uses: ros-tooling/action-ros-ci@0.0.19
         with:
-          package-name: ${{ matrix.package }}
+          package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros1-distro: ${{ matrix.ros_distribution }}
           vcs-repo-file-url: ""
       - name: build and test ROS2
