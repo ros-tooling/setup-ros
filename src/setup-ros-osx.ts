@@ -27,7 +27,7 @@ export async function runOsX() {
 
 	// While rosdep and vcs are available as a Debian package on Ubuntu, they need
 	// to be installed through pip on OS X.
-	await pip.runPython3PipInstall(["rosdep", "vcstool"]);
+	await pip.runPython3PipInstall(["catkin-pkg", "rosdep", "vcstool"]);
 
 	// Initializes rosdep
 	await utils.exec("sudo", ["rosdep", "init"]);
