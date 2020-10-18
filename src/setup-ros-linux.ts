@@ -70,28 +70,24 @@ export async function runLinux() {
 		]);
 	}
 
-	await exec.exec("sudo", ["tee", "/etc/timezone"], {
-		input: Buffer.from("/etc/timezone"),
-	});
-
-	await utils.exec("sudo", ["apt-get", "update"]);
+	await utils.exec("sudo", ["apt", "update"]);
+	await apt.runAptGetInstall(["locales"]);
+	await utils.exec("sudo", [
+		"update-locale",
+		"LC_ALL=en_US.UTF-8",
+		"LANG=en_US.UTF-8",
+	]);
 
 	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+	await apt.runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
 	core.exportVariable("LANG", "en_US.UTF-8");
 
 	// Enforce UTC time for consistency.
-	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-	await utils.exec("sudo", [
-		"ln",
-		"-sf",
-		"/usr/share/zoneinfo/Etc/UTC",
-		"/etc/localtime",
-	]);
 	await apt.runAptGetInstall(["tzdata"]);
+	await utils.exec("sudo", ["timedatectl", "set-timezone", "UTC"]);
 
 	// OSRF APT repository is necessary, even when building
 	// from source to install colcon, vcs, etc.
@@ -100,16 +96,21 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-	]);
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
-	]);
+	let ubuntuDistro = "";
+	await utils.exec("lsb_release", ["-sc"], {
+		listeners: { stdline: (x) => (ubuntuDistro = x) },
+	});
+
+	await exec.exec("sudo", ["tee", "/etc/apt/sources.list.d/ros-latest.list"], {
+		input: Buffer.from(
+			`deb http://packages.ros.org/ros/ubuntu ${ubuntuDistro} main`
+		),
+	});
+	await exec.exec("sudo", ["tee", "/etc/apt/sources.list.d/ros2-latest.list"], {
+		input: Buffer.from(
+			`deb http://packages.ros2.org/ros/ubuntu ${ubuntuDistro} main`
+		),
+	});
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.

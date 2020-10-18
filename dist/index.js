@@ -1180,40 +1180,37 @@ function runLinux() {
                 "sudo",
             ]);
         }
-        yield exec.exec("sudo", ["tee", "/etc/timezone"], {
-            input: Buffer.from("/etc/timezone"),
-        });
-        yield utils.exec("sudo", ["apt-get", "update"]);
+        yield utils.exec("sudo", ["apt", "update"]);
+        yield apt.runAptGetInstall(["locales"]);
+        yield utils.exec("sudo", [
+            "update-locale",
+            "LC_ALL=en_US.UTF-8",
+            "LANG=en_US.UTF-8",
+        ]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+        yield apt.runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
         // Enforce UTC time for consistency.
-        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
-        yield utils.exec("sudo", [
-            "ln",
-            "-sf",
-            "/usr/share/zoneinfo/Etc/UTC",
-            "/etc/localtime",
-        ]);
         yield apt.runAptGetInstall(["tzdata"]);
+        yield utils.exec("sudo", ["timedatectl", "set-timezone", "UTC"]);
         // OSRF APT repository is necessary, even when building
         // from source to install colcon, vcs, etc.
         const workspace = process.env.GITHUB_WORKSPACE;
         const keyFilePath = path.join(workspace, "ros.key");
         fs_1.default.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils.exec("sudo", ["apt-key", "add", keyFilePath]);
-        yield utils.exec("sudo", [
-            "bash",
-            "-c",
-            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-        ]);
-        yield utils.exec("sudo", [
-            "bash",
-            "-c",
-            `echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
-        ]);
+        let ubuntuDistro = "";
+        yield utils.exec("lsb_release", ["-sc"], {
+            listeners: { stdline: (x) => (ubuntuDistro = x) },
+        });
+        yield exec.exec("sudo", ["tee", "/etc/apt/sources.list.d/ros-latest.list"], {
+            input: Buffer.from(`deb http://packages.ros.org/ros/ubuntu ${ubuntuDistro} main`),
+        });
+        yield exec.exec("sudo", ["tee", "/etc/apt/sources.list.d/ros2-latest.list"], {
+            input: Buffer.from(`deb http://packages.ros2.org/ros/ubuntu ${ubuntuDistro} main`),
+        });
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
         // vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
