@@ -61,6 +61,7 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["dashing"])).toBe(true);
 		await expect(utils.validateDistro(["eloquent"])).toBe(true);
 		await expect(utils.validateDistro(["foxy"])).toBe(true);
+		await expect(utils.validateDistro(["rolling"])).toBe(true);
 	});
 
 	it("test not valid", async () => {
@@ -78,5 +79,8 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["ardent"])).toBe(false);
 		await expect(utils.validateDistro(["bouncy"])).toBe(false);
 		await expect(utils.validateDistro(["crystal"])).toBe(false);
+		// Does not exist or not all valid
+		await expect(utils.validateDistro(["foxy", "doesntexist"])).toBe(false);
+		await expect(utils.validateDistro(["master"])).toBe(false);
 	});
 });
