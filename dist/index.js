@@ -1180,7 +1180,7 @@ function runLinux() {
             ]);
         }
         // Get user input & validate
-        var use_ros2_testing = core.getInput("use-ros2-testing");
+        var use_ros2_testing = core.getInput('use-ros2-testing') === 'true';
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
