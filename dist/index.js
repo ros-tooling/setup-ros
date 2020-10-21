@@ -1181,19 +1181,12 @@ function runLinux() {
             ]);
         }
         yield utils.exec("sudo", ["apt", "update"]);
-        yield apt.runAptGetInstall(["locales"]);
-        yield utils.exec("sudo", [
-            "update-locale",
-            "LC_ALL=en_US.UTF-8",
-            "LANG=en_US.UTF-8",
-        ]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "lsb-release"]);
+        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release", "tzdata"]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
         // Enforce UTC time for consistency.
-        yield apt.runAptGetInstall(["tzdata"]);
         yield utils.exec("sudo", ["timedatectl", "set-timezone", "UTC"]);
         // OSRF APT repository is necessary, even when building
         // from source to install colcon, vcs, etc.
