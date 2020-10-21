@@ -6,6 +6,11 @@ branding:
   icon: "box"
   color: "gray-dark"
 inputs:
+  use-ros2-testing:
+    description: |
+      Enable use of the ROS2 pre-release testing debs.
+    required: false
+    default: "false"
   required-ros-distributions:
     description: |
       List of binary ROS distributions to be installed.
