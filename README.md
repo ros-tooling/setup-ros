@@ -218,7 +218,7 @@ jobs:
           - docker_image: ubuntu:bionic
             ros_distribution: eloquent
             ros_version: 2
-            
+
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal
             ros_distribution: foxy

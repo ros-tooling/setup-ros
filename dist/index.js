@@ -1182,7 +1182,14 @@ function runLinux() {
         }
         yield utils.exec("sudo", ["apt", "update"]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release", "tzdata"]);
+        yield apt.runAptGetInstall([
+            "curl",
+            "dbus",
+            "gnupg2",
+            "locales",
+            "lsb-release",
+            "tzdata",
+        ]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");

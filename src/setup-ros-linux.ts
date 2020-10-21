@@ -75,6 +75,7 @@ export async function runLinux() {
 	// Install tools required to configure the worker system.
 	await apt.runAptGetInstall([
 		"curl",
+		"dbus",
 		"gnupg2",
 		"locales",
 		"lsb-release",
