@@ -49,7 +49,6 @@ AHNx8kw4MPUkxExgI7Sd
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 
-
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -72,7 +71,7 @@ export async function runLinux() {
 
 	// Get user input & validate
 	var use_ros2_testing = core.getInput('use-ros2-testing') === 'true';
-        
+
 	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
 	await utils.exec("sudo", ["apt-get", "update"]);
 
@@ -105,19 +104,12 @@ export async function runLinux() {
 		"-c",
 		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
 	]);
-	if(use_ros2_testing) {
-          await utils.exec("sudo", [
-  		"bash",
-  		"-c",
-  		`echo "deb http://packages.ros.org/ros2-testing/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
-  	  ]);
-        } else {
-          await utils.exec("sudo", [
-  		"bash",
-  		"-c",
-  		`echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
-  	  ]);
-        }
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
+		`echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+	]);
+
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
