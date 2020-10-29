@@ -135,6 +135,22 @@ build_docker:
     - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
 ```
 
+### Use Pre-release ROS2 source for Testing
+
+You can specify if you'd like to use the [pre-release ROS2 source url](https://index.ros.org/doc/ros2/Installation/Prerelease-Testing/) in your sources list file by setting the `use-ros2-testing` parameter to true
+
+```yaml
+build_docker:
+  runs-on: ubuntu-latest
+  container:
+    image: ubuntu:bionic
+  steps:
+    - uses: ros-tooling/setup-ros@0.0.25
+      with:
+        use-ros2-testing: true
+        required-ros-distributions: dashing
+```
+
 ### Iterating on all ROS distributions, for all platforms
 
 This workflow illustrates how to spawn one job per ROS release, for
