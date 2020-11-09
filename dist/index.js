@@ -1181,6 +1181,7 @@ function runLinux() {
         }
         // Get user input & validate
         var use_ros2_testing = core.getInput('use-ros2-testing') === 'true';
+        var installConnext = core.getInput('install-connext') === 'true';
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
@@ -1214,10 +1215,11 @@ function runLinux() {
             `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
-        // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
+        // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
+        // optionally RTI Connext.
         // vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
         // they are also installed during this stage.
-        yield apt.installAptDependencies();
+        yield apt.installAptDependencies(installConnext);
         // pip3 dependencies need to be installed after the APT ones, as pip3
         // modules such as cryptography requires python-dev to be installed,
         // because they rely on Python C headers.
@@ -1273,6 +1275,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.installAptDependencies = exports.runAptGetInstall = void 0;
 const exec = __importStar(__webpack_require__(986));
 const utils = __importStar(__webpack_require__(163));
+const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
     "RTI_NC_LICENSE_ACCEPTED=yes",
@@ -1300,8 +1303,6 @@ const aptDependencies = [
     // FastRTPS dependencies
     "libasio-dev",
     "libtinyxml2-dev",
-    // RTI Connext - required to ensure the installation in non-blocking
-    "rti-connext-dds-5.3.1",
 ];
 const distributionSpecificAptDependencies = {
     bionic: [
@@ -1369,9 +1370,10 @@ function determineDistribCodename() {
  *
  * @returns Promise<number> exit code
  */
-function installAptDependencies() {
+function installAptDependencies(installConnext = false) {
     return __awaiter(this, void 0, void 0, function* () {
-        let aptPackages = aptDependencies;
+        let aptPackages = installConnext ?
+            aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME) : aptDependencies;
         const distribCodename = yield determineDistribCodename();
         const additionalAptPackages = distributionSpecificAptDependencies[distribCodename] || [];
         aptPackages = aptPackages.concat(additionalAptPackages);

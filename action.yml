@@ -11,6 +11,11 @@ inputs:
       Enable use of the ROS2 pre-release testing debs.
     required: false
     default: "false"
+  install-connext:
+    description: |
+      Install RTI Connext (and by default accept non-commercial license).
+    required: false
+    default: "false"
   required-ros-distributions:
     description: |
       List of binary ROS distributions to be installed.
