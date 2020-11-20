@@ -180,7 +180,7 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
-        uses: ros-tooling/action-ros-ci@0.0.19
+        uses: ros-tooling/action-ros-ci@0.1.0
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
@@ -249,14 +249,14 @@ jobs:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test ROS1
         if: ${{ matrix.ros_version == 1 }}
-        uses: ros-tooling/action-ros-ci@0.0.19
+        uses: ros-tooling/action-ros-ci@0.1.0
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros1-distro: ${{ matrix.ros_distribution }}
           vcs-repo-file-url: ""
       - name: build and test ROS2
         if: ${{ matrix.ros_version == 2 }}
-        uses: ros-tooling/action-ros-ci@0.0.19
+        uses: ros-tooling/action-ros-ci@0.1.0
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
