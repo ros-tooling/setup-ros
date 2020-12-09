@@ -120,6 +120,8 @@ export async function runLinux() {
 	// pip3 dependencies need to be installed after the APT ones, as pip3
 	// modules such as cryptography requires python-dev to be installed,
 	// because they rely on Python C headers.
+	// Upgrade pip to latest before installing other dependencies, the apt version is very old
+	await pip.runPython3PipInstall(['pip']);
 	await pip.installPython3Dependencies();
 
 	// Initializes rosdep
