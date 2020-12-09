@@ -1221,6 +1221,8 @@ function runLinux() {
         // pip3 dependencies need to be installed after the APT ones, as pip3
         // modules such as cryptography requires python-dev to be installed,
         // because they rely on Python C headers.
+        // Upgrade pip to latest before installing other dependencies, the apt version is very old
+        yield pip.runPython3PipInstall(['pip']);
         yield pip.installPython3Dependencies();
         // Initializes rosdep
         yield utils.exec("sudo", ["rosdep", "init"]);
