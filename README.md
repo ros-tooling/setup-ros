@@ -151,6 +151,23 @@ build_docker:
         required-ros-distributions: dashing
 ```
 
+### Including RTI Connext
+
+By default this action will not install RTI Connext as it requires acceptance of a non-commerical license, which should be reviewed by users on their own before accepting the license agreement. To include RTI Connext, simply set the `install-connext` parameter to `true`.
+
+```yaml
+build_docker:
+  runs-on: ubuntu-latest
+  container:
+    image: ubuntu:bionic
+  steps:
+    - uses: ros-tooling/setup-ros@0.0.25
+      with:
+        install-connext: true
+        use-ros2-testing: true
+        required-ros-distributions: dashing
+```
+
 ### Iterating on all ROS distributions, for all platforms
 
 This workflow illustrates how to spawn one job per ROS release, for

@@ -71,6 +71,7 @@ export async function runLinux() {
 
 	// Get user input & validate
 	var use_ros2_testing = core.getInput('use-ros2-testing') === 'true';
+	var installConnext = core.getInput('install-connext') === 'true';
 
 	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
 	await utils.exec("sudo", ["apt-get", "update"]);
@@ -112,10 +113,11 @@ export async function runLinux() {
 
 	await utils.exec("sudo", ["apt-get", "update"]);
 
-	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and RTI Connext.
+	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
+      // optionally RTI Connext.
 	// vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
 	// they are also installed during this stage.
-	await apt.installAptDependencies();
+	await apt.installAptDependencies(installConnext);
 
 	// pip3 dependencies need to be installed after the APT ones, as pip3
 	// modules such as cryptography requires python-dev to be installed,
