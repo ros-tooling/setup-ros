@@ -34,7 +34,7 @@
     "@actions/exec": "^1.0.4",
     "@actions/io": "^1.0.2",
     "@actions/tool-cache": "^1.6.1",
-    "husky": "^4.3.5"
+    "husky": "^4.3.6"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
@@ -43,7 +43,7 @@
     "@typescript-eslint/parser": "^2.34.0",
     "@zeit/ncc": "^0.22.3",
     "eslint": "^6.8.0",
-    "husky": "^4.3.5",
+    "husky": "^4.3.6",
     "jest": "^25.5.4",
     "jest-circus": "^26.6.3",
     "prettier": "^2.2.1",
