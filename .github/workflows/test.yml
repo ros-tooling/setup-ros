@@ -183,6 +183,19 @@ jobs:
       - run: .github/workflows/check-ros2-distribution.sh dashing
       - run: .github/workflows/check-ros-distribution.sh melodic
 
+  test_on_setup_ros_docker_container:
+    name: "Test on a setup-ros-docker container"
+    runs-on: ubuntu-latest
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-focal-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node_version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./
+
   log_workflow_status_to_cloudwatch:
     runs-on: ubuntu-latest
     container:
