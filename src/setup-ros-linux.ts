@@ -126,7 +126,8 @@ export async function runLinux() {
 	await pip.runPython3PipInstall(['pip']);
 	await pip.installPython3Dependencies();
 
-	// Initializes rosdep
+	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
+	// await utils.exec("sudo", ["bash", "-c", "rm /etc/ros/rosdep/sources.list.d/20-default.list || true"]);
 	await utils.exec("sudo", ["rosdep", "init"]);
 
 	for (let rosDistro of utils.getRequiredRosDistributions()) {
