@@ -119,11 +119,17 @@ export async function runLinux() {
 	// they are also installed during this stage.
 	await apt.installAptDependencies(installConnext);
 
-	// pip3 dependencies need to be installed after the APT ones, as pip3
-	// modules such as cryptography requires python-dev to be installed,
-	// because they rely on Python C headers.
-	// Upgrade pip to latest before installing other dependencies, the apt version is very old
+	/* Get the latest version of pip before installing dependencies,
+	the version from apt can be very out of date (v8.0 on xenial)
+	The latest version of pip doesn't support Python3.5 as of v21,
+	but pip 8 doesn't understand the metadata that states this, so we must first
+	make an intermediate upgrade to pip 20, which does understand that information */
+	await pip.runPython3PipInstall(['pip==20.*']);
 	await pip.runPython3PipInstall(['pip']);
+
+	/* pip3 dependencies need to be installed after the APT ones, as pip3
+	modules such as cryptography requires python-dev to be installed,
+	because they rely on Python C headers. */
 	await pip.installPython3Dependencies();
 
 	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
