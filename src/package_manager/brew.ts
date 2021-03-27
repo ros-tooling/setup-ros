@@ -3,6 +3,7 @@ import * as utils from "../utils";
 const brewDependencies: string[] = [
 	"asio",
 	"assimp",
+	"bison",
 	"bullet",
 	"cmake",
 	"console_bridge",
