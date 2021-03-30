@@ -2052,6 +2052,7 @@ const utils = __importStar(__webpack_require__(163));
 const brewDependencies = [
     "asio",
     "assimp",
+    "bison",
     "bullet",
     "cmake",
     "console_bridge",
