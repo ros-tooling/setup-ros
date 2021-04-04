@@ -73,6 +73,12 @@ jobs:
 
           # Eloquent Elusor (November 2019 - November 2020)
           - eloquent
+
+          # Foxy Fitzroy (June 2020 - May 2023)
+          - foxy
+
+          # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
+          - rolling
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
