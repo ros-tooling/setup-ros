@@ -13,6 +13,8 @@ const binaryReleases: { [index: string]: string } = {
 		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
 	foxy:
 		"https://github.com/ros2/ros2/releases/download/release-foxy-20200710/ros2-foxy-20200710-windows-release-amd64.zip",
+	rolling:
+		"https://ci.ros2.org/view/packaging/job/packaging_windows/lastSuccessfulBuild/artifact/ws/ros2-package-windows-AMD64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
