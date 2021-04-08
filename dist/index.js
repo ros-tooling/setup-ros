@@ -1279,7 +1279,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.installAptDependencies = exports.runAptGetInstall = void 0;
-const exec = __importStar(__webpack_require__(986));
 const utils = __importStar(__webpack_require__(163));
 const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
 const aptCommandLine = [
@@ -1367,7 +1366,7 @@ function determineDistribCodename() {
                 distribCodename += data.toString();
             },
         };
-        yield exec.exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
+        yield utils.exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
         return distribCodename;
     });
 }
