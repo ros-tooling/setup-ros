@@ -91,7 +91,7 @@ async function determineDistribCodename(): Promise<string> {
 			distribCodename += data.toString();
 		},
 	};
-	await exec.exec(
+	await utils.exec(
 		"bash",
 		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
 		options
