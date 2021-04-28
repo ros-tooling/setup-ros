@@ -72,7 +72,7 @@ This action is under active development, and compatibility between releases
 is not yet guaranteed.
 Please do not use `ros-tooling/setup-ros@master`.
 Instead, pin your workflows to a particular release:
-`ros-tooling/setup-ros@0.0.25`.
+`ros-tooling/setup-ros@v0.1`.
 
 ### Setting up the worker, and installing the system dependencies
 
@@ -82,7 +82,7 @@ This setup should be used when ROS is built entirely from source.
 
 ```yaml
 steps:
-  - uses: ros-tooling/setup-ros@0.0.25
+  - uses: ros-tooling/setup-ros@v0.1
   - run: vcs --help
 ```
 
@@ -102,7 +102,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.25
+        uses: ros-tooling/setup-ros@v0.1
       - run: vcs --help
 
   build_docker:
@@ -111,7 +111,7 @@ jobs:
       image: ubuntu:bionic
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@0.0.25
+        uses: ros-tooling/setup-ros@v0.1
       - run: vcs --help
 ```
 
@@ -128,7 +128,7 @@ build_docker:
   container:
     image: ubuntu:bionic
   steps:
-    - uses: ros-tooling/setup-ros@0.0.25
+    - uses: ros-tooling/setup-ros@v0.1
       with:
         required-ros-distributions: melodic dashing
     - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
@@ -145,7 +145,7 @@ build_docker:
   container:
     image: ubuntu:bionic
   steps:
-    - uses: ros-tooling/setup-ros@0.0.25
+    - uses: ros-tooling/setup-ros@v0.1
       with:
         use-ros2-testing: true
         required-ros-distributions: dashing
@@ -161,7 +161,7 @@ build_docker:
   container:
     image: ubuntu:bionic
   steps:
-    - uses: ros-tooling/setup-ros@0.0.25
+    - uses: ros-tooling/setup-ros@v0.1
       with:
         install-connext: true
         use-ros2-testing: true
@@ -193,7 +193,7 @@ jobs:
           - eloquent
           - foxy
     steps:
-      - uses: ros-tooling/setup-ros@0.0.25
+      - uses: ros-tooling/setup-ros@v0.1
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
@@ -251,7 +251,7 @@ jobs:
           - docker_image: ubuntu:bionic
             ros_distribution: eloquent
             ros_version: 2
-            
+
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal
             ros_distribution: foxy
@@ -261,7 +261,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     steps:
       - name: setup ROS environment
-        uses: ros-tooling/setup-ros@0.0.25
+        uses: ros-tooling/setup-ros@v0.1
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test ROS1
