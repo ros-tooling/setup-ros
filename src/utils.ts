@@ -52,6 +52,7 @@ const validDistro: string[] = [
 	"dashing",
 	"eloquent",
 	"foxy",
+	"galactic",
 	"rolling"
 ];
 
