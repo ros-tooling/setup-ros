@@ -3877,6 +3877,111 @@ Comparator.prototype.intersects = function (comp, options) {
   return sameDirectionIncreasing || sameDirectionDecreasing ||
     (sameSemVer && differentDirectionsInclusive) ||
     oppositeDirectionsLessThan || oppositeDirectionsGreaterThan
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.runWindows = void 0;
+const core = __importStar(__webpack_require__(470));
+const tc = __importStar(__webpack_require__(533));
+const path = __importStar(__webpack_require__(622));
+const chocolatey = __importStar(__webpack_require__(510));
+const pip = __importStar(__webpack_require__(230));
+const utils = __importStar(__webpack_require__(163));
+const binaryReleases = {
+    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20201202/ros2-dashing-20201202-windows-amd64.zip",
+    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
+    foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20201211/ros2-foxy-20201211-windows-release.amd64.zip",
+    // TODO(christophebedard) add URL once Galactic is properly released
+    // galactic:
+    // 	"",
+};
+const pip3Packages = ["lxml", "netifaces"];
+/**
+ * Install ROS 2 build tools.
+ */
+function prepareRos2BuildEnvironment() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let python_dir = tc.find("Python", "3.7");
+        yield utils.exec(path.join(python_dir, "python"), [
+            "-c",
+            "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))",
+        ], {
+            listeners: {
+                stdline: (data) => {
+                    const p = data.trim();
+                    if (p) {
+                        core.info("Prepending to path: " + JSON.stringify(p));
+                        core.addPath(p);
+                    }
+                },
+            },
+        });
+        core.addPath("c:\\program files\\cppcheck");
+        yield chocolatey.installChocoDependencies();
+        yield chocolatey.downloadAndInstallRos2NugetPackages();
+        yield pip.installPython3Dependencies(false);
+        yield pip.runPython3PipInstall(pip3Packages, false);
+        yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
+        return utils.exec(`rosdep`, ["init"]);
+    });
+}
+/**
+ * Install ROS 2 binary releases.
+ */
+function prepareRos2BinaryReleases() {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let rosDistro of utils.getRequiredRosDistributions()) {
+            if (rosDistro in binaryReleases) {
+                yield utils.exec("wget", [
+                    "--quiet",
+                    binaryReleases[rosDistro],
+                    "-O",
+                    `${rosDistro}.zip`,
+                ]);
+                yield utils.exec("7z", [
+                    "x",
+                    `${rosDistro}.zip`,
+                    "-y",
+                    `-oC:\\dev\\${rosDistro}`
+                ]);
+            }
+        }
+    });
+}
+/**
+ * Install build environment on a Windows worker.
+ */
+function runWindows() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield prepareRos2BuildEnvironment();
+        return yield prepareRos2BinaryReleases();
+    });
 }
 
 exports.Range = Range

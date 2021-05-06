@@ -196,6 +196,7 @@ jobs:
           - dashing
           - eloquent
           - foxy
+          - galactic
     steps:
       - uses: ros-tooling/setup-ros@v0.1
         with:
@@ -218,6 +219,7 @@ jobs:
           - dashing
           - eloquent
           - foxy
+          - galactic
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -259,6 +261,11 @@ jobs:
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal
             ros_distribution: foxy
+            ros_version: 2
+
+          # Galactic Geochelone (May 2021 - November 2022)
+          - docker_image: ubuntu:focal
+            ros_distribution: galactic
             ros_version: 2
 
     container:

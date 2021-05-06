@@ -12,6 +12,9 @@ const binaryReleases: { [index: string]: string } = {
 	eloquent:
 		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
 	foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20201211/ros2-foxy-20201211-windows-release.amd64.zip",
+	// TODO(christophebedard) add URL once Galactic is properly released
+	// galactic:
+	// 	"",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];

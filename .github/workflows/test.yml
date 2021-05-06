@@ -103,6 +103,8 @@ jobs:
           - dashing
           - eloquent
           - foxy
+          # TODO(christophebedard) uncomment once Galactic has been released
+          # - galactic
           - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
@@ -141,6 +143,12 @@ jobs:
           - docker_image: ubuntu:focal
             ros_distribution: foxy
             ros_version: 2
+
+          # Galactic Geochelone (May 2021 - November 2022)
+          # TODO(christophebedard) uncomment once Galactic has been released
+          # - docker_image: ubuntu:focal
+          #   ros_distribution: galactic
+          #   ros_version: 2
 
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
           - docker_image: ubuntu:focal
