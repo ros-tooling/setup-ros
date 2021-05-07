@@ -31,6 +31,7 @@ inputs:
       - dashing
       - eloquent
       - foxy
+      - galactic
       - rolling
 
       Multiple values can be passed using a whitespace delimited list

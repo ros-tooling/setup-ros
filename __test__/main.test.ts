@@ -61,6 +61,7 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["dashing"])).toBe(true);
 		await expect(utils.validateDistro(["eloquent"])).toBe(true);
 		await expect(utils.validateDistro(["foxy"])).toBe(true);
+		await expect(utils.validateDistro(["galactic"])).toBe(true);
 		await expect(utils.validateDistro(["rolling"])).toBe(true);
 	});
 
