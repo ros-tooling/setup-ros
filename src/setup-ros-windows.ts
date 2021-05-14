@@ -11,8 +11,7 @@ const binaryReleases: { [index: string]: string } = {
 		"https://github.com/ros2/ros2/releases/download/release-dashing-20201202/ros2-dashing-20201202-windows-amd64.zip",
 	eloquent:
 		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
-	foxy:
-		"https://github.com/ros2/ros2/releases/download/release-foxy-20201211/ros2-foxy-20201211-windows-release.amd64.zip",
+	foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20201211/ros2-foxy-20201211-windows-release.amd64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
@@ -21,7 +20,7 @@ const pip3Packages: string[] = ["lxml", "netifaces"];
  * Install ROS 2 build tools.
  */
 async function prepareRos2BuildEnvironment() {
-	let python_dir = tc.find("Python", "3.7");
+	const python_dir = tc.find("Python", "3.7");
 
 	await utils.exec(
 		path.join(python_dir, "python"),
@@ -55,7 +54,7 @@ async function prepareRos2BuildEnvironment() {
  * Install ROS 2 binary releases.
  */
 async function prepareRos2BinaryReleases() {
-	for (let rosDistro of utils.getRequiredRosDistributions()) {
+	for (const rosDistro of utils.getRequiredRosDistributions()) {
 		if (rosDistro in binaryReleases) {
 			await utils.exec("wget", [
 				"--quiet",
@@ -67,7 +66,7 @@ async function prepareRos2BinaryReleases() {
 				"x",
 				`${rosDistro}.zip`,
 				"-y",
-				`-oC:\\dev\\${rosDistro}`
+				`-oC:\\dev\\${rosDistro}`,
 			]);
 		}
 	}
