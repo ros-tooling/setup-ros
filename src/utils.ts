@@ -1,9 +1,6 @@
 import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
 import * as im from "@actions/exec/lib/interfaces";
-import * as tr from "@actions/exec/lib/toolrunner";
-
-// eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**
  * Execute a command and wrap the output in a log group.
@@ -53,14 +50,14 @@ const validDistro: string[] = [
 	"eloquent",
 	"foxy",
 	"galactic",
-	"rolling"
+	"rolling",
 ];
 
 //Determine whether all inputs name supported ROS distributions.
 export function validateDistro(
 	requiredRosDistributionsList: string[]
 ): boolean {
-  for (const rosDistro of requiredRosDistributionsList) {
+	for (const rosDistro of requiredRosDistributionsList) {
 		if (validDistro.indexOf(rosDistro) <= -1) {
 			return false;
 		}
