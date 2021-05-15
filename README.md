@@ -289,6 +289,10 @@ jobs:
 On Linux workers, an alternative to `setup-ros` is to run actions on a Docker container where ROS is pre-installed.
 See [Open Robotics DockerHub page][dockerhub_osrf], for instance.
 
+## Developing
+
+For developing and releasing `setup-ros`, see [`DEVELOPING.md`](DEVELOPING.md).
+
 ## License
 
 The scripts and documentation in this project are released under the [Apache 2](LICENSE).

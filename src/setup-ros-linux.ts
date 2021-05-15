@@ -70,8 +70,8 @@ export async function runLinux() {
 	}
 
 	// Get user input & validate
-	var use_ros2_testing = core.getInput('use-ros2-testing') === 'true';
-	var installConnext = core.getInput('install-connext') === 'true';
+	const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
+	const installConnext = core.getInput("install-connext") === "true";
 
 	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
 	await utils.exec("sudo", ["apt-get", "update"]);
@@ -108,13 +108,15 @@ export async function runLinux() {
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
-		`echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+		`echo "deb http://packages.ros.org/ros2${
+			use_ros2_testing ? "-testing" : ""
+		}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
 	]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
-      // optionally RTI Connext.
+	// optionally RTI Connext.
 	// vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
 	// they are also installed during this stage.
 	await apt.installAptDependencies(installConnext);
@@ -124,8 +126,8 @@ export async function runLinux() {
 	The latest version of pip doesn't support Python3.5 as of v21,
 	but pip 8 doesn't understand the metadata that states this, so we must first
 	make an intermediate upgrade to pip 20, which does understand that information */
-	await pip.runPython3PipInstall(['pip==20.*']);
-	await pip.runPython3PipInstall(['pip']);
+	await pip.runPython3PipInstall(["pip==20.*"]);
+	await pip.runPython3PipInstall(["pip"]);
 
 	/* pip3 dependencies need to be installed after the APT ones, as pip3
 	modules such as cryptography requires python-dev to be installed,
@@ -133,10 +135,14 @@ export async function runLinux() {
 	await pip.installPython3Dependencies();
 
 	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
-	await utils.exec("sudo", ["bash", "-c", "rm /etc/ros/rosdep/sources.list.d/20-default.list || true"]);
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
+		"rm /etc/ros/rosdep/sources.list.d/20-default.list || true",
+	]);
 	await utils.exec("sudo", ["rosdep", "init"]);
 
-	for (let rosDistro of utils.getRequiredRosDistributions()) {
+	for (const rosDistro of utils.getRequiredRosDistributions()) {
 		await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
 	}
 }

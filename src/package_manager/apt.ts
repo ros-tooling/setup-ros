@@ -1,8 +1,7 @@
-import * as exec from "@actions/exec";
 import * as im from "@actions/exec/lib/interfaces";
 import * as utils from "../utils";
 
-const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1";  // RTI Connext
+const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
 
 const aptCommandLine: string[] = [
 	"DEBIAN_FRONTEND=noninteractive",
@@ -104,9 +103,12 @@ async function determineDistribCodename(): Promise<string> {
  *
  * @returns Promise<number> exit code
  */
-export async function installAptDependencies(installConnext = false): Promise<number> {
-	let aptPackages: string[] = installConnext ?
-                aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME) : aptDependencies;
+export async function installAptDependencies(
+	installConnext = false
+): Promise<number> {
+	let aptPackages: string[] = installConnext
+		? aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME)
+		: aptDependencies;
 	const distribCodename = await determineDistribCodename();
 	const additionalAptPackages =
 		distributionSpecificAptDependencies[distribCodename] || [];
