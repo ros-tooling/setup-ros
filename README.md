@@ -114,7 +114,7 @@ jobs:
   build_docker:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:bionic
+      image: ubuntu:focal
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@v0.1
@@ -130,13 +130,13 @@ This setup is necessary to use the ROS 1/ROS 2 bridge: [ros1_bridge](https://git
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:bionic
+    image: ubuntu:focal
   steps:
     - uses: ros-tooling/setup-ros@v0.1
       with:
-        required-ros-distributions: melodic dashing
-    - run: "source /opt/ros/dashing/setup.bash && ros2 run --help"
-    - run: "source /opt/ros/melodic/setup.bash && rosnode --help"
+        required-ros-distributions: noetic galactic
+    - run: "source /opt/ros/galactic/setup.bash && ros2 run --help"
+    - run: "source /opt/ros/noetic/setup.bash && rosnode --help"
 ```
 
 ### Use pre-release ROS 2 binaries for testing
@@ -147,12 +147,12 @@ You can specify if you'd like to use the [pre-release ROS 2 repository][pre_rele
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:bionic
+    image: ubuntu:focal
   steps:
     - uses: ros-tooling/setup-ros@v0.1
       with:
         use-ros2-testing: true
-        required-ros-distributions: dashing
+        required-ros-distributions: galactic
 ```
 
 ### Including RTI Connext
@@ -165,13 +165,13 @@ To include RTI Connext, simply set the `install-connext` parameter to `true`.
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:bionic
+    image: ubuntu:focal
   steps:
     - uses: ros-tooling/setup-ros@v0.1
       with:
         install-connext: true
         use-ros2-testing: true
-        required-ros-distributions: dashing
+        required-ros-distributions: galactic
 ```
 
 ### Iterating on all ROS distributions, for all platforms
@@ -183,7 +183,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Kinetic requires `xenial`, Dashing requires `bionic`, Focal requires `focal`, etc.
+For example, Kinetic requires `xenial`, Dashing requires `bionic`, Galactic requires `focal`, etc.
 
 ```yaml
 jobs:
@@ -196,6 +196,7 @@ jobs:
           - dashing
           - eloquent
           - foxy
+          - galactic
     steps:
       - uses: ros-tooling/setup-ros@v0.1
         with:
@@ -205,7 +206,6 @@ jobs:
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
-          vcs-repo-file-url: ""
 
   test_docker: # On Linux, iterates on all ROS 1 and ROS 2 distributions.
     runs-on: ubuntu-latest
@@ -218,6 +218,7 @@ jobs:
           - dashing
           - eloquent
           - foxy
+          - galactic
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -261,6 +262,11 @@ jobs:
             ros_distribution: foxy
             ros_version: 2
 
+          # Galactic Geochelone (May 2021 - November 2022)
+          - docker_image: ubuntu:focal
+            ros_distribution: galactic
+            ros_version: 2
+
     container:
       image: ${{ matrix.docker_image }}
     steps:
@@ -274,14 +280,12 @@ jobs:
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros1-distro: ${{ matrix.ros_distribution }}
-          vcs-repo-file-url: ""
       - name: build and test ROS 2
         if: ${{ matrix.ros_version == 2 }}
         uses: ros-tooling/action-ros-ci@v0.2
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
-          vcs-repo-file-url: ""
 ```
 
 ## Alternative to `setup-ros`
@@ -295,7 +299,7 @@ For developing and releasing `setup-ros`, see [`DEVELOPING.md`](DEVELOPING.md).
 
 ## License
 
-The scripts and documentation in this project are released under the [Apache 2](LICENSE).
+The scripts and documentation in this project are released under the [Apache 2](LICENSE) license.
 
 [ros]: https://www.ros.org/
 [ROS 2]: https://docs.ros.org/en/rolling/index.html
