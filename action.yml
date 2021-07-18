@@ -8,7 +8,7 @@ branding:
 inputs:
   use-ros2-testing:
     description: |
-      Enable use of the ROS2 pre-release testing debs.
+      Enable use of the ROS 2 pre-release testing debs.
     required: false
     default: "false"
   install-connext:
@@ -21,7 +21,7 @@ inputs:
       List of binary ROS distributions to be installed.
 
       Support for non-Linux platform is not implemented yet, so this
-      parameter is ignored on Mac OS X and Windows.
+      parameter is ignored on macOS and Windows.
 
       Allowed ROS distributions
       - "" (no value) - no ROS binary installation
@@ -38,6 +38,13 @@ inputs:
       "melodic dashing".
 
       For each passed ROS distribution, its desktop variant will be installed.
+    required: false
+    default: ""
+  snapshots:
+    description: |
+      TODO
+
+      This input is ignored on macOS and Windows.
     required: false
     default: ""
 runs:

@@ -85,3 +85,25 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["master"])).toBe(false);
 	});
 });
+
+describe("snapshots", () => {
+	it("should validate snapshots input", () => {
+		expect(utils.validateSnapshots({}, [])).toBe(true);
+		expect(utils.validateSnapshots({}, ["dashing", "galactic"])).toBe(true);
+		expect(utils.validateSnapshots({"galactic": "2021-06-01"}, ["dashing", "galactic"])).toBe(true);
+		expect(utils.validateSnapshots({"dashing": "final", "galactic": "2021-06-01"}, ["dashing", "galactic"])).toBe(true);
+
+		expect(utils.validateSnapshots({"dashing": "", "galactic": "2021-06-01"}, ["dashing", "galactic"])).toBe(false);
+		expect(utils.validateSnapshots({"dashing": "abc", "galactic": "2021-06-01"}, ["galactic", "dashing"])).toBe(false);
+		expect(utils.validateSnapshots({"dashing": "huh", "galactic": "2021-06-01"}, ["dashing", "galactic"])).toBe(false);
+		expect(utils.validateSnapshots({"dashing": "2021-01-1", "galactic": "2021-06-01"}, ["galactic", "dashing"])).toBe(false);
+		expect(utils.validateSnapshots({"eloquent": "2020-12-31", "dashing": "2021-01-1", "galactic": "2021-06-01"}, ["galactic", "dashing"])).toBe(false);
+	});
+});
+
+describe("utilities", () => {
+	it("should validate JSON strings", () => {
+		expect(utils.getJson('{')).toBeUndefined();
+		expect(utils.getJson('{"a":"b"}')).toEqual({ 'a': 'b'});
+	});
+});

@@ -101,18 +101,34 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-	]);
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros2${
-			use_ros2_testing ? "-testing" : ""
-		}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
-	]);
+	const distros = utils.getRequiredRosDistributions();
+	const snapshots_input = core.getInput("snapshots");
+	if (snapshots_input.length === 0) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+		]);
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://packages.ros.org/ros2${
+				use_ros2_testing ? "-testing" : ""
+			}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+		]);
+	} else {
+		const snapshots = utils.getJson(snapshots_input);
+		if (snapshots_input === undefined) {
+			core.setFailed(`snapshots value is not a valid JSON string:\n${snapshots_input}`);
+			return;
+		}
+		if (!utils.validateSnapshots(snapshots, distros)) {
+			core.setFailed(`snapshots value is invalid:\n${snapshots_input}`);
+			return;
+		}
+
+	}
+
 
 	await utils.exec("sudo", ["apt-get", "update"]);
 
@@ -143,7 +159,7 @@ export async function runLinux() {
 	]);
 	await utils.exec("sudo", ["rosdep", "init"]);
 
-	for (const rosDistro of utils.getRequiredRosDistributions()) {
+	for (const rosDistro of distros) {
 		await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
 	}
 }

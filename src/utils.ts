@@ -65,3 +65,41 @@ export function validateDistro(
 
 	return true;
 }
+
+/**
+ * Get JSON object if the string is valid.
+ *
+ * @param str the string
+ * @returns the JSON object if valid, `undefined` otherwise
+ */
+export function getJson(str: string): any | undefined {
+	try {
+		return JSON.parse(str);
+	} catch (e) {
+	}
+	return undefined;
+}
+
+/**
+ * Validate snapshots dictionary.
+ *
+ * The snapshots object must be a {string: string} dictionary.
+ * The key must be the name of a distro in the distros array.
+ * The value must be either 'final' or a 'yyyy-MM-dd' datestamp.
+ * Distros in the distros array don't necessarily need to be in the snapshots dictionary.
+ *
+ * @param snapshots the snapshots dictionary
+ * @param distros the list of distros
+ * @returns `true` if valid, `false` otherwise
+ */
+export function validateSnapshots(snapshots: {[key: string]: string}, distros: string[]): boolean {
+	for (let [distro, datestamp] of Object.entries(snapshots)) {
+		if (!distros.includes(distro)) {
+			return false;
+		}
+		if (datestamp !== "final" && !/[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(datestamp)) {
+			return false;
+		}
+	}
+	return true;
+}
