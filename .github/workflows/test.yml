@@ -198,6 +198,6 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v2.2.0
         with:
-          node_version: "12.x"
+          node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
