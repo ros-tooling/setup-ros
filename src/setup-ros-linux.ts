@@ -122,10 +122,10 @@ export async function runLinux() {
 	// they are also installed during this stage.
 	await apt.installAptDependencies(installConnext);
 
-    // Before running `pip`, change directory to where a `setup.cfg` should not exist.
-    // This prevents `pip` from installing to `install_scripts` as specified in the
-    // `setup.cfg`, which for most packages in the ROS ecosystem is `$base/lib/<pkg-name>`.
-    await utils.exec("cd", ["/"]);
+	// Before running `pip`, change directory to where a `setup.cfg` should not exist.
+	// This prevents `pip` from installing to `install_scripts` as specified in the
+	// `setup.cfg`, which for most packages in the ROS ecosystem is `$base/lib/<pkg-name>`.
+	await utils.exec("cd", ["/"]);
 
 	/* Get the latest version of pip before installing dependencies,
 	the version from apt can be very out of date (v8.0 on xenial)
@@ -140,8 +140,8 @@ export async function runLinux() {
 	because they rely on Python C headers. */
 	await pip.installPython3Dependencies();
 
-    // Return to the original directory.
-    await utils.exec("cd", ["-"]);
+	// Return to the original directory.
+	await utils.exec("cd", ["-"]);
 
 	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
 	await utils.exec("sudo", [
