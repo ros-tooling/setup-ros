@@ -35,7 +35,7 @@
 		"@actions/core": "^1.2.7",
 		"@actions/exec": "^1.0.4",
 		"@actions/io": "^1.1.0",
-		"@actions/tool-cache": "^1.6.1"
+		"@actions/tool-cache": "^1.7.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^26.0.23",
@@ -43,7 +43,7 @@
 		"@typescript-eslint/eslint-plugin": "^4.23.0",
 		"@typescript-eslint/parser": "^4.9.1",
 		"@vercel/ncc": "^0.29.0",
-		"eslint": "^7.18.0",
+		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
 		"husky": "^7.0.1",
