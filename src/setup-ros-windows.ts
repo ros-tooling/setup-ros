@@ -8,12 +8,12 @@ import * as utils from "./utils";
 
 const binaryReleases: { [index: string]: string } = {
 	dashing:
-		"https://github.com/ros2/ros2/releases/download/release-dashing-20201202/ros2-dashing-20201202-windows-amd64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-dashing-20210610/ros2-dashing-20210610-windows-amd64.zip",
 	eloquent:
 		"https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
-	foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20201211/ros2-foxy-20201211-windows-release.amd64.zip",
+	foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20210902/ros2-foxy-20210902-windows-release-amd64.zip",
 	galactic:
-		"https://github.com/ros2/ros2/releases/download/release-galactic-20210523/ros2-galactic-20210523-windows-release-amd64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-galactic-20210716/ros2-galactic-20210616-windows-release-amd64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
