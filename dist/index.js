@@ -6508,7 +6508,13 @@ const chocoCommandLine = [
     "--no-progress",
     "--yes",
 ];
-const chocoDependencies = ["cppcheck", "wget", "7zip", "lcov"];
+const chocoDependencies = [
+    "cppcheck",
+    "wget",
+    "7zip",
+    "lcov",
+    "openssl",
+];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
