@@ -20,8 +20,9 @@ inputs:
     description: |
       List of binary ROS distributions to be installed.
 
-      Support for non-Linux platform is not implemented yet, so this
-      parameter is ignored on Mac OS X and Windows.
+      On Ubuntu, this installs the desktop variant for the given distribution.
+      On Windows, this downloads and extracts the binaries for the given distribution.
+      This parameter is ignored on macOS.
 
       Allowed ROS distributions
       - "" (no value) - no ROS binary installation
@@ -36,8 +37,6 @@ inputs:
 
       Multiple values can be passed using a whitespace delimited list
       "melodic dashing".
-
-      For each passed ROS distribution, its desktop variant will be installed.
     required: false
     default: ""
 runs:
