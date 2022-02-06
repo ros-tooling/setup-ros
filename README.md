@@ -139,20 +139,7 @@ build_docker:
     - run: "source /opt/ros/noetic/setup.bash && rosnode --help"
 ```
 
-**Note**: if you are also using `action-ros-ci`, consider not using the `required-ros-distributions` option, otherwise the full desktop variant (`ros-$DISTRO-desktop`) gets installed.
-This could hide problems if your project is missing any dependencies, and generally takes more time to download and install.
-Instead, you can rely on [`action-ros-ci`, which runs `rosdep`](https://github.com/ros-tooling/action-ros-ci/#overview) to install any declared dependencies.
-
-```yaml
-build_docker:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: ros-tooling/setup-ros@v0.2
-    - uses: ros-tooling/action-ros-ci@v0.2
-      with:
-        package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
-        target-ros2-distro: galactic
-```
+**Note: on Ubuntu, `required-ros-distributions` installs the desktop variant for that distribution. This option is not required, and should probably be avoided in most workflows. It is retained for historical reasons and those who specifically do not care about whether their application specifies its dependencies properly.**
 
 ### Use pre-release ROS 2 binaries for testing
 
