@@ -6617,6 +6617,12 @@ function prepareRos2BuildEnvironment() {
         core.addPath("c:\\program files\\cppcheck");
         yield installChocoDependencies();
         yield downloadAndInstallRos2NugetPackages();
+        // Avoid version of pip that breaks Windows GitHub actions. See:
+        // * https://github.com/ros-tooling/action-ros-ci/pull/719#issuecomment-1030318146
+        // * https://github.com/actions/virtual-environments/issues/5027#issuecomment-1031113617
+        yield utils_exec("python", ["-m", "pip", "install", "-U", "pip!=22.0.*"], {
+            cwd: external_path_.sep,
+        });
         yield installPython3Dependencies(false);
         yield runPython3PipInstall(setup_ros_windows_pip3Packages, false);
         yield runPython3PipInstall(["rosdep", "vcstool"], false);
