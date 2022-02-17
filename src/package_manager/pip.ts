@@ -1,3 +1,5 @@
+import * as im from "@actions/exec/lib/interfaces"; // eslint-disable-line no-unused-vars
+import * as path from "path";
 import * as utils from "../utils";
 
 const pip3Packages: string[] = [
@@ -72,10 +74,14 @@ export async function runPython3PipInstall(
 ): Promise<number> {
 	const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
 	const args = pip3CommandLine.concat(packages);
+	// Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
+	const options: im.ExecOptions = {
+		cwd: path.sep,
+	};
 	if (sudo_enabled) {
-		return utils.exec("sudo", pip3CommandLine.concat(packages));
+		return utils.exec("sudo", pip3CommandLine.concat(packages), options);
 	} else {
-		return utils.exec(args[0], args.splice(1));
+		return utils.exec(args[0], args.splice(1), options);
 	}
 }
 
