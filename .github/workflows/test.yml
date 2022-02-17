@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - "releases/*"
+      - christophebedard/fix-pip-install-with-checked-out-repo-containing-root-setup-cfg-test-before
   schedule:
     # Run the CI automatically twice per day to look for flakyness.
     - cron: "0 */12 * * *"
