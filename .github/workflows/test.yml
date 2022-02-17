@@ -182,6 +182,21 @@ jobs:
       - run: .github/workflows/check-ros2-distribution.sh dashing
       - run: .github/workflows/check-ros-distribution.sh melodic
 
+  test_repo_with_root_setup_cfg:
+    name: "Directly in directory with setup.cfg (Linux only)"
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:focal
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2.5.1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - run: cp .github/workflows/test_setup.cfg setup.cfg
+      - uses: ./ # Uses an action in the root directory
+      - run: colcon --help
+
   test_on_setup_ros_docker_container:
     name: "Test on a setup-ros-docker container"
     runs-on: ubuntu-latest
