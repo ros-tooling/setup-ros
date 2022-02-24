@@ -26,7 +26,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -46,7 +46,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -73,7 +73,7 @@ jobs:
           - galactic
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -139,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -159,7 +159,7 @@ jobs:
       image: ubuntu:focal
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -176,7 +176,7 @@ jobs:
       image: ubuntu:focal
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -191,7 +191,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-focal-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
