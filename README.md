@@ -139,6 +139,8 @@ build_docker:
     - run: "source /opt/ros/noetic/setup.bash && rosnode --help"
 ```
 
+**Note: on Ubuntu, `required-ros-distributions` installs the desktop variant for that distribution. This option is not required, and should probably be avoided in most workflows. It is retained for historical reasons and those who specifically do not care about whether their application specifies its dependencies properly.**
+
 ### Use pre-release ROS 2 binaries for testing
 
 You can specify if you'd like to use the [pre-release ROS 2 repository][pre_release_testing] in your sources list file by setting the `use-ros2-testing` parameter to `true`.
