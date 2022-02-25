@@ -6141,6 +6141,8 @@ function installAptDependencies(installConnext = false) {
     });
 }
 
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(622);
 ;// CONCATENATED MODULE: ./src/package_manager/pip.ts
 var pip_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -6151,6 +6153,7 @@ var pip_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 const pip3Packages = [
     "argcomplete",
@@ -6220,11 +6223,15 @@ function runPython3PipInstall(packages, run_with_sudo) {
     return pip_awaiter(this, void 0, void 0, function* () {
         const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
         const args = pip3CommandLine.concat(packages);
+        // Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
+        const options = {
+            cwd: external_path_.sep,
+        };
         if (sudo_enabled) {
-            return utils_exec("sudo", pip3CommandLine.concat(packages));
+            return utils_exec("sudo", pip3CommandLine.concat(packages), options);
         }
         else {
-            return utils_exec(args[0], args.splice(1));
+            return utils_exec(args[0], args.splice(1), options);
         }
     });
 }
@@ -6240,8 +6247,6 @@ function installPython3Dependencies(run_with_sudo) {
     });
 }
 
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(622);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(747);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
@@ -6617,6 +6622,12 @@ function prepareRos2BuildEnvironment() {
         core.addPath("c:\\program files\\cppcheck");
         yield installChocoDependencies();
         yield downloadAndInstallRos2NugetPackages();
+        // Avoid version of pip that breaks Windows GitHub actions. See:
+        // * https://github.com/ros-tooling/action-ros-ci/pull/719#issuecomment-1030318146
+        // * https://github.com/actions/virtual-environments/issues/5027#issuecomment-1031113617
+        yield utils_exec("python", ["-m", "pip", "install", "-U", "pip!=22.0.*"], {
+            cwd: external_path_.sep,
+        });
         yield installPython3Dependencies(false);
         yield runPython3PipInstall(setup_ros_windows_pip3Packages, false);
         yield runPython3PipInstall(["rosdep", "vcstool"], false);

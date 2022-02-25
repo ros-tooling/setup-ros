@@ -26,7 +26,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -46,7 +46,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -67,14 +67,13 @@ jobs:
           # - macOS-latest
           - windows-latest
         ros_distribution:
-          # Dashing Diademata (May 2019 - May 2021)
-          - dashing
-
-          # Eloquent Elusor (November 2019 - November 2020)
-          - eloquent
+          # Foxy Fitzroy (June 2020 - May 2023)
+          - foxy
+          # Galactic Geochelone (May 2021 - November 2022)
+          - galactic
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -98,8 +97,6 @@ jobs:
         ros_distribution:
           - melodic
           - noetic
-          - dashing
-          - eloquent
           - foxy
           - galactic
           - rolling
@@ -120,16 +117,6 @@ jobs:
           - docker_image: ubuntu:focal
             ros_distribution: noetic
             ros_version: 1
-
-          # Dashing Diademata (May 2019 - May 2021)
-          - docker_image: ubuntu:bionic
-            ros_distribution: dashing
-            ros_version: 2
-
-          # Eloquent Elusor (November 2019 - November 2020)
-          - docker_image: ubuntu:bionic
-            ros_distribution: eloquent
-            ros_version: 2
 
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal
@@ -152,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -169,18 +156,33 @@ jobs:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:bionic
+      image: ubuntu:focal
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
         with:
-          required-ros-distributions: melodic dashing
-      - run: .github/workflows/check-ros2-distribution.sh dashing
-      - run: .github/workflows/check-ros-distribution.sh melodic
+          required-ros-distributions: noetic galactic
+      - run: .github/workflows/check-ros2-distribution.sh galactic
+      - run: .github/workflows/check-ros-distribution.sh noetic
+
+  test_repo_with_root_setup_cfg:
+    name: "Test with setup.cfg file in root directory (Linux only)"
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:focal
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v3.0.0
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - run: cp .github/workflows/test_setup.cfg setup.cfg
+      - uses: ./ # Uses an action in the root directory
+      - run: colcon --help
 
   test_on_setup_ros_docker_container:
     name: "Test on a setup-ros-docker container"
@@ -189,7 +191,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-focal-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh

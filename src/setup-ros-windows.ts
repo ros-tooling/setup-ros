@@ -46,6 +46,14 @@ async function prepareRos2BuildEnvironment() {
 	core.addPath("c:\\program files\\cppcheck");
 	await chocolatey.installChocoDependencies();
 	await chocolatey.downloadAndInstallRos2NugetPackages();
+
+	// Avoid version of pip that breaks Windows GitHub actions. See:
+	// * https://github.com/ros-tooling/action-ros-ci/pull/719#issuecomment-1030318146
+	// * https://github.com/actions/virtual-environments/issues/5027#issuecomment-1031113617
+	await utils.exec("python", ["-m", "pip", "install", "-U", "pip!=22.0.*"], {
+		cwd: path.sep,
+	});
+
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
 	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
