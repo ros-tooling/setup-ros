@@ -109,11 +109,11 @@ export async function runLinux() {
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
 	const distribCodename = await utils.exec("lsb_release", ["-sc"]);
-	if (distribCodename in distrosRequiringRosUbuntu) {
+	if (distrosRequiringRosUbuntu.includes(distribCodename)) {
 		await utils.exec("sudo", [
 			"bash",
 			"-c",
-			`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+			`echo "deb http://packages.ros.org/ros/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
 		]);
 	}
 	await utils.exec("sudo", [
@@ -121,7 +121,7 @@ export async function runLinux() {
 		"-c",
 		`echo "deb http://packages.ros.org/ros2${
 			use_ros2_testing ? "-testing" : ""
-		}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+		}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
 	]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);

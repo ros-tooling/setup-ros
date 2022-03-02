@@ -6372,17 +6372,17 @@ function runLinux() {
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
         const distribCodename = yield utils_exec("lsb_release", ["-sc"]);
-        if (distribCodename in distrosRequiringRosUbuntu) {
+        if (distrosRequiringRosUbuntu.includes(distribCodename)) {
             yield utils_exec("sudo", [
                 "bash",
                 "-c",
-                `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+                `echo "deb http://packages.ros.org/ros/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
             ]);
         }
         yield utils_exec("sudo", [
             "bash",
             "-c",
-            `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+            `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils_exec("sudo", ["apt-get", "update"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
