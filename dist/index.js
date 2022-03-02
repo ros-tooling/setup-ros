@@ -6077,6 +6077,11 @@ const distributionSpecificAptDependencies = {
         // The issue with ros-melodic-desktop-full is also non-applicable.
         "python3-rosdep",
     ],
+    jammy: [
+        // python-rosdep does not exist on Jammy, so python3-rosdep is used.
+        // The issue with ros-melodic-desktop-full is also non-applicable.
+        "python3-rosdep",
+    ],
     xenial: [
         // OpenSplice
         "libopensplice69",
