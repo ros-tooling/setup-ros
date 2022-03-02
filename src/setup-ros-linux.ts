@@ -108,7 +108,7 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	const distribCodename = await utils.exec("bash", ["-c", "lsb_release", "-sc"]);
+	const distribCodename = await utils.exec("lsb_release", ["-sc"]);
 	if (distribCodename in distrosRequiringRosUbuntu) {
 		await utils.exec("sudo", [
 			"bash",
