@@ -6354,11 +6354,11 @@ function runLinux() {
         const keyFilePath = external_path_.join(workspace, "ros.key");
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
-        yield utils_exec("sudo", [
-            "bash",
-            "-c",
-            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-        ]);
+        // yield utils_exec("sudo", [
+        //     "bash",
+        //     "-c",
+        //     `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+        // ]);
         yield utils_exec("sudo", [
             "bash",
             "-c",

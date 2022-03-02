@@ -101,11 +101,11 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-	]);
+// 	await utils.exec("sudo", [
+// 		"bash",
+// 		"-c",
+// 		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+// 	]);
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
