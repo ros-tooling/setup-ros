@@ -6070,9 +6070,18 @@ const distributionSpecificAptDependencies = {
         // python3-rosdep is conflicting with ros-melodic-desktop-full,
         // and should not be used here. See ros-tooling/setup-ros#74
         "python-rosdep",
+        // python required for sourcing setup.sh
+        "python",
     ],
     focal: [
         // python-rosdep does not exist on Focal, so python3-rosdep is used.
+        // The issue with ros-melodic-desktop-full is also non-applicable.
+        "python3-rosdep",
+        // python required for sourcing setup.sh
+        "python",
+    ],
+    jammy: [
+        // python-rosdep does not exist on Jammy, so python3-rosdep is used.
         // The issue with ros-melodic-desktop-full is also non-applicable.
         "python3-rosdep",
     ],
@@ -6082,6 +6091,8 @@ const distributionSpecificAptDependencies = {
         // python3-rosdep is conflicting with ros-melodic-desktop-full,
         // and should not be used here. See ros-tooling/setup-ros#74
         "python-rosdep",
+        // python required for sourcing setup.sh
+        "python",
     ],
 };
 /**
