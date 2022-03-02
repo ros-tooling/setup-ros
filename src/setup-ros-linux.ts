@@ -65,16 +65,20 @@ const distrosRequiringRosUbuntu = [
  *
  * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
  */
-export async function determineDistribCodename(): Promise<string> {
-		let distribCodename = "";
-		const options = {};
-		options.listeners = {
-				stdout: (data) => {
-						distribCodename += data.toString();
-				},
-		};
-		yield utils_exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
-		return distribCodename;
+ async function determineDistribCodename(): Promise<string> {
+	let distribCodename = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			distribCodename += data.toString();
+		},
+	};
+	await utils.exec(
+		"bash",
+		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
+		options
+	);
+	return distribCodename;
 }
 
 /**
