@@ -50,6 +50,13 @@ WE+F5FaIKwb72PL4rLi4
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 
+// List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
+const distrosRequiringRosUbuntu = [
+	"bionic",
+	"focal",
+	"xenial",
+];
+
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -101,11 +108,14 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-// 	await utils.exec("sudo", [
-// 		"bash",
-// 		"-c",
-// 		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-// 	]);
+	const distribCodename = await utils.exec("bash", ["lsb_release", "-sc"]);
+	if (distribCodename in distrosRequiringRosUbuntu) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+		]);
+	}
 	await utils.exec("sudo", [
 		"bash",
 		"-c",

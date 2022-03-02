@@ -6024,6 +6024,13 @@ function validateDistro(requiredRosDistributionsList) {
     return true;
 }
 
+// List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
+const distrosRequiringRosUbuntu = [
+    "bionic",
+    "focal",
+    "xenial",
+];
+
 ;// CONCATENATED MODULE: ./src/package_manager/apt.ts
 var apt_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -6364,11 +6371,14 @@ function runLinux() {
         const keyFilePath = external_path_.join(workspace, "ros.key");
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
-        // yield utils_exec("sudo", [
-        //     "bash",
-        //     "-c",
-        //     `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-        // ]);
+        const distribCodename = yield utils.exec("bash", ["lsb_release", "-sc"]);
+        if (distribCodename in distrosRequiringRosUbuntu) {
+            yield utils_exec("sudo", [
+                "bash",
+                "-c",
+                `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
+            ]);
+        }
         yield utils_exec("sudo", [
             "bash",
             "-c",
