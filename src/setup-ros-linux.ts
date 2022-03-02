@@ -58,6 +58,26 @@ const distrosRequiringRosUbuntu = [
 ];
 
 /**
+ * Determines the Ubuntu distribution codename.
+ *
+ * This function directly source /etc/lsb-release instead of invoking
+ * lsb-release as the package may not be installed.
+ *
+ * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
+ */
+export async function determineDistribCodename(): Promise<string> {
+		let distribCodename = "";
+		const options = {};
+		options.listeners = {
+				stdout: (data) => {
+						distribCodename += data.toString();
+				},
+		};
+		yield utils_exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
+		return distribCodename;
+}
+
+/**
  * Install ROS 2 on a Linux worker.
  */
 export async function runLinux() {
@@ -108,7 +128,7 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	const distribCodename = await utils.exec("lsb_release", ["-sc"]);
+	const distribCodename = yield determineDistribCodename();
 	if (distrosRequiringRosUbuntu.includes(distribCodename)) {
 		await utils.exec("sudo", [
 			"bash",
