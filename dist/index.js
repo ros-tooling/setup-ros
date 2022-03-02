@@ -6371,7 +6371,7 @@ function runLinux() {
         const keyFilePath = external_path_.join(workspace, "ros.key");
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
-        const distribCodename = yield utils_exec("bash", ["lsb_release", "-sc"]);
+        const distribCodename = yield utils_exec("bash", ["-c", "lsb_release", "-sc"]);
         if (distribCodename in distrosRequiringRosUbuntu) {
             yield utils_exec("sudo", [
                 "bash",
