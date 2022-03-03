@@ -185,7 +185,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Kinetic requires `xenial`, Dashing requires `bionic`, Galactic requires `focal`, etc.
+For example, Galactic requires `focal`, Humble requires `jammy`, etc.
 
 ```yaml
 jobs:
@@ -195,8 +195,6 @@ jobs:
       matrix:
         os: [macOS-latest, windows-latest]
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support macOS and Windows.
-          - dashing
-          - eloquent
           - foxy
           - galactic
     steps:
@@ -231,33 +229,18 @@ jobs:
         # https://ros.org/reps/rep-0003.html
         # https://ros.org/reps/rep-2000.html
         include:
-          # Kinetic Kame (May 2016 - May 2021)
-          - docker_image: ubuntu:xenial
-            ros_distribution: kinetic
-            # Setting ros_version is helpful to customize the workflow
-            # depending on whether a ROS 1, or ROS 2 is being tested.
-            # See 'if: ros_version ==' below for an example.
-            ros_version: 1
-
           # Melodic Morenia (May 2018 - May 2023)
           - docker_image: ubuntu:bionic
             ros_distribution: melodic
+            # Setting ros_version is helpful to customize the workflow
+            # depending on whether a ROS 1, or ROS 2 is being tested.
+            # See 'if: ros_version ==' below for an example.
             ros_version: 1
 
           # Noetic Ninjemys (May 2020 - May 2025)
           - docker_image: ubuntu:focal
             ros_distribution: noetic
             ros_version: 1
-
-          # Dashing Diademata (May 2019 - May 2021)
-          - docker_image: ubuntu:bionic
-            ros_distribution: dashing
-            ros_version: 2
-
-          # Eloquent Elusor (November 2019 - November 2020)
-          - docker_image: ubuntu:bionic
-            ros_distribution: eloquent
-            ros_version: 2
 
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal

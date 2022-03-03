@@ -6028,7 +6028,6 @@ function validateDistro(requiredRosDistributionsList) {
 const distrosRequiringRosUbuntu = [
     "bionic",
     "focal",
-    "xenial",
 ];
 
 ;// CONCATENATED MODULE: ./src/package_manager/apt.ts
@@ -6091,15 +6090,6 @@ const distributionSpecificAptDependencies = {
         // python-rosdep does not exist on Jammy, so python3-rosdep is used.
         // The issue with ros-melodic-desktop-full is also non-applicable.
         "python3-rosdep",
-    ],
-    xenial: [
-        // OpenSplice
-        "libopensplice69",
-        // python3-rosdep is conflicting with ros-melodic-desktop-full,
-        // and should not be used here. See ros-tooling/setup-ros#74
-        "python-rosdep",
-        // python required for sourcing setup.sh
-        "python",
     ],
 };
 /**
@@ -6215,7 +6205,7 @@ const pip3Packages = [
     "mock",
     "mypy",
     "nose",
-    "numpy==1.18.0",
+    "numpy",
     "pep8",
     "pydocstyle",
     "pyparsing",
@@ -6391,9 +6381,9 @@ function runLinux() {
         // they are also installed during this stage.
         yield installAptDependencies(installConnext);
         /* Get the latest version of pip before installing dependencies,
-        the version from apt can be very out of date (v8.0 on xenial)
+        the version from apt can be very out of date (v9.0 on bionic)
         The latest version of pip doesn't support Python3.5 as of v21,
-        but pip 8 doesn't understand the metadata that states this, so we must first
+        but pip 9 doesn't understand the metadata that states this, so we must first
         make an intermediate upgrade to pip 20, which does understand that information */
         yield runPython3PipInstall(["pip==20.*"]);
         yield runPython3PipInstall(["pip"]);

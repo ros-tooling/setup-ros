@@ -54,7 +54,6 @@ WE+F5FaIKwb72PL4rLi4
 const distrosRequiringRosUbuntu = [
 	"bionic",
 	"focal",
-	"xenial",
 ];
 
 /**
@@ -157,9 +156,9 @@ export async function runLinux() {
 	await apt.installAptDependencies(installConnext);
 
 	/* Get the latest version of pip before installing dependencies,
-	the version from apt can be very out of date (v8.0 on xenial)
+	the version from apt can be very out of date (v9.0 on bionic)
 	The latest version of pip doesn't support Python3.5 as of v21,
-	but pip 8 doesn't understand the metadata that states this, so we must first
+	but pip 9 doesn't understand the metadata that states this, so we must first
 	make an intermediate upgrade to pip 20, which does understand that information */
 	await pip.runPython3PipInstall(["pip==20.*"]);
 	await pip.runPython3PipInstall(["pip"]);
