@@ -212,13 +212,11 @@ jobs:
     strategy:
       matrix:
         ros_distribution:
-          - kinetic
           - melodic
           - noetic
-          - dashing
-          - eloquent
           - foxy
           - galactic
+          - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -250,6 +248,11 @@ jobs:
           # Galactic Geochelone (May 2021 - November 2022)
           - docker_image: ubuntu:focal
             ros_distribution: galactic
+            ros_version: 2
+          
+          # Rolling Ridley (No End-Of-Life)
+          - docker_image: ubuntu:jammy
+            ros_distribution: rolling
             ros_version: 2
 
     container:

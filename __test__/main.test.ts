@@ -54,12 +54,8 @@ describe("required-ros-distributions/melodic workflow tests", () => {
 
 describe("validate distribution test", () => {
 	it("test valid", async () => {
-		await expect(utils.validateDistro(["kinetic"])).toBe(true);
-		await expect(utils.validateDistro(["lunar"])).toBe(true);
 		await expect(utils.validateDistro(["melodic"])).toBe(true);
 		await expect(utils.validateDistro(["noetic"])).toBe(true);
-		await expect(utils.validateDistro(["dashing"])).toBe(true);
-		await expect(utils.validateDistro(["eloquent"])).toBe(true);
 		await expect(utils.validateDistro(["foxy"])).toBe(true);
 		await expect(utils.validateDistro(["galactic"])).toBe(true);
 		await expect(utils.validateDistro(["rolling"])).toBe(true);
@@ -76,10 +72,13 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["hydro"])).toBe(false);
 		await expect(utils.validateDistro(["indigo"])).toBe(false);
 		await expect(utils.validateDistro(["jade"])).toBe(false);
+		await expect(utils.validateDistro(["kinetic"])).toBe(false);
 		//ROS2 End-of-Life
 		await expect(utils.validateDistro(["ardent"])).toBe(false);
 		await expect(utils.validateDistro(["bouncy"])).toBe(false);
 		await expect(utils.validateDistro(["crystal"])).toBe(false);
+		await expect(utils.validateDistro(["dashing"])).toBe(false);
+		await expect(utils.validateDistro(["eloquent"])).toBe(false);
 		// Does not exist or not all valid
 		await expect(utils.validateDistro(["foxy", "doesntexist"])).toBe(false);
 		await expect(utils.validateDistro(["master"])).toBe(false);

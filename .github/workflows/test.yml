@@ -42,6 +42,7 @@ jobs:
         docker_image:
           - "ubuntu:bionic"
           - "ubuntu:focal"
+          - "ubuntu:jammy"
     container:
       image: ${{ matrix.docker_image }}
     steps:
@@ -71,6 +72,8 @@ jobs:
           - foxy
           # Galactic Geochelone (May 2021 - November 2022)
           - galactic
+          # Rolling Ridley (No End-Of-Life)
+          - rolling
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.0.0

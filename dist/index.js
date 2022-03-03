@@ -6004,12 +6004,8 @@ function getRequiredRosDistributions() {
 }
 //list of valid linux distributions
 const validDistro = [
-    "kinetic",
-    "lunar",
     "melodic",
     "noetic",
-    "dashing",
-    "eloquent",
     "foxy",
     "galactic",
     "rolling",
@@ -6603,8 +6599,6 @@ var setup_ros_windows_awaiter = (undefined && undefined.__awaiter) || function (
 
 
 const binaryReleases = {
-    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20210610/ros2-dashing-20210610-windows-amd64.zip",
-    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
     foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20210902/ros2-foxy-20210902-windows-release-amd64.zip",
     galactic: "https://github.com/ros2/ros2/releases/download/release-galactic-20210716/ros2-galactic-20210616-windows-release-amd64.zip",
 };
