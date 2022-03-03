@@ -1,4 +1,3 @@
-import * as im from "@actions/exec/lib/interfaces";
 import * as utils from "../utils";
 
 const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
@@ -76,30 +75,6 @@ export async function runAptGetInstall(packages: string[]): Promise<number> {
 }
 
 /**
- * Determines the Ubuntu distribution codename.
- *
- * This function directly source /etc/lsb-release instead of invoking
- * lsb-release as the package may not be installed.
- *
- * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
- */
-async function determineDistribCodename(): Promise<string> {
-	let distribCodename = "";
-	const options: im.ExecOptions = {};
-	options.listeners = {
-		stdout: (data: Buffer) => {
-			distribCodename += data.toString();
-		},
-	};
-	await utils.exec(
-		"bash",
-		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
-		options
-	);
-	return distribCodename;
-}
-
-/**
  * Run ROS 2 APT dependencies.
  *
  * @returns Promise<number> exit code
@@ -110,7 +85,7 @@ export async function installAptDependencies(
 	let aptPackages: string[] = installConnext
 		? aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME)
 		: aptDependencies;
-	const distribCodename = await determineDistribCodename();
+	const distribCodename = await utils.determineDistribCodename();
 	const additionalAptPackages =
 		distributionSpecificAptDependencies[distribCodename] || [];
 	aptPackages = aptPackages.concat(additionalAptPackages);
