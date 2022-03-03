@@ -2,7 +2,7 @@
 #
 # ./check-ros-distribution.sh <ROS distribution>
 # ROS distribution must match the directory name for this distribution
-# in /opt. E.g. dashing
+# in /opt. E.g. galactic
 
 readonly ROS_DISTRIBUTION="$1"
 

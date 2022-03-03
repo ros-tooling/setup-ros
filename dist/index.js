@@ -6004,12 +6004,8 @@ function getRequiredRosDistributions() {
 }
 //list of valid linux distributions
 const validDistro = [
-    "kinetic",
-    "lunar",
     "melodic",
     "noetic",
-    "dashing",
-    "eloquent",
     "foxy",
     "galactic",
     "rolling",
@@ -6076,13 +6072,6 @@ const distributionSpecificAptDependencies = {
         // python-rosdep does not exist on Focal, so python3-rosdep is used.
         // The issue with ros-melodic-desktop-full is also non-applicable.
         "python3-rosdep",
-    ],
-    xenial: [
-        // OpenSplice
-        "libopensplice69",
-        // python3-rosdep is conflicting with ros-melodic-desktop-full,
-        // and should not be used here. See ros-tooling/setup-ros#74
-        "python-rosdep",
     ],
 };
 /**
@@ -6198,7 +6187,7 @@ const pip3Packages = [
     "mock",
     "mypy",
     "nose",
-    "numpy==1.18.0",
+    "numpy",
     "pep8",
     "pydocstyle",
     "pyparsing",
@@ -6371,9 +6360,9 @@ function runLinux() {
         // they are also installed during this stage.
         yield installAptDependencies(installConnext);
         /* Get the latest version of pip before installing dependencies,
-        the version from apt can be very out of date (v8.0 on xenial)
+        the version from apt can be very out of date (v9.0 on bionic)
         The latest version of pip doesn't support Python3.5 as of v21,
-        but pip 8 doesn't understand the metadata that states this, so we must first
+        but pip 9 doesn't understand the metadata that states this, so we must first
         make an intermediate upgrade to pip 20, which does understand that information */
         yield runPython3PipInstall(["pip==20.*"]);
         yield runPython3PipInstall(["pip"]);
@@ -6593,8 +6582,6 @@ var setup_ros_windows_awaiter = (undefined && undefined.__awaiter) || function (
 
 
 const binaryReleases = {
-    dashing: "https://github.com/ros2/ros2/releases/download/release-dashing-20210610/ros2-dashing-20210610-windows-amd64.zip",
-    eloquent: "https://github.com/ros2/ros2/releases/download/release-eloquent-20200124/ros2-eloquent-20200124-windows-release-amd64.zip",
     foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20210902/ros2-foxy-20210902-windows-release-amd64.zip",
     galactic: "https://github.com/ros2/ros2/releases/download/release-galactic-20210716/ros2-galactic-20210616-windows-release-amd64.zip",
 };

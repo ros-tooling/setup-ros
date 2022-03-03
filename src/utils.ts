@@ -42,12 +42,8 @@ export function getRequiredRosDistributions(): string[] {
 
 //list of valid linux distributions
 const validDistro: string[] = [
-	"kinetic",
-	"lunar",
 	"melodic",
 	"noetic",
-	"dashing",
-	"eloquent",
 	"foxy",
 	"galactic",
 	"rolling",
