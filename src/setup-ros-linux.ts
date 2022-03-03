@@ -52,8 +52,8 @@ WE+F5FaIKwb72PL4rLi4
 
 // List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
 const distrosRequiringRosUbuntu = [
-	"bionic",
-	"focal",
+  "bionic",
+  "focal",
 ];
 
 /**
