@@ -26,17 +26,14 @@ inputs:
 
       Allowed ROS distributions
       - "" (no value) - no ROS binary installation
-      - kinetic
       - melodic
       - noetic
-      - dashing
-      - eloquent
       - foxy
       - galactic
       - rolling
 
       Multiple values can be passed using a whitespace delimited list
-      "melodic dashing".
+      "noetic galactic".
     required: false
     default: ""
 runs:

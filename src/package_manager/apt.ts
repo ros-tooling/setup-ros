@@ -47,14 +47,6 @@ const distributionSpecificAptDependencies = {
 		// The issue with ros-melodic-desktop-full is also non-applicable.
 		"python3-rosdep",
 	],
-	xenial: [
-		// OpenSplice
-		"libopensplice69",
-
-		// python3-rosdep is conflicting with ros-melodic-desktop-full,
-		// and should not be used here. See ros-tooling/setup-ros#74
-		"python-rosdep",
-	],
 };
 
 /**
