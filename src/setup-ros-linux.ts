@@ -50,6 +50,36 @@ WE+F5FaIKwb72PL4rLi4
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 
+// List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
+const distrosRequiringRosUbuntu = [
+  "bionic",
+  "focal",
+];
+
+/**
+ * Determines the Ubuntu distribution codename.
+ *
+ * This function directly source /etc/lsb-release instead of invoking
+ * lsb-release as the package may not be installed.
+ *
+ * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
+ */
+ async function determineDistribCodename(): Promise<string> {
+	let distribCodename = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			distribCodename += data.toString();
+		},
+	};
+	await utils.exec(
+		"bash",
+		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
+		options
+	);
+	return distribCodename;
+}
+
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -101,17 +131,20 @@ export async function runLinux() {
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-	]);
+	const distribCodename = yield determineDistribCodename();
+	if (distrosRequiringRosUbuntu.includes(distribCodename)) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://packages.ros.org/ros/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
+		]);
+	}
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
 		`echo "deb http://packages.ros.org/ros2${
 			use_ros2_testing ? "-testing" : ""
-		}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+		}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
 	]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);

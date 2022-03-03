@@ -6020,6 +6020,12 @@ function validateDistro(requiredRosDistributionsList) {
     return true;
 }
 
+// List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
+const distrosRequiringRosUbuntu = [
+    "bionic",
+    "focal",
+];
+
 ;// CONCATENATED MODULE: ./src/package_manager/apt.ts
 var apt_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -6051,7 +6057,6 @@ const aptDependencies = [
     "lcov",
     "libc++-dev",
     "libc++abi-dev",
-    "python",
     "python3-catkin-pkg-modules",
     "python3-pip",
     "python3-vcstool",
@@ -6067,9 +6072,18 @@ const distributionSpecificAptDependencies = {
         // python3-rosdep is conflicting with ros-melodic-desktop-full,
         // and should not be used here. See ros-tooling/setup-ros#74
         "python-rosdep",
+        // python required for sourcing setup.sh
+        "python",
     ],
     focal: [
         // python-rosdep does not exist on Focal, so python3-rosdep is used.
+        // The issue with ros-melodic-desktop-full is also non-applicable.
+        "python3-rosdep",
+        // python required for sourcing setup.sh
+        "python",
+    ],
+    jammy: [
+        // python-rosdep does not exist on Jammy, so python3-rosdep is used.
         // The issue with ros-melodic-desktop-full is also non-applicable.
         "python3-rosdep",
     ],
@@ -6343,15 +6357,18 @@ function runLinux() {
         const keyFilePath = external_path_.join(workspace, "ros.key");
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
+        const distribCodename = yield determineDistribCodename();
+        if (distrosRequiringRosUbuntu.includes(distribCodename)) {
+            yield utils_exec("sudo", [
+                "bash",
+                "-c",
+                `echo "deb http://packages.ros.org/ros/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
+            ]);
+        }
         yield utils_exec("sudo", [
             "bash",
             "-c",
-            `echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list`,
-        ]);
-        yield utils_exec("sudo", [
-            "bash",
-            "-c",
-            `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list`,
+            `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils_exec("sudo", ["apt-get", "update"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
