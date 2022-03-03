@@ -22,7 +22,6 @@ const aptDependencies: string[] = [
 	"lcov",
 	"libc++-dev",
 	"libc++abi-dev",
-	"python", // required for sourcing setup.sh
 	"python3-catkin-pkg-modules",
 	"python3-pip",
 	"python3-vcstool",
