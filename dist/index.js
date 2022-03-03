@@ -6372,7 +6372,6 @@ function runLinux() {
         external_fs_default().writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
         yield utils_exec("sudo", ["apt-key", "add", keyFilePath]);
         const distribCodename = yield determineDistribCodename();
-        console.log("distribCodename is " + distribCodename);
         if (distrosRequiringRosUbuntu.includes(distribCodename)) {
             yield utils_exec("sudo", [
                 "bash",
