@@ -42,6 +42,7 @@ jobs:
         docker_image:
           - "ubuntu:bionic"
           - "ubuntu:focal"
+          - "ubuntu:jammy"
     container:
       image: ${{ matrix.docker_image }}
     steps:
