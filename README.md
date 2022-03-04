@@ -249,6 +249,11 @@ jobs:
             ros_distribution: galactic
             ros_version: 2
 
+          # Rolling Ridley (No End-Of-Life)
+          - docker_image: ubuntu:jammy
+            ros_distribution: rolling
+            ros_version: 2
+
     container:
       image: ${{ matrix.docker_image }}
     steps:
