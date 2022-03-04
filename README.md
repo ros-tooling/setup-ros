@@ -79,7 +79,7 @@ See [action.yml](action.yml).
 
 `setup-ros` is under active development, and compatibility between releases is not yet guaranteed.
 Please do not use `ros-tooling/setup-ros@master`.
-Instead, pin your workflows to a particular release, e.g.: `ros-tooling/setup-ros@v0.2`.
+Instead, pin your workflows to a particular release, e.g.: `ros-tooling/setup-ros@v0.3`.
 
 ### Setting up the worker, and installing the system dependencies
 
@@ -89,7 +89,7 @@ This setup should be used when ROS is built entirely from source.
 
 ```yaml
 steps:
-  - uses: ros-tooling/setup-ros@v0.2
+  - uses: ros-tooling/setup-ros@v0.3
   - run: vcs --help
 ```
 
@@ -108,7 +108,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@v0.2
+        uses: ros-tooling/setup-ros@v0.3
       - run: vcs --help
 
   build_docker:
@@ -117,7 +117,7 @@ jobs:
       image: ubuntu:focal
     steps:
       - name: Setup ROS
-        uses: ros-tooling/setup-ros@v0.2
+        uses: ros-tooling/setup-ros@v0.3
       - run: vcs --help
 ```
 
@@ -132,7 +132,7 @@ build_docker:
   container:
     image: ubuntu:focal
   steps:
-    - uses: ros-tooling/setup-ros@v0.2
+    - uses: ros-tooling/setup-ros@v0.3
       with:
         required-ros-distributions: noetic galactic
     - run: "source /opt/ros/galactic/setup.bash && ros2 run --help"
@@ -151,7 +151,7 @@ build_docker:
   container:
     image: ubuntu:focal
   steps:
-    - uses: ros-tooling/setup-ros@v0.2
+    - uses: ros-tooling/setup-ros@v0.3
       with:
         use-ros2-testing: true
         required-ros-distributions: galactic
@@ -169,7 +169,7 @@ build_docker:
   container:
     image: ubuntu:focal
   steps:
-    - uses: ros-tooling/setup-ros@v0.2
+    - uses: ros-tooling/setup-ros@v0.3
       with:
         install-connext: true
         use-ros2-testing: true
@@ -198,7 +198,7 @@ jobs:
           - foxy
           - galactic
     steps:
-      - uses: ros-tooling/setup-ros@v0.2
+      - uses: ros-tooling/setup-ros@v0.3
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
@@ -258,7 +258,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     steps:
       - name: setup ROS environment
-        uses: ros-tooling/setup-ros@v0.2
+        uses: ros-tooling/setup-ros@v0.3
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test ROS 1
