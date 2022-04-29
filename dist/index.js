@@ -6008,6 +6008,7 @@ const validDistro = [
     "noetic",
     "foxy",
     "galactic",
+    "humble",
     "rolling",
 ];
 //Determine whether all inputs name supported ROS distributions.

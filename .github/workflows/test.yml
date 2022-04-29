@@ -72,6 +72,9 @@ jobs:
           - foxy
           # Galactic Geochelone (May 2021 - November 2022)
           - galactic
+          # Humble Hawksbill (May 2022 - May 2027)
+          # TODO uncomment this once Humble is officially available on Windows
+          # - humble
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.1.1
@@ -100,6 +103,7 @@ jobs:
           - noetic
           - foxy
           - galactic
+          - humble
           - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
@@ -129,8 +133,13 @@ jobs:
             ros_distribution: galactic
             ros_version: 2
 
+          # Humble Hawksbill (May 2022 - May 2027)
+          - docker_image: ubuntu:jammy
+            ros_distribution: humble
+            ros_version: 2
+
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
-          - docker_image: ubuntu:focal
+          - docker_image: ubuntu:jammy
             ros_distribution: rolling
             ros_version: 2
 
@@ -147,6 +156,8 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
+          # TODO remove this once Humble has been officially released
+          use-ros2-testing: ${{ matrix.ros_distribution == 'humble' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 1
