@@ -197,6 +197,7 @@ jobs:
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support macOS and Windows.
           - foxy
           - galactic
+          - humble
     steps:
       - uses: ros-tooling/setup-ros@v0.3
         with:
@@ -216,6 +217,7 @@ jobs:
           - noetic
           - foxy
           - galactic
+          - humble
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -247,6 +249,11 @@ jobs:
           # Galactic Geochelone (May 2021 - November 2022)
           - docker_image: ubuntu:focal
             ros_distribution: galactic
+            ros_version: 2
+
+          # Humble Hawksbill (May 2022 - May 2027)
+          - docker_image: ubuntu:jammy
+            ros_distribution: humble
             ros_version: 2
 
           # Rolling Ridley (No End-Of-Life)
