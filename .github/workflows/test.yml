@@ -208,3 +208,22 @@ jobs:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
+
+  test_install_connext:
+    name: "Test with RTI Connext DDS"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.1.1
+        with:
+          node-version: "12.x"
+      - run: .github/workflows/build-and-test.sh
+      - uses: ./
+        with:
+          install-connext: true
+      - run: .github/workflows/check-environment.sh
+      - run: dpkg -l | grep rti-connext-dds-
