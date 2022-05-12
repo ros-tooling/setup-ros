@@ -211,7 +211,11 @@ jobs:
 
   test_install_connext:
     name: "Test with RTI Connext DDS"
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.1.1
