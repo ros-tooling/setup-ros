@@ -1,7 +1,5 @@
 import * as utils from "../utils";
 
-const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
-
 const aptCommandLine: string[] = [
 	"DEBIAN_FRONTEND=noninteractive",
 	"RTI_NC_LICENSE_ACCEPTED=yes",
@@ -56,6 +54,12 @@ const distributionSpecificAptDependencies = {
 	],
 };
 
+const aptRtiConnextDds = {
+	bionic: "rti-connext-dds-5.3.1",
+	focal: "rti-connext-dds-5.3.1",
+	jammy: "rti-connext-dds-6.0.1",
+};
+
 /**
  * Run apt-get install on list of specified packages.
  *
@@ -81,10 +85,10 @@ export async function runAptGetInstall(packages: string[]): Promise<number> {
 export async function installAptDependencies(
 	installConnext = false
 ): Promise<number> {
-	let aptPackages: string[] = installConnext
-		? aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME)
-		: aptDependencies;
 	const distribCodename = await utils.determineDistribCodename();
+	let aptPackages: string[] = installConnext
+		? aptDependencies.concat(aptRtiConnextDds[distribCodename] || [])
+		: aptDependencies;
 	const additionalAptPackages =
 		distributionSpecificAptDependencies[distribCodename] || [];
 	aptPackages = aptPackages.concat(additionalAptPackages);

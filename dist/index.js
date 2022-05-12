@@ -6053,7 +6053,6 @@ var apt_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
     });
 };
 
-const CONNEXT_APT_PACKAGE_NAME = "rti-connext-dds-5.3.1"; // RTI Connext
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
     "RTI_NC_LICENSE_ACCEPTED=yes",
@@ -6104,6 +6103,11 @@ const distributionSpecificAptDependencies = {
         "python3-rosdep",
     ],
 };
+const aptRtiConnextDds = {
+    bionic: "rti-connext-dds-5.3.1",
+    focal: "rti-connext-dds-5.3.1",
+    jammy: "rti-connext-dds-6.0.1",
+};
 /**
  * Run apt-get install on list of specified packages.
  *
@@ -6129,10 +6133,10 @@ function runAptGetInstall(packages) {
  */
 function installAptDependencies(installConnext = false) {
     return apt_awaiter(this, void 0, void 0, function* () {
-        let aptPackages = installConnext
-            ? aptDependencies.concat(CONNEXT_APT_PACKAGE_NAME)
-            : aptDependencies;
         const distribCodename = yield determineDistribCodename();
+        let aptPackages = installConnext
+            ? aptDependencies.concat(aptRtiConnextDds[distribCodename] || [])
+            : aptDependencies;
         const additionalAptPackages = distributionSpecificAptDependencies[distribCodename] || [];
         aptPackages = aptPackages.concat(additionalAptPackages);
         return runAptGetInstall(aptPackages);
