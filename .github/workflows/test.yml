@@ -26,7 +26,7 @@ jobs:
         os: [macOS-latest, windows-latest]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -47,7 +47,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -77,7 +77,7 @@ jobs:
           # - humble
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -149,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -171,7 +171,7 @@ jobs:
       image: ubuntu:focal
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -188,7 +188,7 @@ jobs:
       image: ubuntu:focal
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -203,7 +203,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-focal-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
@@ -218,7 +218,7 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.1.1
+      - uses: actions/setup-node@v3.2.0
         with:
           node-version: "12.x"
       - run: .github/workflows/build-and-test.sh
