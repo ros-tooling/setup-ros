@@ -10,6 +10,8 @@ const binaryReleases: { [index: string]: string } = {
 	foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20210902/ros2-foxy-20210902-windows-release-amd64.zip",
 	galactic:
 		"https://github.com/ros2/ros2/releases/download/release-galactic-20210716/ros2-galactic-20210616-windows-release-amd64.zip",
+	humble:
+		"https://github.com/ros2/ros2/releases/download/release-humble-20220523/ros2-humble-20220523-windows-release-amd64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
