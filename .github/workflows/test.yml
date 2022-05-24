@@ -156,8 +156,6 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
-          # TODO remove this once Humble has been officially released
-          use-ros2-testing: ${{ matrix.ros_distribution == 'humble' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 1

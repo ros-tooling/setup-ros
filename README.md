@@ -114,7 +114,7 @@ jobs:
   build_docker:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:focal
+      image: ubuntu:jammy
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@v0.3
@@ -130,12 +130,12 @@ This setup is necessary to use the ROS 1/ROS 2 bridge: [ros1_bridge](https://git
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:focal
+    image: ubuntu:jammy
   steps:
     - uses: ros-tooling/setup-ros@v0.3
       with:
-        required-ros-distributions: noetic galactic
-    - run: "source /opt/ros/galactic/setup.bash && ros2 run --help"
+        required-ros-distributions: noetic humble
+    - run: "source /opt/ros/humble/setup.bash && ros2 run --help"
     - run: "source /opt/ros/noetic/setup.bash && rosnode --help"
 ```
 
@@ -149,12 +149,12 @@ You can specify if you'd like to use the [pre-release ROS 2 repository][pre_rele
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:focal
+    image: ubuntu:jammy
   steps:
     - uses: ros-tooling/setup-ros@v0.3
       with:
         use-ros2-testing: true
-        required-ros-distributions: galactic
+        required-ros-distributions: humble
 ```
 
 ### Including RTI Connext
@@ -167,13 +167,13 @@ To include RTI Connext, simply set the `install-connext` parameter to `true`.
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:focal
+    image: ubuntu:jammy
   steps:
     - uses: ros-tooling/setup-ros@v0.3
       with:
         install-connext: true
         use-ros2-testing: true
-        required-ros-distributions: galactic
+        required-ros-distributions: humble
 ```
 
 ### Iterating on all ROS distributions, for all platforms
@@ -185,7 +185,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Melodic requires `bionic`, Galactic requires `focal`, etc.
+For example, Melodic requires `bionic`, Galactic requires `focal`, Humble requires `jammy`, etc.
 
 ```yaml
 jobs:
