@@ -73,8 +73,7 @@ jobs:
           # Galactic Geochelone (May 2021 - November 2022)
           - galactic
           # Humble Hawksbill (May 2022 - May 2027)
-          # TODO uncomment this once Humble is officially available on Windows
-          # - humble
+          - humble
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.2.0
