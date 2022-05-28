@@ -6520,23 +6520,20 @@ const chocoCommandLine = [
     "--no-progress",
     "--yes",
 ];
-const chocoDependencies = [
-    "cppcheck",
-    "wget",
-    "7zip",
-    "lcov",
-    "openssl",
-];
+const chocoDependencies = ["wget", "7zip", "lcov", "openssl"];
+const chocoDependenciesPinned = [["cppcheck", "1.90"]];
 const ros2ChocolateyPackagesUrl = [
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/eigen.3.3.4.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/log4cxx.0.10.0-2.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml-usestl.2.6.2.nupkg",
-    "https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/asio.1.12.1.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/bullet.3.17.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/cunit.2.1.3.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/eigen.3.3.4.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/log4cxx.0.10.0.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/tinyxml-usestl.2.6.2.nupkg",
+    "https://github.com/ros2/choco-packages/releases/download/2022-03-15/tinyxml2.6.0.0.nupkg",
 ];
 const ros2ChocolateyPackages = [
     "asio",
+    "bullet",
     "cunit",
     "eigen",
     "log4cxx",
@@ -6555,13 +6552,29 @@ function runChocoInstall(packages) {
     });
 }
 /**
+ * Run choco install on the list of specified packages and versions.
+ *
+ * @param   packages        list of Chocolatey pacakges to be installed along with their versions
+ * @returns Promise<number> exit code
+ */
+function runChocoInstallVersion(packages) {
+    return chocolatey_awaiter(this, void 0, void 0, function* () {
+        let ret = 0;
+        for (const [pkg, version] of packages) {
+            ret += yield utils_exec("choco", chocoCommandLine.concat(pkg, "--version", version));
+        }
+        return ret !== 0 ? 1 : 0;
+    });
+}
+/**
  * Install ROS 2 Chocolatey dependencies.
  *
  * @returns Promise<number> exit code
  */
 function installChocoDependencies() {
     return chocolatey_awaiter(this, void 0, void 0, function* () {
-        return runChocoInstall(chocoDependencies);
+        return ((yield runChocoInstall(chocoDependencies)) +
+            (yield runChocoInstallVersion(chocoDependenciesPinned)));
     });
 }
 /**
