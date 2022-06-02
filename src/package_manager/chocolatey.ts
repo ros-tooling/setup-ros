@@ -7,24 +7,22 @@ const chocoCommandLine: string[] = [
 	"--yes",
 ];
 
-const chocoDependencies: string[] = [
-	"cppcheck",
-	"wget",
-	"7zip",
-	"lcov",
-	"openssl",
-];
+const chocoDependencies: string[] = ["wget", "7zip", "lcov", "openssl"];
+
+const chocoDependenciesPinned: [string, string][] = [["cppcheck", "1.90"]];
 
 const ros2ChocolateyPackagesUrl: string[] = [
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/asio.1.12.1.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/cunit.2.1.3.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/eigen.3.3.4.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/log4cxx.0.10.0-2.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml-usestl.2.6.2.nupkg",
-	"https://github.com/ros2/choco-packages/releases/download/2019-10-24/tinyxml2.6.0.0.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/asio.1.12.1.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/bullet.3.17.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/cunit.2.1.3.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/eigen.3.3.4.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/log4cxx.0.10.0.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/tinyxml-usestl.2.6.2.nupkg",
+	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/tinyxml2.6.0.0.nupkg",
 ];
 const ros2ChocolateyPackages: string[] = [
 	"asio",
+	"bullet",
 	"cunit",
 	"eigen",
 	"log4cxx",
@@ -43,12 +41,34 @@ export async function runChocoInstall(packages: string[]): Promise<number> {
 }
 
 /**
+ * Run choco install on the list of specified packages and versions.
+ *
+ * @param   packages        list of Chocolatey pacakges to be installed along with their versions
+ * @returns Promise<number> exit code
+ */
+export async function runChocoInstallVersion(
+	packages: [string, string][]
+): Promise<number> {
+	let ret = 0;
+	for (const [pkg, version] of packages) {
+		ret += await utils.exec(
+			"choco",
+			chocoCommandLine.concat(pkg, "--version", version)
+		);
+	}
+	return ret !== 0 ? 1 : 0;
+}
+
+/**
  * Install ROS 2 Chocolatey dependencies.
  *
  * @returns Promise<number> exit code
  */
 export async function installChocoDependencies(): Promise<number> {
-	return runChocoInstall(chocoDependencies);
+	return (
+		(await runChocoInstall(chocoDependencies)) +
+		(await runChocoInstallVersion(chocoDependenciesPinned))
+	);
 }
 
 /**
