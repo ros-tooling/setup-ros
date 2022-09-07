@@ -18,8 +18,6 @@ const aptDependencies: string[] = [
 	"cmake",
 	"git",
 	"lcov",
-	"libc++-dev",
-	"libc++abi-dev",
 	"python3-catkin-pkg-modules",
 	"python3-pip",
 	"python3-vcstool",
@@ -39,6 +37,8 @@ const distributionSpecificAptDependencies = {
 		"python-rosdep",
 		// python required for sourcing setup.sh
 		"python",
+		"libc++-dev",
+		"libc++abi-dev",
 	],
 	focal: [
 		// python-rosdep does not exist on Focal, so python3-rosdep is used.
@@ -46,11 +46,14 @@ const distributionSpecificAptDependencies = {
 		"python3-rosdep",
 		// python required for sourcing setup.sh
 		"python",
+		"libc++-dev",
+		"libc++abi-dev",
 	],
 	jammy: [
 		// python-rosdep does not exist on Jammy, so python3-rosdep is used.
 		// The issue with ros-melodic-desktop-full is also non-applicable.
 		"python3-rosdep",
+		// libc++-dev and libc++abi-dev installs intentionally removed because https://github.com/ros-tooling/setup-ros/issues/506
 	],
 };
 
