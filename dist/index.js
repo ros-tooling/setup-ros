@@ -8291,6 +8291,7 @@ function runLinux() {
             `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils_exec("sudo", ["apt-get", "update"]);
+        yield utils_exec("sudo", ["apt-get", "upgrade", "-y"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
         // optionally RTI Connext.
         // vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
