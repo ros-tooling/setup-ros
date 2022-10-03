@@ -8122,6 +8122,7 @@ const pip3Packages = [
     "numpy",
     "pep8",
     "pydocstyle",
+    "pyopenssl",
     "pyparsing",
     "pytest",
     "pytest-cov",
