@@ -48,6 +48,7 @@ const pip3Packages: string[] = [
 	"numpy",
 	"pep8",
 	"pydocstyle",
+	"pyopenssl",
 	"pyparsing",
 	"pytest",
 	"pytest-cov",
