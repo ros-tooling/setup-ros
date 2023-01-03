@@ -7988,6 +7988,7 @@ const aptDependencies = [
     "lcov",
     "python3-catkin-pkg-modules",
     "python3-pip",
+    "python3-rosinstall-generator",
     "python3-vcstool",
     "wget",
     // FastRTPS dependencies
