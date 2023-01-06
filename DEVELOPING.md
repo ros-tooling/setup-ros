@@ -2,9 +2,10 @@
 
 ## Prerequisites
 
-Install [Node.js](https://nodejs.org/en/download/).
+* Install [Node.js](https://nodejs.org/en/download/).
+  We are currently using Node.js v12.
 
-We are currently using Node.js v12.
+* Install [husky](https://www.npmjs.com/package/husky) (``npm install husky``)
 
 ## Setup git hooks
 
