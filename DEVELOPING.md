@@ -2,10 +2,15 @@
 
 ## Prerequisites
 
-* Install [Node.js](https://nodejs.org/en/download/).
-  We are currently using Node.js v12.
+Install [Node.js](https://nodejs.org/en/download/).
 
-* Install [husky](https://www.npmjs.com/package/husky) (``npm install husky``)
+We are currently using Node.js v12.
+
+## Install Dependencies
+
+```sh
+npm install
+```
 
 ## Setup git hooks
 
@@ -18,8 +23,6 @@ npm run prepare
 ## Build and test
 
 ```sh
-# install dependencies
-npm install
 # autoformat sources to meet enforced linter style
 npm run fixup
 # generate build artifacts (run automatically when committing if git hooks are installed)
