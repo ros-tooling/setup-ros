@@ -51,3 +51,5 @@ Release process
 1. Create a new release and publish it to the marketplace via https://github.com/ros-tooling/setup-ros/releases/new using the patch-level tag that you created
 1. Push the minor version tag now that the release is officially out. Users will get the new version automatically
     * `git push -f origin v0.1`
+1. For a new minor release, update version in examples given in `README.md`
+    * Search for `ros-tooling/setup-ros@v0.N`
