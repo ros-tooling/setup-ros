@@ -57,7 +57,6 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["melodic"])).toBe(true);
 		await expect(utils.validateDistro(["noetic"])).toBe(true);
 		await expect(utils.validateDistro(["foxy"])).toBe(true);
-		await expect(utils.validateDistro(["galactic"])).toBe(true);
 		await expect(utils.validateDistro(["humble"])).toBe(true);
 		await expect(utils.validateDistro(["rolling"])).toBe(true);
 	});
@@ -81,6 +80,7 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["crystal"])).toBe(false);
 		await expect(utils.validateDistro(["dashing"])).toBe(false);
 		await expect(utils.validateDistro(["eloquent"])).toBe(false);
+		await expect(utils.validateDistro(["galactic"])).toBe(false);
 		// Does not exist or not all valid
 		await expect(utils.validateDistro(["foxy", "doesntexist"])).toBe(false);
 		await expect(utils.validateDistro(["master"])).toBe(false);
