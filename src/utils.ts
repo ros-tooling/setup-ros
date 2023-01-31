@@ -45,7 +45,6 @@ const validDistro: string[] = [
 	"melodic",
 	"noetic",
 	"foxy",
-	"galactic",
 	"humble",
 	"rolling",
 ];

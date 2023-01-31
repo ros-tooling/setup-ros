@@ -185,7 +185,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Melodic requires `bionic`, Galactic requires `focal`, Humble requires `jammy`, etc.
+For example, Melodic requires `bionic`, Humble requires `jammy`, etc.
 
 ```yaml
 jobs:
@@ -196,7 +196,6 @@ jobs:
         os: [macOS-latest, windows-latest]
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support macOS and Windows.
           - foxy
-          - galactic
           - humble
     steps:
       - uses: ros-tooling/setup-ros@v0.5
@@ -216,7 +215,6 @@ jobs:
           - melodic
           - noetic
           - foxy
-          - galactic
           - humble
 
         # Define the Docker image(s) associated with each ROS distribution.
@@ -244,11 +242,6 @@ jobs:
           # Foxy Fitzroy (June 2020 - May 2023)
           - docker_image: ubuntu:focal
             ros_distribution: foxy
-            ros_version: 2
-
-          # Galactic Geochelone (May 2021 - November 2022)
-          - docker_image: ubuntu:focal
-            ros_distribution: galactic
             ros_version: 2
 
           # Humble Hawksbill (May 2022 - May 2027)
