@@ -23,7 +23,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, windows-latest]
+        os:
+          - macOS-latest
+          - windows-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
@@ -35,16 +37,13 @@ jobs:
 
   test_environment_linux:
     name: "Check development tools"
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        docker_image:
-          - "ubuntu:bionic"
-          - "ubuntu:focal"
-          - "ubuntu:jammy"
-    container:
-      image: ${{ matrix.docker_image }}
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
@@ -155,9 +154,7 @@ jobs:
 
   test_multiple_ros_installations:
     name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:focal
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
@@ -172,9 +169,7 @@ jobs:
 
   test_repo_with_root_setup_cfg:
     name: "Test with setup.cfg file in root directory (Linux only)"
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:focal
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
@@ -204,7 +199,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
