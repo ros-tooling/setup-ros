@@ -53,6 +53,68 @@ WE+F5FaIKwb72PL4rLi4
 // List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
 const distrosRequiringRosUbuntu = ["bionic", "focal"];
 
+const distroPipPackages = {
+	default: [
+		"argcomplete",
+		"colcon-bash==0.4.2",
+		"colcon-cd==0.1.1",
+		"colcon-cmake==0.2.27",
+		"colcon-common-extensions==0.3.0",
+		"colcon-core==0.11.0",
+		"colcon-coveragepy-result==0.0.8",
+		"colcon-defaults==0.2.7",
+		"colcon-lcov-result==0.5.0",
+		"colcon-library-path==0.2.1",
+		"colcon-meson==0.4.2",
+		"colcon-metadata==0.2.5",
+		"colcon-mixin==0.2.2",
+		"colcon-notification==0.2.15",
+		"colcon-output==0.2.12",
+		"colcon-package-information==0.3.3",
+		"colcon-package-selection==0.2.10",
+		"colcon-parallel-executor==0.2.4",
+		"colcon-pkg-config==0.1.0",
+		"colcon-powershell==0.3.7",
+		"colcon-python-setup-py==0.2.7",
+		"colcon-recursive-crawl==0.2.1",
+		"colcon-ros==0.3.23",
+		"colcon-test-result==0.3.8",
+		"coverage",
+		"cryptography",
+		"empy",
+		"flake8<3.8",
+		"flake8-blind-except",
+		"flake8-builtins",
+		"flake8-class-newline",
+		"flake8-comprehensions",
+		"flake8-deprecated",
+		"flake8-docstrings",
+		"flake8-import-order",
+		"flake8-quotes",
+		"ifcfg",
+		"importlib-metadata==2.*",
+		"importlib-resources",
+		"lark-parser",
+		"mock",
+		"mypy",
+		"nose",
+		"numpy",
+		"pep8",
+		"pydocstyle",
+		"pyopenssl",
+		"pyparsing",
+		"pytest",
+		"pytest-cov",
+		"pytest-mock",
+		"pytest-repeat",
+		"pytest-rerunfailures",
+		"pytest-runner",
+		"setuptools<60.0",
+		"wheel",
+	],
+	jammy: [],
+};
+
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -140,7 +202,9 @@ export async function runLinux() {
 	/* pip3 dependencies need to be installed after the APT ones, as pip3
 	modules such as cryptography requires python-dev to be installed,
 	because they rely on Python C headers. */
-	await pip.installPython3Dependencies();
+	const pipPackages =
+		distroPipPackages[distribCodename] || distroPipPackages.default;
+	await pip.installPython3Dependencies(true, pipPackages);
 
 	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
 	await utils.exec("sudo", [

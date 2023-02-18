@@ -6627,9 +6627,43 @@ const distributionSpecificAptDependencies = {
         "libc++abi-dev",
     ],
     jammy: [
-        // python-rosdep does not exist on Jammy, so python3-rosdep is used.
-        // The issue with ros-melodic-desktop-full is also non-applicable.
-        "python3-rosdep",
+        // Basic ROS 2 dependencies
+        "python3-flake8-docstrings",
+        "python3-pytest-cov",
+        "ros-dev-tools",
+        "python3-flake8-blind-except",
+        "python3-flake8-builtins",
+        "python3-flake8-class-newline",
+        "python3-flake8-comprehensions",
+        "python3-flake8-deprecated",
+        "python3-flake8-import-order",
+        "python3-flake8-quotes",
+        "python3-pytest-repeat",
+        "python3-pytest-rerunfailures",
+        // Install all colcon extensions
+        "python3-colcon-bash",
+        "python3-colcon-cd",
+        "python3-colcon-cmake",
+        "python3-colcon-common-extensions",
+        "python3-colcon-core",
+        "python3-colcon-coveragepy-result",
+        "python3-colcon-defaults",
+        "python3-colcon-lcov-result",
+        "python3-colcon-library-path",
+        "python3-colcon-meson",
+        "python3-colcon-metadata",
+        "python3-colcon-mixin",
+        "python3-colcon-notification",
+        "python3-colcon-output",
+        "python3-colcon-package-information",
+        "python3-colcon-package-selection",
+        "python3-colcon-parallel-executor",
+        "python3-colcon-pkg-config",
+        "python3-colcon-powershell",
+        "python3-colcon-python-setup-py",
+        "python3-colcon-recursive-crawl",
+        "python3-colcon-ros",
+        "python3-colcon-test-result",
         // libc++-dev and libc++abi-dev installs intentionally removed because https://github.com/ros-tooling/setup-ros/issues/506
     ],
 };
@@ -7005,15 +7039,17 @@ const pip3CommandLine = ["pip3", "install", "--upgrade"];
  * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function runPython3PipInstall(packages, run_with_sudo) {
+function runPython3PipInstall(packages, run_with_sudo = true) {
     return __awaiter(this, void 0, void 0, function* () {
-        const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
+        if (packages.length === 0) {
+            return 0;
+        }
         const args = pip3CommandLine.concat(packages);
         // Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
         const options = {
             cwd: path.sep,
         };
-        if (sudo_enabled) {
+        if (run_with_sudo) {
             return utils.exec("sudo", pip3CommandLine.concat(packages), options);
         }
         else {
@@ -7023,14 +7059,15 @@ function runPython3PipInstall(packages, run_with_sudo) {
 }
 exports.runPython3PipInstall = runPython3PipInstall;
 /**
- * Run Python3 pip install on a list of specified packages.
+ * Run Python3 pip install on a list of specified packages, or a default list of packages.
  *
+ * @param   packages        the list of packages to install
  * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function installPython3Dependencies(run_with_sudo) {
+function installPython3Dependencies(run_with_sudo, packages = pip3Packages) {
     return __awaiter(this, void 0, void 0, function* () {
-        return runPython3PipInstall(pip3Packages, run_with_sudo);
+        return runPython3PipInstall(packages, run_with_sudo);
     });
 }
 exports.installPython3Dependencies = installPython3Dependencies;
@@ -7130,6 +7167,67 @@ WE+F5FaIKwb72PL4rLi4
 `;
 // List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
 const distrosRequiringRosUbuntu = ["bionic", "focal"];
+const distroPipPackages = {
+    default: [
+        "argcomplete",
+        "colcon-bash==0.4.2",
+        "colcon-cd==0.1.1",
+        "colcon-cmake==0.2.27",
+        "colcon-common-extensions==0.3.0",
+        "colcon-core==0.11.0",
+        "colcon-coveragepy-result==0.0.8",
+        "colcon-defaults==0.2.7",
+        "colcon-lcov-result==0.5.0",
+        "colcon-library-path==0.2.1",
+        "colcon-meson==0.4.2",
+        "colcon-metadata==0.2.5",
+        "colcon-mixin==0.2.2",
+        "colcon-notification==0.2.15",
+        "colcon-output==0.2.12",
+        "colcon-package-information==0.3.3",
+        "colcon-package-selection==0.2.10",
+        "colcon-parallel-executor==0.2.4",
+        "colcon-pkg-config==0.1.0",
+        "colcon-powershell==0.3.7",
+        "colcon-python-setup-py==0.2.7",
+        "colcon-recursive-crawl==0.2.1",
+        "colcon-ros==0.3.23",
+        "colcon-test-result==0.3.8",
+        "coverage",
+        "cryptography",
+        "empy",
+        "flake8<3.8",
+        "flake8-blind-except",
+        "flake8-builtins",
+        "flake8-class-newline",
+        "flake8-comprehensions",
+        "flake8-deprecated",
+        "flake8-docstrings",
+        "flake8-import-order",
+        "flake8-quotes",
+        "ifcfg",
+        "importlib-metadata==2.*",
+        "importlib-resources",
+        "lark-parser",
+        "mock",
+        "mypy",
+        "nose",
+        "numpy",
+        "pep8",
+        "pydocstyle",
+        "pyopenssl",
+        "pyparsing",
+        "pytest",
+        "pytest-cov",
+        "pytest-mock",
+        "pytest-repeat",
+        "pytest-rerunfailures",
+        "pytest-runner",
+        "setuptools<60.0",
+        "wheel",
+    ],
+    jammy: [],
+};
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -7206,7 +7304,8 @@ function runLinux() {
         /* pip3 dependencies need to be installed after the APT ones, as pip3
         modules such as cryptography requires python-dev to be installed,
         because they rely on Python C headers. */
-        yield pip.installPython3Dependencies();
+        const pipPackages = distroPipPackages[distribCodename] || distroPipPackages.default;
+        yield pip.installPython3Dependencies(true, pipPackages);
         // Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
         yield utils.exec("sudo", [
             "bash",

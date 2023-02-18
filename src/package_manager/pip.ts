@@ -72,15 +72,17 @@ const pip3CommandLine: string[] = ["pip3", "install", "--upgrade"];
  */
 export async function runPython3PipInstall(
 	packages: string[],
-	run_with_sudo?: boolean
+	run_with_sudo: boolean = true
 ): Promise<number> {
-	const sudo_enabled = run_with_sudo === undefined ? true : run_with_sudo;
+	if (packages.length === 0) {
+		return 0;
+	}
 	const args = pip3CommandLine.concat(packages);
 	// Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
 	const options: im.ExecOptions = {
 		cwd: path.sep,
 	};
-	if (sudo_enabled) {
+	if (run_with_sudo) {
 		return utils.exec("sudo", pip3CommandLine.concat(packages), options);
 	} else {
 		return utils.exec(args[0], args.splice(1), options);
@@ -88,13 +90,15 @@ export async function runPython3PipInstall(
 }
 
 /**
- * Run Python3 pip install on a list of specified packages.
+ * Run Python3 pip install on a list of specified packages, or a default list of packages.
  *
+ * @param   packages        the list of packages to install
  * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
 export async function installPython3Dependencies(
-	run_with_sudo?: boolean
+	run_with_sudo?: boolean,
+	packages: string[] = pip3Packages
 ): Promise<number> {
-	return runPython3PipInstall(pip3Packages, run_with_sudo);
+	return runPython3PipInstall(packages, run_with_sudo);
 }
