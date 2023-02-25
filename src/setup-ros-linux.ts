@@ -121,6 +121,8 @@ export async function runLinux() {
 	]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);
+	// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
+	await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
 	await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
 
 	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and

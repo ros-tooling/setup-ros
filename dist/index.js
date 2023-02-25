@@ -7190,6 +7190,8 @@ function runLinux() {
             `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
+        // Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
+        yield utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
         yield utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
         // Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
         // optionally RTI Connext.
