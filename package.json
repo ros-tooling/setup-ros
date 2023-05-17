@@ -51,7 +51,7 @@
 		"jest-circus": "^29.4.3",
 		"lint-staged": "^13.2.2",
 		"prettier": "^2.8.4",
-		"ts-jest": "^29.0.5",
+		"ts-jest": "^29.1.0",
 		"typescript": "^5.0.4"
 	}
 }
