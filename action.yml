@@ -30,6 +30,7 @@ inputs:
       - noetic
       - foxy
       - humble
+      - iron
       - rolling
 
       Multiple values can be passed using a whitespace delimited list

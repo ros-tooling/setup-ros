@@ -71,6 +71,8 @@ jobs:
           - foxy
           # Humble Hawksbill (May 2022 - May 2027)
           - humble
+          # Iron Irwini (May 2023 - November 2024)
+          - iron
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.6.0
@@ -99,6 +101,7 @@ jobs:
           - noetic
           - foxy
           - humble
+          - iron
           - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
@@ -126,6 +129,11 @@ jobs:
           # Humble Hawksbill (May 2022 - May 2027)
           - docker_image: ubuntu:jammy
             ros_distribution: humble
+            ros_version: 2
+
+          # Iron Irwini (May 2023 - November 2024)
+          - docker_image: ubuntu:jammy
+            ros_distribution: iron
             ros_version: 2
 
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)

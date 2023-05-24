@@ -197,6 +197,7 @@ jobs:
         ros_distribution: # Only include ROS 2 distributions, as ROS 1 does not support macOS and Windows.
           - foxy
           - humble
+          - iron
     steps:
       - uses: ros-tooling/setup-ros@v0.6
         with:
@@ -216,6 +217,7 @@ jobs:
           - noetic
           - foxy
           - humble
+          - iron
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -247,6 +249,11 @@ jobs:
           # Humble Hawksbill (May 2022 - May 2027)
           - docker_image: ubuntu:jammy
             ros_distribution: humble
+            ros_version: 2
+
+          # Iron Irwini (May 2023 - November 2024)
+          - docker_image: ubuntu:jammy
+            ros_distribution: iron
             ros_version: 2
 
           # Rolling Ridley (No End-Of-Life)
