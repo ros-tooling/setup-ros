@@ -6570,17 +6570,6 @@ const aptDependencies = [
     "libtinyxml2-dev",
 ];
 const distributionSpecificAptDependencies = {
-    bionic: [
-        // OpenSplice
-        "libopensplice69",
-        // python3-rosdep is conflicting with ros-melodic-desktop-full,
-        // and should not be used here. See ros-tooling/setup-ros#74
-        "python-rosdep",
-        // python required for sourcing setup.sh
-        "python",
-        "libc++-dev",
-        "libc++abi-dev",
-    ],
     focal: [
         // python-rosdep does not exist on Focal, so python3-rosdep is used.
         // The issue with ros-melodic-desktop-full is also non-applicable.
@@ -6598,7 +6587,6 @@ const distributionSpecificAptDependencies = {
     ],
 };
 const aptRtiConnextDds = {
-    bionic: "rti-connext-dds-5.3.1",
     focal: "rti-connext-dds-5.3.1",
     jammy: "rti-connext-dds-6.0.1",
 };
@@ -7093,7 +7081,7 @@ WE+F5FaIKwb72PL4rLi4
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 // List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
-const distrosRequiringRosUbuntu = ["bionic", "focal"];
+const distrosRequiringRosUbuntu = ["focal"];
 /**
  * Install ROS 2 on a Linux worker.
  */
@@ -7312,8 +7300,7 @@ const chocolatey = __importStar(__nccwpck_require__(855));
 const pip = __importStar(__nccwpck_require__(6744));
 const utils = __importStar(__nccwpck_require__(1314));
 const binaryReleases = {
-    foxy: "https://github.com/ros2/ros2/releases/download/release-foxy-20221021/ros2-foxy-20221021-windows-release-amd64.zip",
-    humble: "https://github.com/ros2/ros2/releases/download/release-humble-20230213/ros2-humble-20230127-windows-release-amd64.zip",
+    humble: "https://github.com/ros2/ros2/releases/download/release-humble-20230614/ros2-humble-20230614-windows-release-amd64.zip",
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20230523/ros2-iron-20230523-windows-release-amd64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
@@ -7535,14 +7522,7 @@ function getRequiredRosDistributions() {
 }
 exports.getRequiredRosDistributions = getRequiredRosDistributions;
 //list of valid linux distributions
-const validDistro = [
-    "melodic",
-    "noetic",
-    "foxy",
-    "humble",
-    "iron",
-    "rolling",
-];
+const validDistro = ["noetic", "humble", "iron", "rolling"];
 //Determine whether all inputs name supported ROS distributions.
 function validateDistro(requiredRosDistributionsList) {
     for (const rosDistro of requiredRosDistributionsList) {

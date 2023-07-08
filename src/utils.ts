@@ -41,14 +41,7 @@ export function getRequiredRosDistributions(): string[] {
 }
 
 //list of valid linux distributions
-const validDistro: string[] = [
-	"melodic",
-	"noetic",
-	"foxy",
-	"humble",
-	"iron",
-	"rolling",
-];
+const validDistro: string[] = ["noetic", "humble", "iron", "rolling"];
 
 //Determine whether all inputs name supported ROS distributions.
 export function validateDistro(
