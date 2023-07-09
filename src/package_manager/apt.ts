@@ -13,25 +13,22 @@ const aptCommandLine: string[] = [
 const aptDependencies: string[] = [
 	"libssl-dev", // required for pip3 cryptography module
 	"python3-dev", // required for pip3 cryptography module
-	"build-essential",
 	"clang",
-	"cmake",
-	"git",
 	"lcov",
-	"python3-catkin-pkg-modules",
-	"python3-pip",
 	"python3-rosinstall-generator",
-	"python3-vcstool",
-	"wget",
-	// FastRTPS dependencies
-	"libasio-dev",
-	"libtinyxml2-dev",
 ];
 
 const distributionSpecificAptDependencies = {
 	focal: [
+		// Basic development packages
+		"build-essential",
+		"cmake",
+		"git",
+		"python3-pip",
+		"python3-catkin-pkg-modules",
+		"python3-vcstool",
+		"wget",
 		// python-rosdep does not exist on Focal, so python3-rosdep is used.
-		// The issue with ros-melodic-desktop-full is also non-applicable.
 		"python3-rosdep",
 		// python required for sourcing setup.sh
 		"python",
@@ -39,15 +36,35 @@ const distributionSpecificAptDependencies = {
 		"libc++abi-dev",
 	],
 	jammy: [
-		// python-rosdep does not exist on Jammy, so python3-rosdep is used.
-		// The issue with ros-melodic-desktop-full is also non-applicable.
-		"python3-rosdep",
-		// libc++-dev and libc++abi-dev installs intentionally removed because https://github.com/ros-tooling/setup-ros/issues/506
+		// Basic development packages (from ROS 2 source/development setup instructions)
+		// ros-dev-tools includes many packages that we needed to include manually in Focal & older
+		"python3-flake8-docstrings",
+		"python3-pip",
+		"python3-pytest-cov",
+		"python3-flake8-blind-except",
+		"python3-flake8-builtins",
+		"python3-flake8-class-newline",
+		"python3-flake8-comprehensions",
+		"python3-flake8-deprecated",
+		"python3-flake8-import-order",
+		"python3-flake8-quotes",
+		"python3-pytest-repeat",
+		"python3-pytest-rerunfailures",
+		"ros-dev-tools",
+		// Additional colcon packages (not included in ros-dev-tools)
+		"python3-colcon-coveragepy-result",
+		"python3-colcon-lcov-result",
+		"python3-colcon-meson",
+		"python3-colcon-mixin",
+		// FastRTPS dependencies
+		"libasio-dev",
+		"libtinyxml2-dev",
+		// libc++-dev and libc++abi-dev installs intentionally removed because:
+		// https://github.com/ros-tooling/setup-ros/issues/506
 	],
 };
 
 const aptRtiConnextDds = {
-	focal: "rti-connext-dds-5.3.1",
 	jammy: "rti-connext-dds-6.0.1",
 };
 
@@ -74,7 +91,7 @@ export async function runAptGetInstall(packages: string[]): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function installAptDependencies(
-	installConnext = false
+	installConnext: boolean = false
 ): Promise<number> {
 	const distribCodename = await utils.determineDistribCodename();
 	let aptPackages: string[] = installConnext

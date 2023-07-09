@@ -50,13 +50,10 @@ WE+F5FaIKwb72PL4rLi4
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 
-// List of linux distributions that need http://packages.ros.org/ros/ubuntu APT repo
-const distrosRequiringRosUbuntu = ["focal"];
-
 /**
- * Install ROS 2 on a Linux worker.
+ * Configure basic OS stuff.
  */
-export async function runLinux() {
+async function configOs(): Promise<void> {
 	// When this action runs in a Docker image, sudo may be missing.
 	// This installs sudo to avoid having to handle both cases (action runs as
 	// root, action does not run as root) everywhere in the action.
@@ -72,10 +69,6 @@ export async function runLinux() {
 			"sudo",
 		]);
 	}
-
-	// Get user input & validate
-	const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
-	const installConnext = core.getInput("install-connext") === "true";
 
 	await utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
 	await utils.exec("sudo", ["apt-get", "update"]);
@@ -96,61 +89,99 @@ export async function runLinux() {
 		"/etc/localtime",
 	]);
 	await apt.runAptGetInstall(["tzdata"]);
+}
 
-	// OSRF APT repository is necessary, even when building
-	// from source to install colcon, vcs, etc.
+/**
+ * Add OSRF APT repository key.
+ *
+ * This is necessary even when building from source to install colcon, vcs, etc.
+ */
+async function addAptRepoKey(): Promise<void> {
 	const workspace = process.env.GITHUB_WORKSPACE as string;
 	const keyFilePath = path.join(workspace, "ros.key");
 	fs.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
+}
 
-	const distribCodename = await utils.determineDistribCodename();
-	if (distrosRequiringRosUbuntu.includes(distribCodename)) {
+// Ubuntu distribution for ROS 1
+const ros1UbuntuVersion = "focal";
+
+/**
+ * Add OSRF APT repository.
+ *
+ * @param ubuntuCodename the Ubuntu version codename
+ */
+async function addAptRepo(
+	ubuntuCodename: string,
+	use_ros2_testing: boolean
+): Promise<void> {
+	// There is now no Ubuntu version overlap between ROS 1 and ROS 2
+	if (ros1UbuntuVersion === ubuntuCodename) {
 		await utils.exec("sudo", [
 			"bash",
 			"-c",
-			`echo "deb http://packages.ros.org/ros/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
+			`echo "deb http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
+		]);
+	} else {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://packages.ros.org/ros2${
+				use_ros2_testing ? "-testing" : ""
+			}/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
 		]);
 	}
-	await utils.exec("sudo", [
-		"bash",
-		"-c",
-		`echo "deb http://packages.ros.org/ros2${
-			use_ros2_testing ? "-testing" : ""
-		}/ubuntu ${distribCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
-	]);
 
 	await utils.exec("sudo", ["apt-get", "update"]);
-	// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
-	await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
-	await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+}
 
-	// Install rosdep and vcs, as well as FastRTPS dependencies, OpenSplice, and
-	// optionally RTI Connext.
-	// vcs dependencies (e.g. git), as well as base building packages are not pulled by rosdep, so
-	// they are also installed during this stage.
-	await apt.installAptDependencies(installConnext);
-
-	/* Get the latest version of pip before installing dependencies,
-	the version from apt can be very out of date (v9.0 on bionic)
-	The latest version of pip doesn't support Python3.5 as of v21,
-	but pip 9 doesn't understand the metadata that states this, so we must first
-	make an intermediate upgrade to pip 20, which does understand that information */
-	await pip.runPython3PipInstall(["pip==20.*"]);
-	await pip.runPython3PipInstall(["pip"]);
-
-	/* pip3 dependencies need to be installed after the APT ones, as pip3
-	modules such as cryptography requires python-dev to be installed,
-	because they rely on Python C headers. */
-	await pip.installPython3Dependencies();
-
-	// Initializes rosdep, trying to remove the default file first in case this environment has already done a rosdep init before
+/**
+ * Initialize rosdep.
+ */
+async function rosdepInit(): Promise<void> {
+	/**
+	 * Try to remove the default file first in case this environment has already done a rosdep
+	 * init before.
+	 */
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
 		"rm /etc/ros/rosdep/sources.list.d/20-default.list || true",
 	]);
 	await utils.exec("sudo", ["rosdep", "init"]);
+}
+
+/**
+ * Install ROS 1 or 2 (development packages and/or ROS binaries) on a Linux worker.
+ */
+export async function runLinux(): Promise<void> {
+	// Get user input & validate
+	const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
+	const installConnext = core.getInput("install-connext") === "true";
+
+	await configOs();
+
+	await addAptRepoKey();
+
+	const ubuntuCodename = await utils.determineDistribCodename();
+	await addAptRepo(ubuntuCodename, use_ros2_testing);
+
+	// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
+	await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
+	await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+
+	// Install development-related packages and some common dependencies
+	await apt.installAptDependencies(installConnext);
+
+	// We don't use pip here to install dependencies for ROS 2
+	if (ubuntuCodename === ros1UbuntuVersion) {
+		/* pip3 dependencies need to be installed after the APT ones, as pip3
+		modules such as cryptography requires python-dev to be installed,
+		because they rely on Python C headers. */
+		await pip.installPython3Dependencies();
+	}
+
+	await rosdepInit();
 
 	for (const rosDistro of utils.getRequiredRosDistributions()) {
 		await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
