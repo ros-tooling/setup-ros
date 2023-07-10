@@ -67,8 +67,6 @@ jobs:
           # - macOS-latest
           - windows-latest
         ros_distribution:
-          # Foxy Fitzroy (June 2020 - May 2023)
-          - foxy
           # Humble Hawksbill (May 2022 - May 2027)
           - humble
           # Iron Irwini (May 2023 - November 2024)
@@ -97,9 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         ros_distribution:
-          - melodic
           - noetic
-          - foxy
           - humble
           - iron
           - rolling
@@ -111,20 +107,10 @@ jobs:
         #
         # Platforms are defined in REP 3: https://ros.org/reps/rep-0003.html
         include:
-          # Melodic Morenia (May 2018 - May 2023)
-          - docker_image: ubuntu:bionic
-            ros_distribution: melodic
-            ros_version: 1
-
           # Noetic Ninjemys (May 2020 - May 2025)
           - docker_image: ubuntu:focal
             ros_distribution: noetic
             ros_version: 1
-
-          # Foxy Fitzroy (June 2020 - May 2023)
-          - docker_image: ubuntu:focal
-            ros_distribution: foxy
-            ros_version: 2
 
           # Humble Hawksbill (May 2022 - May 2027)
           - docker_image: ubuntu:jammy
@@ -160,21 +146,6 @@ jobs:
       - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 2
 
-  test_multiple_ros_installations:
-    name: "ROS and ROS 2 Binary Install Test Suite (Linux only)"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3.7.0
-        with:
-          node-version: "16.x"
-      - run: .github/workflows/build-and-test.sh
-      - uses: ./ # Uses an action in the root directory
-        with:
-          required-ros-distributions: noetic foxy
-      - run: .github/workflows/check-ros2-distribution.sh foxy
-      - run: .github/workflows/check-ros-distribution.sh noetic
-
   test_repo_with_root_setup_cfg:
     name: "Test with setup.cfg file in root directory (Linux only)"
     runs-on: ubuntu-22.04
@@ -192,7 +163,7 @@ jobs:
     name: "Test on a setup-ros-docker container"
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-focal-latest
+      image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3.7.0
@@ -208,7 +179,6 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
           - ubuntu-22.04
     steps:
       - uses: actions/checkout@v3

@@ -29,18 +29,6 @@ const aptDependencies: string[] = [
 ];
 
 const distributionSpecificAptDependencies = {
-	bionic: [
-		// OpenSplice
-		"libopensplice69",
-
-		// python3-rosdep is conflicting with ros-melodic-desktop-full,
-		// and should not be used here. See ros-tooling/setup-ros#74
-		"python-rosdep",
-		// python required for sourcing setup.sh
-		"python",
-		"libc++-dev",
-		"libc++abi-dev",
-	],
 	focal: [
 		// python-rosdep does not exist on Focal, so python3-rosdep is used.
 		// The issue with ros-melodic-desktop-full is also non-applicable.
@@ -59,7 +47,6 @@ const distributionSpecificAptDependencies = {
 };
 
 const aptRtiConnextDds = {
-	bionic: "rti-connext-dds-5.3.1",
 	focal: "rti-connext-dds-5.3.1",
 	jammy: "rti-connext-dds-6.0.1",
 };

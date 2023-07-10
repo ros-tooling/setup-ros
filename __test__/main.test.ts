@@ -29,10 +29,10 @@ describe("basic workflow tests", () => {
 	});
 });
 
-describe("required-ros-distributions/melodic workflow tests", () => {
+describe("required-ros-distributions/noetic workflow tests", () => {
 	beforeAll(() => {
 		jest.spyOn(actions_exec, "exec").mockImplementation(jest.fn());
-		jest.spyOn(core, "getInput").mockReturnValue("melodic");
+		jest.spyOn(core, "getInput").mockReturnValue("noetic");
 	});
 
 	afterAll(() => {
@@ -54,9 +54,7 @@ describe("required-ros-distributions/melodic workflow tests", () => {
 
 describe("validate distribution test", () => {
 	it("test valid", async () => {
-		await expect(utils.validateDistro(["melodic"])).toBe(true);
 		await expect(utils.validateDistro(["noetic"])).toBe(true);
-		await expect(utils.validateDistro(["foxy"])).toBe(true);
 		await expect(utils.validateDistro(["humble"])).toBe(true);
 		await expect(utils.validateDistro(["iron"])).toBe(true);
 		await expect(utils.validateDistro(["rolling"])).toBe(true);
@@ -75,12 +73,14 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["jade"])).toBe(false);
 		await expect(utils.validateDistro(["kinetic"])).toBe(false);
 		await expect(utils.validateDistro(["lunar"])).toBe(false);
+		await expect(utils.validateDistro(["melodic"])).toBe(false);
 		//ROS2 End-of-Life
 		await expect(utils.validateDistro(["ardent"])).toBe(false);
 		await expect(utils.validateDistro(["bouncy"])).toBe(false);
 		await expect(utils.validateDistro(["crystal"])).toBe(false);
 		await expect(utils.validateDistro(["dashing"])).toBe(false);
 		await expect(utils.validateDistro(["eloquent"])).toBe(false);
+		await expect(utils.validateDistro(["foxy"])).toBe(false);
 		await expect(utils.validateDistro(["galactic"])).toBe(false);
 		// Does not exist or not all valid
 		await expect(utils.validateDistro(["foxy", "doesntexist"])).toBe(false);
