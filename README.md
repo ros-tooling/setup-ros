@@ -281,7 +281,7 @@ The scripts and documentation in this project are released under the [Apache 2](
 
 [ros]: https://www.ros.org/
 [ROS 2]: https://docs.ros.org/en/rolling/index.html
-[ros2_latest_development_setup]: https://docs.ros.org/en/rolling/Installation/Latest-Development-Setup.html
+[ros2_latest_development_setup]: https://docs.ros.org/en/rolling/Installation/Alternatives/Latest-Development-Setup.html
 [rep-2000]: https://www.ros.org/reps/rep-2000.html
 [rep-3]: https://www.ros.org/reps/rep-0003.html
 [chocolatey]: https://chocolatey.org/
