@@ -27,7 +27,7 @@ jobs:
           - macOS-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -45,7 +45,7 @@ jobs:
           - ubuntu-20.04
           - ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -72,7 +72,7 @@ jobs:
           # Iron Irwini (May 2023 - November 2024)
           - iron
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -132,7 +132,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -150,7 +150,7 @@ jobs:
     name: "Test with setup.cfg file in root directory (Linux only)"
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -165,7 +165,7 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
@@ -181,7 +181,7 @@ jobs:
         os:
           - ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3.8.1
         with:
           node-version: "16.x"
