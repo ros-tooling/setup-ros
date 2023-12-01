@@ -47,13 +47,13 @@ export async function runChocoInstall(packages: string[]): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function runChocoInstallVersion(
-	packages: [string, string][]
+	packages: [string, string][],
 ): Promise<number> {
 	let ret = 0;
 	for (const [pkg, version] of packages) {
 		ret += await utils.exec(
 			"choco",
-			chocoCommandLine.concat(pkg, "--version", version)
+			chocoCommandLine.concat(pkg, "--version", version),
 		);
 	}
 	return ret !== 0 ? 1 : 0;
@@ -87,6 +87,6 @@ export async function downloadAndInstallRos2NugetPackages(): Promise<number> {
 	await utils.exec("reg", ["add", "HKCU\\SOFTWARE\\Kitware\\CMake", "/f"]);
 	return utils.exec(
 		"choco",
-		chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages)
+		chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages),
 	);
 }

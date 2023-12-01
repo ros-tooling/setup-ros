@@ -15,7 +15,7 @@ export async function exec(
 	commandLine: string,
 	args?: string[],
 	options?: im.ExecOptions,
-	log_message?: string
+	log_message?: string,
 ): Promise<number> {
 	const argsAsString = (args || []).join(" ");
 	const message = log_message || `Invoking "${commandLine} ${argsAsString}"`;
@@ -29,7 +29,7 @@ export function getRequiredRosDistributions(): string[] {
 	const requiredRosDistributions = core.getInput("required-ros-distributions");
 	if (requiredRosDistributions) {
 		requiredRosDistributionsList = requiredRosDistributions.split(
-			RegExp("\\s")
+			RegExp("\\s"),
 		);
 	}
 
@@ -45,7 +45,7 @@ const validDistro: string[] = ["noetic", "humble", "iron", "rolling"];
 
 //Determine whether all inputs name supported ROS distributions.
 export function validateDistro(
-	requiredRosDistributionsList: string[]
+	requiredRosDistributionsList: string[],
 ): boolean {
 	for (const rosDistro of requiredRosDistributionsList) {
 		if (validDistro.indexOf(rosDistro) <= -1) {
@@ -75,7 +75,7 @@ export async function determineDistribCodename(): Promise<string> {
 	await exec(
 		"bash",
 		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
-		options
+		options,
 	);
 	return distribCodename;
 }

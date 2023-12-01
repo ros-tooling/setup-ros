@@ -91,7 +91,7 @@ export async function runAptGetInstall(packages: string[]): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function installAptDependencies(
-	installConnext: boolean = false
+	installConnext: boolean = false,
 ): Promise<number> {
 	const distribCodename = await utils.determineDistribCodename();
 	let aptPackages: string[] = installConnext

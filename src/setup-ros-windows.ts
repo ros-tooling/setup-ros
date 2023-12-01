@@ -36,7 +36,7 @@ async function prepareRos2BuildEnvironment() {
 					}
 				},
 			},
-		}
+		},
 	);
 
 	core.addPath("c:\\program files\\cppcheck");

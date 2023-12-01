@@ -113,7 +113,7 @@ const ros1UbuntuVersion = "focal";
  */
 async function addAptRepo(
 	ubuntuCodename: string,
-	use_ros2_testing: boolean
+	use_ros2_testing: boolean,
 ): Promise<void> {
 	// There is now no Ubuntu version overlap between ROS 1 and ROS 2
 	if (ros1UbuntuVersion === ubuntuCodename) {
