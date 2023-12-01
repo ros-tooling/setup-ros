@@ -29,7 +29,7 @@ const pip3Packages: string[] = [
 	"colcon-test-result==0.3.8",
 	"coverage",
 	"cryptography",
-	"empy",
+	"empy<4",
 	"flake8<3.8",
 	"flake8-blind-except",
 	"flake8-builtins",
