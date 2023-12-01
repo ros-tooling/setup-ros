@@ -558,7 +558,7 @@ class OidcClient {
                 .catch(error => {
                 throw new Error(`Failed to get ID Token. \n 
         Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
+        Error Message: ${error.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
             if (!id_token) {
@@ -6982,7 +6982,7 @@ const pip3Packages = [
     "colcon-test-result==0.3.8",
     "coverage",
     "cryptography",
-    "empy",
+    "empy<4",
     "flake8<3.8",
     "flake8-blind-except",
     "flake8-builtins",
