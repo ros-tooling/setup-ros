@@ -72,7 +72,7 @@ const pip3CommandLine: string[] = ["pip3", "install", "--upgrade"];
  */
 export async function runPython3PipInstall(
 	packages: string[],
-	run_with_sudo: boolean = true
+	run_with_sudo: boolean = true,
 ): Promise<number> {
 	const args = pip3CommandLine.concat(packages);
 	// Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
@@ -94,7 +94,7 @@ export async function runPython3PipInstall(
  */
 export async function installPython3Dependencies(
 	run_with_sudo: boolean = true,
-	packages: string[] = pip3Packages
+	packages: string[] = pip3Packages,
 ): Promise<number> {
 	if (packages.length === 0) {
 		return 0;
