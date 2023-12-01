@@ -6961,7 +6961,7 @@ const pip3Packages = [
     "colcon-cd==0.1.1",
     "colcon-cmake==0.2.27",
     "colcon-common-extensions==0.3.0",
-    "colcon-core==0.11.0",
+    "colcon-core==0.15.1",
     "colcon-coveragepy-result==0.0.8",
     "colcon-defaults==0.2.7",
     "colcon-lcov-result==0.5.0",
