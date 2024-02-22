@@ -6600,8 +6600,8 @@ const aptCommandLine = [
     "--yes",
 ];
 const aptDependencies = [
-    "libssl-dev",
-    "python3-dev",
+    "libssl-dev", // required for pip3 cryptography module
+    "python3-dev", // required for pip3 cryptography module
     "clang",
     "lcov",
     "python3-rosinstall-generator",
