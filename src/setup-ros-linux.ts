@@ -166,9 +166,11 @@ export async function runLinux(): Promise<void> {
 	const ubuntuCodename = await utils.determineDistribCodename();
 	await addAptRepo(ubuntuCodename, use_ros2_testing);
 
-	// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
-	await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
-	await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+	if ("noble" !== ubuntuCodename) {
+		// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
+		await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
+		await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+	}
 
 	// Install development-related packages and some common dependencies
 	await apt.installAptDependencies(installConnext);
