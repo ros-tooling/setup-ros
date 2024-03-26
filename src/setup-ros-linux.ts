@@ -175,6 +175,17 @@ export async function runLinux(): Promise<void> {
 	// Install development-related packages and some common dependencies
 	await apt.installAptDependencies(installConnext);
 
+	// Workaround for Noble: we need a newer version of python3-flake8
+	if ("noble" == ubuntuCodename) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://archive.ubuntu.com/ubuntu/ ${ubuntuCodename}-proposed restricted main multiverse universe" >> /etc/apt/sources.list.d/ubuntu-${ubuntuCodename}-proposed.list`,
+		]);
+		await utils.exec("sudo", ["apt-get", "update"]);
+		await apt.runAptGetInstall([`python3-flake8/${ubuntuCodename}-proposed`]);
+	}
+
 	// We don't use pip here to install dependencies for ROS 2
 	if (ubuntuCodename === ros1UbuntuVersion) {
 		/* pip3 dependencies need to be installed after the APT ones, as pip3
