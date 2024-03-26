@@ -78,6 +78,8 @@ const distributionSpecificAptDependencies = {
 		"python3-colcon-lcov-result",
 		"python3-colcon-meson",
 		"python3-colcon-mixin",
+		// Others
+		"python3-importlib-metadata",
 	],
 };
 
