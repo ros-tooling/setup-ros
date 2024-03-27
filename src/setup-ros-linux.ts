@@ -166,12 +166,25 @@ export async function runLinux(): Promise<void> {
 	const ubuntuCodename = await utils.determineDistribCodename();
 	await addAptRepo(ubuntuCodename, use_ros2_testing);
 
-	// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
-	await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
-	await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+	if ("noble" !== ubuntuCodename) {
+		// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
+		await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
+		await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
+	}
 
 	// Install development-related packages and some common dependencies
 	await apt.installAptDependencies(installConnext);
+
+	// Workaround for Noble: we need a newer version of python3-flake8
+	if ("noble" == ubuntuCodename) {
+		await utils.exec("sudo", [
+			"bash",
+			"-c",
+			`echo "deb http://archive.ubuntu.com/ubuntu/ ${ubuntuCodename}-proposed restricted main multiverse universe" >> /etc/apt/sources.list.d/ubuntu-${ubuntuCodename}-proposed.list`,
+		]);
+		await utils.exec("sudo", ["apt-get", "update"]);
+		await apt.runAptGetInstall([`python3-flake8/${ubuntuCodename}-proposed`]);
+	}
 
 	// We don't use pip here to install dependencies for ROS 2
 	if (ubuntuCodename === ros1UbuntuVersion) {

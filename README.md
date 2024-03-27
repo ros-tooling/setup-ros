@@ -114,7 +114,7 @@ jobs:
   build_docker:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:jammy
+      image: ubuntu:noble
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@v0.7
@@ -185,7 +185,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Noetic requires `focal`, Humble requires `jammy`, etc.
+For example, Noetic requires `focal`, Humble requires `jammy`, Jazzy requires `noble`, etc.
 
 ```yaml
 jobs:
@@ -241,7 +241,7 @@ jobs:
             ros_version: 2
 
           # Rolling Ridley (No End-Of-Life)
-          - docker_image: ubuntu:jammy
+          - docker_image: ubuntu:noble
             ros_distribution: rolling
             ros_version: 2
 
