@@ -101,6 +101,7 @@ jobs:
           - noetic
           - humble
           - iron
+          - jazzy
           - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
@@ -125,6 +126,11 @@ jobs:
             ros_distribution: iron
             ros_version: 2
 
+          # Jazzy Jalisco (May 2024 - November 2029)
+          - docker_image: ubuntu:noble
+            ros_distribution: jazzy
+            ros_version: 2
+
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
           - docker_image: ubuntu:noble
             ros_distribution: rolling
@@ -143,6 +149,8 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
+          # Use ros2-testing repo for Jazzy before it's officially release
+          use-ros2-testing: ${{ matrix.ros_distribution == 'jazzy' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 1
