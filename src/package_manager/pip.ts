@@ -57,7 +57,7 @@ const pip3Packages: string[] = [
 	"pytest-repeat",
 	"pytest-rerunfailures",
 	"pytest-runner",
-	"setuptools<60.0",
+	"setuptools",
 	"wheel",
 ];
 

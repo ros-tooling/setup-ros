@@ -7030,7 +7030,7 @@ const pip3Packages = [
     "pytest-repeat",
     "pytest-rerunfailures",
     "pytest-runner",
-    "setuptools<60.0",
+    "setuptools",
     "wheel",
 ];
 const pip3ConfigCommandLine = [
