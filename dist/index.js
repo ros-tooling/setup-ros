@@ -7056,11 +7056,11 @@ function runPython3PipInstall(packages, run_with_sudo = true) {
             cwd: path.sep,
         };
         if (run_with_sudo) {
-            utils.exec("sudo", pip3ConfigCommandLine);
+            yield utils.exec("sudo", pip3ConfigCommandLine);
             return utils.exec("sudo", pip3CommandLine.concat(packages), options);
         }
         else {
-            utils.exec(pip3ConfigCommandLine[0], pip3ConfigCommandLine.splice(1));
+            yield utils.exec(pip3ConfigCommandLine[0], pip3ConfigCommandLine.splice(1));
             return utils.exec(args[0], args.splice(1), options);
         }
     });
