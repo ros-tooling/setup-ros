@@ -87,7 +87,7 @@ export async function runPython3PipInstall(
 		cwd: path.sep,
 	};
 	if (run_with_sudo) {
-		utils.exec("sudo", pip3ConfigCommandLine);
+		await utils.exec("sudo", pip3ConfigCommandLine);
 		return utils.exec("sudo", pip3CommandLine.concat(packages), options);
 	} else {
 		utils.exec(pip3ConfigCommandLine[0], pip3ConfigCommandLine.splice(1));
