@@ -6752,7 +6752,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installBrewDependencies = exports.runBrew = void 0;
+exports.setupPython = exports.installBrewDependencies = exports.runBrew = void 0;
 const utils = __importStar(__nccwpck_require__(1314));
 const brewDependencies = [
     "asio",
@@ -6801,6 +6801,33 @@ function installBrewDependencies() {
     });
 }
 exports.installBrewDependencies = installBrewDependencies;
+/**
+ * Set python path to pin specific python.
+ *
+ * @returns Promise<number> exit code
+ */
+function setupPython() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("find", [
+            "/usr/local/bin",
+            "-lname",
+            "'*/Library/Frameworks/Python.framework/*'",
+            "-delete",
+        ]);
+        yield utils.exec("sudo", [
+            "rm",
+            "-rf",
+            "/Library/Frameworks/Python.framework/",
+        ]);
+        yield utils.exec("brew", ["unlink", "python"]);
+        return utils.exec("ln", [
+            "-s",
+            "/opt/homebrew/bin/pip3.10",
+            "/opt/homebrew/bin/pip3",
+        ]);
+    });
+}
+exports.setupPython = setupPython;
 
 
 /***/ }),
@@ -7356,6 +7383,7 @@ const pip = __importStar(__nccwpck_require__(6744));
 function runOsX() {
     return __awaiter(this, void 0, void 0, function* () {
         yield brew.installBrewDependencies();
+        yield brew.setupPython();
         yield utils.exec("sudo", [
             "bash",
             "-c",

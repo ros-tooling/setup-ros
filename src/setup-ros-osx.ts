@@ -8,6 +8,7 @@ import * as pip from "./package_manager/pip";
  */
 export async function runOsX() {
 	await brew.installBrewDependencies();
+	await brew.setupPython();
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
