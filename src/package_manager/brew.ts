@@ -16,7 +16,7 @@ const brewDependencies: string[] = [
 	"openssl",
 	"pcre",
 	"poco",
-	"python3",
+	"python@3.10",
 	"qt",
 	"spdlog",
 	"tinyxml",
