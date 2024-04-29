@@ -7467,7 +7467,8 @@ const pip3Packages = ["lxml", "netifaces"];
  */
 function prepareRos2BuildEnvironment() {
     return __awaiter(this, void 0, void 0, function* () {
-        const python_dir = tc.find("Python", "3.7");
+        // Currently targeted Python version for Windows according to REP 2000
+        const python_dir = tc.find("Python", "3.8");
         yield utils.exec(path.join(python_dir, "python"), [
             "-c",
             "import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))",
