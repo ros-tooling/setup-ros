@@ -61,6 +61,13 @@ const pip3Packages: string[] = [
 	"wheel",
 ];
 
+const pip3ConfigCommandLine: string[] = [
+	"pip3",
+	"config",
+	"set",
+	"global.break-system-packages",
+	"true",
+];
 const pip3CommandLine: string[] = ["pip3", "install", "--upgrade"];
 
 /**
@@ -80,8 +87,10 @@ export async function runPython3PipInstall(
 		cwd: path.sep,
 	};
 	if (run_with_sudo) {
+		await utils.exec("sudo", pip3ConfigCommandLine);
 		return utils.exec("sudo", pip3CommandLine.concat(packages), options);
 	} else {
+		await utils.exec(pip3ConfigCommandLine[0], pip3ConfigCommandLine.splice(1));
 		return utils.exec(args[0], args.splice(1), options);
 	}
 }
