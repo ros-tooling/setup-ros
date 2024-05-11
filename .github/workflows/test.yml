@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
       - run: .github/workflows/check-environment.sh
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
       - run: .github/workflows/check-environment.sh
@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
         with:
@@ -144,7 +144,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
         with:
@@ -166,7 +166,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - run: cp .github/workflows/test_setup.cfg setup.cfg
       - uses: ./ # Uses an action in the root directory
@@ -181,7 +181,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
 
@@ -199,7 +199,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
         with:
-          node-version: "16.x"
+          node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
         with:
