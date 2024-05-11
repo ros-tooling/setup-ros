@@ -6698,8 +6698,8 @@ exports.runAptGetInstall = runAptGetInstall;
  *
  * @returns Promise<number> exit code
  */
-function installAptDependencies(installConnext = false) {
-    return __awaiter(this, void 0, void 0, function* () {
+function installAptDependencies() {
+    return __awaiter(this, arguments, void 0, function* (installConnext = false) {
         const distribCodename = yield utils.determineDistribCodename();
         let aptPackages = installConnext
             ? aptDependencies.concat(aptRtiConnextDds[distribCodename] || [])
@@ -7075,8 +7075,8 @@ const pip3CommandLine = ["pip3", "install", "--upgrade"];
  * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function runPython3PipInstall(packages, run_with_sudo = true) {
-    return __awaiter(this, void 0, void 0, function* () {
+function runPython3PipInstall(packages_1) {
+    return __awaiter(this, arguments, void 0, function* (packages, run_with_sudo = true) {
         const args = pip3CommandLine.concat(packages);
         // Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
         const options = {
@@ -7099,8 +7099,8 @@ exports.runPython3PipInstall = runPython3PipInstall;
  * @param   run_with_sudo   whether to prefix the command with sudo
  * @returns Promise<number> exit code
  */
-function installPython3Dependencies(run_with_sudo = true, packages = pip3Packages) {
-    return __awaiter(this, void 0, void 0, function* () {
+function installPython3Dependencies() {
+    return __awaiter(this, arguments, void 0, function* (run_with_sudo = true, packages = pip3Packages) {
         if (packages.length === 0) {
             return 0;
         }
