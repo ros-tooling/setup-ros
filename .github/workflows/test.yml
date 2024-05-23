@@ -74,6 +74,8 @@ jobs:
           - humble
           # Iron Irwini (May 2023 - November 2024)
           - iron
+          # Jazzy Jalisco (May 2024 - May 2029)
+          - jazzy
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.0.2
