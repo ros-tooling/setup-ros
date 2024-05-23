@@ -124,19 +124,18 @@ jobs:
 ### Setting up the worker, installing system dependencies and ROS (Linux)
 
 One or more ROS distributions can be installed simultaneously by passing multiple values to `required-ros-distributions`.
-This setup is necessary to use the ROS 1/ROS 2 bridge: [ros1_bridge](https://github.com/ros2/ros1_bridge).
 
 ```yaml
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:jammy
+    image: ubuntu:noble
   steps:
     - uses: ros-tooling/setup-ros@v0.7
       with:
-        required-ros-distributions: noetic humble
-    - run: "source /opt/ros/humble/setup.bash && ros2 run --help"
-    - run: "source /opt/ros/noetic/setup.bash && rosnode --help"
+        required-ros-distributions: jazzy rollling
+    - run: "source /opt/ros/jazzy/setup.bash && ros2 run --help"
+    - run: "source /opt/ros/rollling/setup.bash && ros2 run --help"
 ```
 
 **Note: on Ubuntu, `required-ros-distributions` installs the desktop variant for that distribution. This option is not required, and should probably be avoided in most workflows. It is retained for historical reasons and those who specifically do not care about whether their application specifies its dependencies properly.**
@@ -149,12 +148,12 @@ You can specify if you'd like to use the [pre-release ROS 2 repository][pre_rele
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:jammy
+    image: ubuntu:noble
   steps:
     - uses: ros-tooling/setup-ros@v0.7
       with:
         use-ros2-testing: true
-        required-ros-distributions: humble
+        required-ros-distributions: jazzy
 ```
 
 ### Including RTI Connext
@@ -167,13 +166,13 @@ To include RTI Connext, simply set the `install-connext` parameter to `true`.
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:jammy
+    image: ubuntu:noble
   steps:
     - uses: ros-tooling/setup-ros@v0.7
       with:
         install-connext: true
         use-ros2-testing: true
-        required-ros-distributions: humble
+        required-ros-distributions: jazzy
 ```
 
 ### Iterating on all ROS distributions, for all platforms
@@ -202,7 +201,7 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test
-        uses: ros-tooling/action-ros-ci@v0.2
+        uses: ros-tooling/action-ros-ci@v0.3
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
@@ -215,6 +214,8 @@ jobs:
           - noetic
           - humble
           - iron
+          - jazzy
+          - rolling
 
         # Define the Docker image(s) associated with each ROS distribution.
         # The include syntax allows additional variables to be defined, like
@@ -240,11 +241,15 @@ jobs:
             ros_distribution: iron
             ros_version: 2
 
+          # Jazzy Jalisco (May 2024 - May 2029)
+          - docker_image: ubuntu:noble
+            ros_distribution: jazzy
+            ros_version: 2
+
           # Rolling Ridley (No End-Of-Life)
           - docker_image: ubuntu:noble
             ros_distribution: rolling
             ros_version: 2
-
     container:
       image: ${{ matrix.docker_image }}
     steps:
@@ -254,13 +259,13 @@ jobs:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - name: build and test ROS 1
         if: ${{ matrix.ros_version == 1 }}
-        uses: ros-tooling/action-ros-ci@v0.2
+        uses: ros-tooling/action-ros-ci@v0.3
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros1-distro: ${{ matrix.ros_distribution }}
       - name: build and test ROS 2
         if: ${{ matrix.ros_version == 2 }}
-        uses: ros-tooling/action-ros-ci@v0.2
+        uses: ros-tooling/action-ros-ci@v0.3
         with:
           package-name: YOUR_PACKAGE_HERE MORE_PACKAGES_HERE
           target-ros2-distro: ${{ matrix.ros_distribution }}
