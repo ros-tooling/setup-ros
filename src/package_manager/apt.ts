@@ -80,6 +80,9 @@ const distributionSpecificAptDependencies = {
 		"python3-colcon-mixin",
 		// Others
 		"python3-importlib-metadata",
+		// Explicitly install clang-rt:
+		// https://github.com/ros-tooling/setup-ros/issues/685
+		"libclang-rt-dev",
 	],
 };
 
