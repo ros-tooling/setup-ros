@@ -79,3 +79,20 @@ export async function determineDistribCodename(): Promise<string> {
 	);
 	return distribCodename;
 }
+
+/**
+ * Determines the Linux distribution.
+ *
+ * @returns Promise<string> Linux distribution (e.g. "ubuntu")
+ */
+export async function determineDistrib(): Promise<string> {
+	let distrib = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			distrib += data.toString();
+		},
+	};
+	await exec("bash", ["-c", 'source /etc/os-release ; echo -n "$ID"'], options);
+	return distrib;
+}
