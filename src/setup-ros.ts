@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 
-import * as linux from "./setup-ros-linux";
+import * as ubuntu from "./setup-ros-ubuntu";
 import * as osx from "./setup-ros-osx";
 import * as windows from "./setup-ros-windows";
 
@@ -12,7 +12,7 @@ async function run() {
 		} else if (platform === "win32") {
 			await windows.runWindows();
 		} else if (platform === "linux") {
-			await linux.runLinux();
+			await ubuntu.runLinux();
 		} else {
 			core.setFailed(`Unsupported platform ${platform}`);
 		}
