@@ -96,3 +96,24 @@ export async function determineDistrib(): Promise<string> {
 	await exec("bash", ["-c", 'source /etc/os-release ; echo -n "$ID"'], options);
 	return distrib;
 }
+
+/**
+ * Determines the Linux distribution version.
+ *
+ * @returns Promise<string> Linux distribution version (e.g. "24.04")
+ */
+export async function determineDistribVer(): Promise<string> {
+	let distrib = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			distrib += data.toString();
+		},
+	};
+	await exec(
+		"bash",
+		["-c", 'source /etc/os-release ; echo -n "$VERSION_ID"'],
+		options,
+	);
+	return distrib;
+}

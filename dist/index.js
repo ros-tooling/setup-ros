@@ -7650,7 +7650,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.determineDistrib = exports.determineDistribCodename = exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
+exports.determineDistribVer = exports.determineDistrib = exports.determineDistribCodename = exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -7737,6 +7737,25 @@ function determineDistrib() {
     });
 }
 exports.determineDistrib = determineDistrib;
+/**
+ * Determines the Linux distribution version.
+ *
+ * @returns Promise<string> Linux distribution version (e.g. "24.04")
+ */
+function determineDistribVer() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let distrib = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                distrib += data.toString();
+            },
+        };
+        yield exec("bash", ["-c", 'source /etc/os-release ; echo -n "$VERSION_ID"'], options);
+        return distrib;
+    });
+}
+exports.determineDistribVer = determineDistribVer;
 
 
 /***/ }),
