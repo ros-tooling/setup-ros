@@ -6964,6 +6964,132 @@ exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackage
 
 /***/ }),
 
+/***/ 8796:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.installDnfDependencies = exports.runDnfInstall = void 0;
+const utils = __importStar(__nccwpck_require__(1314));
+const dnfCommandLine = [
+    "dnf",
+    "install",
+    "--setopt=install_weak_deps=False",
+    "--quiet",
+    "--assumeyes",
+];
+const dnfDependencies = [
+    "openssl-devel", // required for pip3 cryptography module
+    "python3-devel", // required for pip3 cryptography module
+    "clang",
+    "lcov",
+];
+const distributionSpecificDnfDependencies = {
+    8: [
+        // Basic development packages (from ROS 2 source/development setup instructions)
+        // ros-dev-tools includes many packages that we needed to include manually in Focal & older
+        "python3-flake8-docstrings",
+        "python3-pip",
+        "python3-pytest-cov",
+        "python3-pytest-repeat",
+        "python3-pytest-rerunfailures",
+        "ros-dev-tools",
+        // Additional colcon packages (not included in ros-dev-tools)
+        "python3-colcon-coveragepy-result",
+        "python3-colcon-lcov-result",
+        "python3-colcon-mixin",
+        // FastRTPS dependencies
+        "tinyxml2-devel",
+        // Others
+        "curl",
+    ],
+    9: [
+        // Basic development packages (from ROS 2 source/development setup instructions)
+        // ros-dev-tools includes many packages that we needed to include manually in Focal & older
+        "python3-pip",
+        "python3-pytest-cov",
+        "python3-pytest-repeat",
+        "python3-pytest-rerunfailures",
+        "ros-build-essential",
+        "python3-colcon-common-extensions",
+        "python3-colcon-mixin",
+        "python3-rosdep",
+        "python3-vcstool",
+        // Additional colcon packages (not included in ros-dev-tools)
+        "python3-colcon-coveragepy-result",
+        "python3-colcon-lcov-result",
+        // Others
+        "python3-importlib-metadata",
+        "curl-minimal",
+    ],
+};
+/**
+ * Run dnf install on list of specified packages.
+ *
+ * This invocation guarantees that dnf install will be non-blocking.
+ *
+ * @param   packages        list of RPM packages to be installed
+ * @returns Promise<number> exit code
+ */
+function runDnfInstall(packages) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return utils.exec("sudo", dnfCommandLine.concat(packages));
+    });
+}
+exports.runDnfInstall = runDnfInstall;
+/**
+ * Run ROS 2 dnf dependencies.
+ *
+ * @returns Promise<number> exit code
+ */
+function installDnfDependencies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const distribVer = yield utils.determineDistribVer();
+        const distribVerMaj = distribVer.split(".")[0];
+        let dnfPackages = dnfDependencies;
+        const additionalDnfPackages = distributionSpecificDnfDependencies[distribVerMaj] || [];
+        dnfPackages = dnfPackages.concat(additionalDnfPackages);
+        return runDnfInstall(dnfPackages);
+    });
+}
+exports.installDnfDependencies = installDnfDependencies;
+
+
+/***/ }),
+
 /***/ 6744:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -7115,7 +7241,233 @@ exports.installPython3Dependencies = installPython3Dependencies;
 
 /***/ }),
 
-/***/ 1401:
+/***/ 2546:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runOsX = void 0;
+const utils = __importStar(__nccwpck_require__(1314));
+const brew = __importStar(__nccwpck_require__(9586));
+const pip = __importStar(__nccwpck_require__(6744));
+/**
+ * Install ROS 2 on a OS X worker.
+ */
+function runOsX() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield brew.installBrewDependencies();
+        yield brew.setupPython();
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc',
+        ]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc',
+        ]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc',
+        ]);
+        yield pip.installPython3Dependencies();
+        // While rosdep and vcs are available as a Debian package on Ubuntu, they need
+        // to be installed through pip on OS X.
+        yield pip.runPython3PipInstall(["catkin-pkg", "rosdep", "vcstool"]);
+        // Initializes rosdep
+        yield utils.exec("sudo", ["rosdep", "init"]);
+    });
+}
+exports.runOsX = runOsX;
+
+
+/***/ }),
+
+/***/ 8110:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.runLinux = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const io = __importStar(__nccwpck_require__(7436));
+const dnf = __importStar(__nccwpck_require__(8796));
+const utils = __importStar(__nccwpck_require__(1314));
+/**
+ * Configure basic OS stuff.
+ */
+function configOs() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // When this action runs in a Docker image, sudo may be missing.
+        // This installs sudo to avoid having to handle both cases (action runs as
+        // root, action does not run as root) everywhere in the action.
+        try {
+            yield io.which("sudo", true);
+        }
+        catch (err) {
+            yield utils.exec("dnf", [
+                "install",
+                "--setopt=install_weak_deps=False",
+                "--quiet",
+                "--assumeyes",
+                "sudo",
+            ]);
+        }
+        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        // Install tools required to configure the worker system.
+        yield dnf.runDnfInstall(["gnupg2", "langpacks-en", "glibc-langpack-en"]);
+        // Select a locale supporting Unicode.
+        core.exportVariable("LANG", "en_US.UTF-8");
+        // Enforce UTC time for consistency.
+        yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
+        yield utils.exec("sudo", [
+            "ln",
+            "-sf",
+            "/usr/share/zoneinfo/Etc/UTC",
+            "/etc/localtime",
+        ]);
+        yield dnf.runDnfInstall(["tzdata"]);
+    });
+}
+/**
+ * Add OSRF repository.
+ */
+function addDnfRepo() {
+    return __awaiter(this, void 0, void 0, function* () {
+        dnf.runDnfInstall(["epel-release"]);
+        yield utils.exec("bash", [
+            "-c",
+            "sudo dnf install --setopt=install_weak_deps=False --quiet --assumeyes 'dnf-command(config-manager)'",
+        ]);
+        const version = Number((yield utils.determineDistribVer()).split(".")[0]);
+        let extra_repo_name = "";
+        if (version === 8) {
+            extra_repo_name = "powertools";
+        }
+        else if (version > 8) {
+            extra_repo_name = "crb";
+        }
+        yield utils.exec("sudo", [
+            "dnf",
+            "config-manager",
+            "--set-enabled",
+            extra_repo_name,
+        ]);
+        yield utils.exec("sudo", [
+            "curl",
+            "--output",
+            "/etc/yum.repos.d/ros2.repo",
+            "http://packages.ros.org/ros2/rhel/ros2.repo",
+        ]);
+        yield utils.exec("sudo", ["dnf", "makecache", "--assumeyes"]);
+    });
+}
+/**
+ * Initialize rosdep.
+ */
+function rosdepInit() {
+    return __awaiter(this, void 0, void 0, function* () {
+        /**
+         * Try to remove the default file first in case this environment has already done a rosdep
+         * init before.
+         */
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            "rm /etc/ros/rosdep/sources.list.d/20-default.list || true",
+        ]);
+        yield utils.exec("sudo", ["rosdep", "init"]);
+    });
+}
+/**
+ * Install ROS 2 (development packages and/or ROS binaries) on a Linux worker.
+ */
+function runLinux() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield configOs();
+        yield addDnfRepo();
+        // Install development-related packages and some common dependencies
+        yield dnf.installDnfDependencies();
+        yield rosdepInit();
+        for (const rosDistro of utils.getRequiredRosDistributions()) {
+            yield dnf.runDnfInstall([`ros-${rosDistro}-desktop`]);
+        }
+    });
+}
+exports.runLinux = runLinux;
+
+
+/***/ }),
+
+/***/ 5056:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -7338,83 +7690,6 @@ exports.runLinux = runLinux;
 
 /***/ }),
 
-/***/ 2546:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runOsX = void 0;
-const utils = __importStar(__nccwpck_require__(1314));
-const brew = __importStar(__nccwpck_require__(9586));
-const pip = __importStar(__nccwpck_require__(6744));
-/**
- * Install ROS 2 on a OS X worker.
- */
-function runOsX() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield brew.installBrewDependencies();
-        yield brew.setupPython();
-        yield utils.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> ~/.bashrc',
-        ]);
-        yield utils.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/usr/local/opt/qt" >> ~/.bashrc',
-        ]);
-        yield utils.exec("sudo", [
-            "bash",
-            "-c",
-            'echo "export PATH=$PATH:/usr/local/opt/qt/bin" >> ~/.bashrc',
-        ]);
-        yield pip.installPython3Dependencies();
-        // While rosdep and vcs are available as a Debian package on Ubuntu, they need
-        // to be installed through pip on OS X.
-        yield pip.runPython3PipInstall(["catkin-pkg", "rosdep", "vcstool"]);
-        // Initializes rosdep
-        yield utils.exec("sudo", ["rosdep", "init"]);
-    });
-}
-exports.runOsX = runOsX;
-
-
-/***/ }),
-
 /***/ 5403:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -7463,7 +7738,7 @@ const utils = __importStar(__nccwpck_require__(1314));
 const binaryReleases = {
     humble: "https://github.com/ros2/ros2/releases/download/release-humble-20230614/ros2-humble-20230614-windows-release-amd64.zip",
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20230523/ros2-iron-20230523-windows-release-amd64.zip",
-    jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20240523/ros2-jazzy-20250523-windows-release-amd64.zip",
+    jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20240523/ros2-jazzy-20240523-windows-release-amd64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**
@@ -7578,9 +7853,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const linux = __importStar(__nccwpck_require__(1401));
+const ubuntu = __importStar(__nccwpck_require__(5056));
+const rhel = __importStar(__nccwpck_require__(8110));
 const osx = __importStar(__nccwpck_require__(2546));
 const windows = __importStar(__nccwpck_require__(5403));
+const utils = __importStar(__nccwpck_require__(1314));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -7592,7 +7869,16 @@ function run() {
                 yield windows.runWindows();
             }
             else if (platform === "linux") {
-                yield linux.runLinux();
+                const dist = yield utils.determineDistrib();
+                if (dist === "ubuntu") {
+                    yield ubuntu.runLinux();
+                }
+                else if (dist === "almalinux" || dist === "rocky") {
+                    yield rhel.runLinux();
+                }
+                else {
+                    core.setFailed(`Unsupported distribution ${dist}`);
+                }
             }
             else {
                 core.setFailed(`Unsupported platform ${platform}`);
@@ -7650,7 +7936,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.determineDistribCodename = exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
+exports.determineDistribVer = exports.determineDistrib = exports.determineDistribCodename = exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -7718,6 +8004,44 @@ function determineDistribCodename() {
     });
 }
 exports.determineDistribCodename = determineDistribCodename;
+/**
+ * Determines the Linux distribution.
+ *
+ * @returns Promise<string> Linux distribution (e.g. "ubuntu")
+ */
+function determineDistrib() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let distrib = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                distrib += data.toString();
+            },
+        };
+        yield exec("bash", ["-c", 'source /etc/os-release ; echo -n "$ID"'], options);
+        return distrib;
+    });
+}
+exports.determineDistrib = determineDistrib;
+/**
+ * Determines the Linux distribution version.
+ *
+ * @returns Promise<string> Linux distribution version (e.g. "24.04")
+ */
+function determineDistribVer() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let distrib = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                distrib += data.toString();
+            },
+        };
+        yield exec("bash", ["-c", 'source /etc/os-release ; echo -n "$VERSION_ID"'], options);
+        return distrib;
+    });
+}
+exports.determineDistribVer = determineDistribVer;
 
 
 /***/ }),

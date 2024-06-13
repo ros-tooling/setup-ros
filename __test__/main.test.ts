@@ -1,7 +1,8 @@
 import * as core from "@actions/core";
 import * as actions_exec from "@actions/exec";
 
-import * as linux from "../src/setup-ros-linux";
+import * as ubuntu from "../src/setup-ros-ubuntu";
+import * as rhel from "../src/setup-ros-rhel";
 import * as osx from "../src/setup-ros-osx";
 import * as windows from "../src/setup-ros-windows";
 
@@ -16,8 +17,12 @@ describe("basic workflow tests", () => {
 		jest.restoreAllMocks();
 	});
 
-	it("run Linux workflow", async () => {
-		await expect(linux.runLinux()).resolves.not.toThrow();
+	it("run Ubuntu workflow", async () => {
+		await expect(ubuntu.runLinux()).resolves.not.toThrow();
+	});
+
+	it("run RHEL workflow", async () => {
+		await expect(rhel.runLinux()).resolves.not.toThrow();
 	});
 
 	it("run Windows workflow", async () => {
@@ -39,8 +44,12 @@ describe("required-ros-distributions/noetic workflow tests", () => {
 		jest.restoreAllMocks();
 	});
 
-	it("run Linux workflow", async () => {
-		await expect(linux.runLinux()).resolves.not.toThrow();
+	it("run Ubuntu workflow", async () => {
+		await expect(ubuntu.runLinux()).resolves.not.toThrow();
+	});
+
+	it("run RHEL workflow", async () => {
+		await expect(rhel.runLinux()).resolves.not.toThrow();
 	});
 
 	it("run Windows workflow", async () => {
