@@ -133,9 +133,9 @@ build_docker:
   steps:
     - uses: ros-tooling/setup-ros@v0.7
       with:
-        required-ros-distributions: jazzy rollling
+        required-ros-distributions: jazzy rolling
     - run: "source /opt/ros/jazzy/setup.bash && ros2 run --help"
-    - run: "source /opt/ros/rollling/setup.bash && ros2 run --help"
+    - run: "source /opt/ros/rolling/setup.bash && ros2 run --help"
 ```
 
 **Note: on Ubuntu, `required-ros-distributions` installs the desktop variant for that distribution. This option is not required, and should probably be avoided in most workflows. It is retained for historical reasons and those who specifically do not care about whether their application specifies its dependencies properly.**
