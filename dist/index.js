@@ -6588,7 +6588,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installAptDependencies = exports.runAptGetInstall = void 0;
+exports.runAptGetInstall = runAptGetInstall;
+exports.installAptDependencies = installAptDependencies;
 const utils = __importStar(__nccwpck_require__(1314));
 const aptCommandLine = [
     "DEBIAN_FRONTEND=noninteractive",
@@ -6695,7 +6696,6 @@ function runAptGetInstall(packages) {
         return utils.exec("sudo", aptCommandLine.concat(packages));
     });
 }
-exports.runAptGetInstall = runAptGetInstall;
 /**
  * Run ROS 2 APT dependencies.
  *
@@ -6712,7 +6712,6 @@ function installAptDependencies() {
         return runAptGetInstall(aptPackages);
     });
 }
-exports.installAptDependencies = installAptDependencies;
 
 
 /***/ }),
@@ -6755,7 +6754,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setupPython = exports.installBrewDependencies = exports.runBrew = void 0;
+exports.runBrew = runBrew;
+exports.installBrewDependencies = installBrewDependencies;
+exports.setupPython = setupPython;
 const utils = __importStar(__nccwpck_require__(1314));
 const brewDependencies = [
     "asio",
@@ -6792,7 +6793,6 @@ function runBrew(packages) {
         return utils.exec("brew", ["install"].concat(packages));
     });
 }
-exports.runBrew = runBrew;
 /**
  * Run ROS 2 Homebrew dependencies.
  *
@@ -6803,7 +6803,6 @@ function installBrewDependencies() {
         return runBrew(brewDependencies);
     });
 }
-exports.installBrewDependencies = installBrewDependencies;
 /**
  * Set python path to pin specific python.
  *
@@ -6830,7 +6829,6 @@ function setupPython() {
         ]);
     });
 }
-exports.setupPython = setupPython;
 
 
 /***/ }),
@@ -6873,7 +6871,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.downloadAndInstallRos2NugetPackages = exports.installChocoDependencies = exports.runChocoInstallVersion = exports.runChocoInstall = void 0;
+exports.runChocoInstall = runChocoInstall;
+exports.runChocoInstallVersion = runChocoInstallVersion;
+exports.installChocoDependencies = installChocoDependencies;
+exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackages;
 const utils = __importStar(__nccwpck_require__(1314));
 const chocoCommandLine = [
     "install",
@@ -6912,7 +6913,6 @@ function runChocoInstall(packages) {
         return utils.exec("choco", chocoCommandLine.concat(packages));
     });
 }
-exports.runChocoInstall = runChocoInstall;
 /**
  * Run choco install on the list of specified packages and versions.
  *
@@ -6928,7 +6928,6 @@ function runChocoInstallVersion(packages) {
         return ret !== 0 ? 1 : 0;
     });
 }
-exports.runChocoInstallVersion = runChocoInstallVersion;
 /**
  * Install ROS 2 Chocolatey dependencies.
  *
@@ -6940,7 +6939,6 @@ function installChocoDependencies() {
             (yield runChocoInstallVersion(chocoDependenciesPinned)));
     });
 }
-exports.installChocoDependencies = installChocoDependencies;
 /**
  * Download Open Robotics maintained packages from GitHub and install them.
  *
@@ -6959,7 +6957,6 @@ function downloadAndInstallRos2NugetPackages() {
         return utils.exec("choco", chocoCommandLine.concat("--source", ".").concat(ros2ChocolateyPackages));
     });
 }
-exports.downloadAndInstallRos2NugetPackages = downloadAndInstallRos2NugetPackages;
 
 
 /***/ }),
@@ -7002,7 +6999,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installDnfDependencies = exports.runDnfInstall = void 0;
+exports.runDnfInstall = runDnfInstall;
+exports.installDnfDependencies = installDnfDependencies;
 const utils = __importStar(__nccwpck_require__(1314));
 const dnfCommandLine = [
     "dnf",
@@ -7069,7 +7067,6 @@ function runDnfInstall(packages) {
         return utils.exec("sudo", dnfCommandLine.concat(packages));
     });
 }
-exports.runDnfInstall = runDnfInstall;
 /**
  * Run ROS 2 dnf dependencies.
  *
@@ -7085,7 +7082,6 @@ function installDnfDependencies() {
         return runDnfInstall(dnfPackages);
     });
 }
-exports.installDnfDependencies = installDnfDependencies;
 
 
 /***/ }),
@@ -7128,7 +7124,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installPython3Dependencies = exports.runPython3PipInstall = void 0;
+exports.runPython3PipInstall = runPython3PipInstall;
+exports.installPython3Dependencies = installPython3Dependencies;
 const path = __importStar(__nccwpck_require__(1017));
 const utils = __importStar(__nccwpck_require__(1314));
 const pip3Packages = [
@@ -7221,7 +7218,6 @@ function runPython3PipInstall(packages_1) {
         }
     });
 }
-exports.runPython3PipInstall = runPython3PipInstall;
 /**
  * Run Python3 pip install on a list of specified packages.
  *
@@ -7236,7 +7232,6 @@ function installPython3Dependencies() {
         return runPython3PipInstall(packages, run_with_sudo);
     });
 }
-exports.installPython3Dependencies = installPython3Dependencies;
 
 
 /***/ }),
@@ -7279,7 +7274,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runOsX = void 0;
+exports.runOsX = runOsX;
 const utils = __importStar(__nccwpck_require__(1314));
 const brew = __importStar(__nccwpck_require__(9586));
 const pip = __importStar(__nccwpck_require__(6744));
@@ -7313,7 +7308,6 @@ function runOsX() {
         yield utils.exec("sudo", ["rosdep", "init"]);
     });
 }
-exports.runOsX = runOsX;
 
 
 /***/ }),
@@ -7356,7 +7350,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runLinux = void 0;
+exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const dnf = __importStar(__nccwpck_require__(8796));
@@ -7462,7 +7456,6 @@ function runLinux() {
         }
     });
 }
-exports.runLinux = runLinux;
 
 
 /***/ }),
@@ -7508,7 +7501,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runLinux = void 0;
+exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const apt = __importStar(__nccwpck_require__(4671));
@@ -7685,7 +7678,6 @@ function runLinux() {
         }
     });
 }
-exports.runLinux = runLinux;
 
 
 /***/ }),
@@ -7728,7 +7720,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runWindows = void 0;
+exports.runWindows = runWindows;
 const core = __importStar(__nccwpck_require__(2186));
 const tc = __importStar(__nccwpck_require__(7784));
 const path = __importStar(__nccwpck_require__(1017));
@@ -7809,7 +7801,6 @@ function runWindows() {
         return yield prepareRos2BinaryReleases();
     });
 }
-exports.runWindows = runWindows;
 
 
 /***/ }),
@@ -7936,7 +7927,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.determineDistribVer = exports.determineDistrib = exports.determineDistribCodename = exports.validateDistro = exports.getRequiredRosDistributions = exports.exec = void 0;
+exports.exec = exec;
+exports.getRequiredRosDistributions = getRequiredRosDistributions;
+exports.validateDistro = validateDistro;
+exports.determineDistribCodename = determineDistribCodename;
+exports.determineDistrib = determineDistrib;
+exports.determineDistribVer = determineDistribVer;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -7957,7 +7953,6 @@ function exec(commandLine, args, options, log_message) {
         });
     });
 }
-exports.exec = exec;
 function getRequiredRosDistributions() {
     let requiredRosDistributionsList = [];
     const requiredRosDistributions = core.getInput("required-ros-distributions");
@@ -7969,7 +7964,6 @@ function getRequiredRosDistributions() {
     }
     return requiredRosDistributionsList;
 }
-exports.getRequiredRosDistributions = getRequiredRosDistributions;
 //list of valid linux distributions
 const validDistro = ["noetic", "humble", "iron", "jazzy", "rolling"];
 //Determine whether all inputs name supported ROS distributions.
@@ -7981,7 +7975,6 @@ function validateDistro(requiredRosDistributionsList) {
     }
     return true;
 }
-exports.validateDistro = validateDistro;
 /**
  * Determines the Ubuntu distribution codename.
  *
@@ -8003,7 +7996,6 @@ function determineDistribCodename() {
         return distribCodename;
     });
 }
-exports.determineDistribCodename = determineDistribCodename;
 /**
  * Determines the Linux distribution.
  *
@@ -8022,7 +8014,6 @@ function determineDistrib() {
         return distrib;
     });
 }
-exports.determineDistrib = determineDistrib;
 /**
  * Determines the Linux distribution version.
  *
@@ -8041,7 +8032,6 @@ function determineDistribVer() {
         return distrib;
     });
 }
-exports.determineDistribVer = determineDistribVer;
 
 
 /***/ }),
