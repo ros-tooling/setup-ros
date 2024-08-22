@@ -7660,7 +7660,8 @@ function runLinux() {
         yield addAptRepo(ubuntuCodename, use_ros2_testing);
         if ("noble" !== ubuntuCodename) {
             // Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
-            yield utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
+            const arch = yield utils.getArch();
+            yield utils.exec("sudo", ["apt-mark", "hold", `grub-efi-${arch}-signed`]);
             yield utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
         }
         // Install development-related packages and some common dependencies
@@ -7933,6 +7934,7 @@ exports.validateDistro = validateDistro;
 exports.determineDistribCodename = determineDistribCodename;
 exports.determineDistrib = determineDistrib;
 exports.determineDistribVer = determineDistribVer;
+exports.getArch = getArch;
 const actions_exec = __importStar(__nccwpck_require__(1514));
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -7976,6 +7978,25 @@ function validateDistro(requiredRosDistributionsList) {
     return true;
 }
 /**
+ * Get the output of a given command.
+ *
+ * @param command the command, which must output something
+ * @returns the string output
+ */
+function getCommandOutput(command) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let output = "";
+        const options = {};
+        options.listeners = {
+            stdout: (data) => {
+                output += data.toString();
+            },
+        };
+        yield exec("bash", ["-c", command], options);
+        return output.trim();
+    });
+}
+/**
  * Determines the Ubuntu distribution codename.
  *
  * This function directly source /etc/lsb-release instead of invoking
@@ -7985,15 +8006,7 @@ function validateDistro(requiredRosDistributionsList) {
  */
 function determineDistribCodename() {
     return __awaiter(this, void 0, void 0, function* () {
-        let distribCodename = "";
-        const options = {};
-        options.listeners = {
-            stdout: (data) => {
-                distribCodename += data.toString();
-            },
-        };
-        yield exec("bash", ["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'], options);
-        return distribCodename;
+        return getCommandOutput('source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"');
     });
 }
 /**
@@ -8003,15 +8016,7 @@ function determineDistribCodename() {
  */
 function determineDistrib() {
     return __awaiter(this, void 0, void 0, function* () {
-        let distrib = "";
-        const options = {};
-        options.listeners = {
-            stdout: (data) => {
-                distrib += data.toString();
-            },
-        };
-        yield exec("bash", ["-c", 'source /etc/os-release ; echo -n "$ID"'], options);
-        return distrib;
+        return getCommandOutput('source /etc/os-release ; echo -n "$ID"');
     });
 }
 /**
@@ -8021,15 +8026,17 @@ function determineDistrib() {
  */
 function determineDistribVer() {
     return __awaiter(this, void 0, void 0, function* () {
-        let distrib = "";
-        const options = {};
-        options.listeners = {
-            stdout: (data) => {
-                distrib += data.toString();
-            },
-        };
-        yield exec("bash", ["-c", 'source /etc/os-release ; echo -n "$VERSION_ID"'], options);
-        return distrib;
+        return getCommandOutput('source /etc/os-release ; echo -n "$VERSION_ID"');
+    });
+}
+/**
+ * Get the machine architecture according to dpkg.
+ *
+ * @returns the architecture according to dpkg
+ */
+function getArch() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return getCommandOutput("dpkg --print-architecture");
     });
 }
 

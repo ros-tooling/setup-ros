@@ -168,7 +168,8 @@ export async function runLinux(): Promise<void> {
 
 	if ("noble" !== ubuntuCodename) {
 		// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
-		await utils.exec("sudo", ["apt-mark", "hold", "grub-efi-amd64-signed"]);
+		const arch = await utils.getArch();
+		await utils.exec("sudo", ["apt-mark", "hold", `grub-efi-${arch}-signed`]);
 		await utils.exec("sudo", ["apt-get", "upgrade", "-y"]);
 	}
 

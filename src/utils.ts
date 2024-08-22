@@ -57,6 +57,24 @@ export function validateDistro(
 }
 
 /**
+ * Get the output of a given command.
+ *
+ * @param command the command, which must output something
+ * @returns the string output
+ */
+async function getCommandOutput(command: string): Promise<string> {
+	let output = "";
+	const options: im.ExecOptions = {};
+	options.listeners = {
+		stdout: (data: Buffer) => {
+			output += data.toString();
+		},
+	};
+	await exec("bash", ["-c", command], options);
+	return output.trim();
+}
+
+/**
  * Determines the Ubuntu distribution codename.
  *
  * This function directly source /etc/lsb-release instead of invoking
@@ -65,19 +83,9 @@ export function validateDistro(
  * @returns Promise<string> Ubuntu distribution codename (e.g. "focal")
  */
 export async function determineDistribCodename(): Promise<string> {
-	let distribCodename = "";
-	const options: im.ExecOptions = {};
-	options.listeners = {
-		stdout: (data: Buffer) => {
-			distribCodename += data.toString();
-		},
-	};
-	await exec(
-		"bash",
-		["-c", 'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"'],
-		options,
+	return getCommandOutput(
+		'source /etc/lsb-release ; echo -n "$DISTRIB_CODENAME"',
 	);
-	return distribCodename;
 }
 
 /**
@@ -86,15 +94,7 @@ export async function determineDistribCodename(): Promise<string> {
  * @returns Promise<string> Linux distribution (e.g. "ubuntu")
  */
 export async function determineDistrib(): Promise<string> {
-	let distrib = "";
-	const options: im.ExecOptions = {};
-	options.listeners = {
-		stdout: (data: Buffer) => {
-			distrib += data.toString();
-		},
-	};
-	await exec("bash", ["-c", 'source /etc/os-release ; echo -n "$ID"'], options);
-	return distrib;
+	return getCommandOutput('source /etc/os-release ; echo -n "$ID"');
 }
 
 /**
@@ -103,17 +103,14 @@ export async function determineDistrib(): Promise<string> {
  * @returns Promise<string> Linux distribution version (e.g. "24.04")
  */
 export async function determineDistribVer(): Promise<string> {
-	let distrib = "";
-	const options: im.ExecOptions = {};
-	options.listeners = {
-		stdout: (data: Buffer) => {
-			distrib += data.toString();
-		},
-	};
-	await exec(
-		"bash",
-		["-c", 'source /etc/os-release ; echo -n "$VERSION_ID"'],
-		options,
-	);
-	return distrib;
+	return getCommandOutput('source /etc/os-release ; echo -n "$VERSION_ID"');
+}
+
+/**
+ * Get the machine architecture according to dpkg.
+ *
+ * @returns the architecture according to dpkg
+ */
+export async function getArch(): Promise<string> {
+	return getCommandOutput("dpkg --print-architecture");
 }
