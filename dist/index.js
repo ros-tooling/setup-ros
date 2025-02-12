@@ -6882,8 +6882,11 @@ const chocoCommandLine = [
     "--no-progress",
     "--yes",
 ];
-const chocoDependencies = ["wget", "7zip", "lcov", "openssl"];
-const chocoDependenciesPinned = [["cppcheck", "1.90"]];
+const chocoDependencies = ["wget", "7zip", "lcov"];
+const chocoDependenciesPinned = [
+    ["cppcheck", "1.90"],
+    ["openssl", "1.1.1.2100"],
+];
 const ros2ChocolateyPackagesUrl = [
     "https://github.com/ros2/choco-packages/releases/download/2022-03-15/asio.1.12.1.nupkg",
     "https://github.com/ros2/choco-packages/releases/download/2022-03-15/bullet.3.17.nupkg",

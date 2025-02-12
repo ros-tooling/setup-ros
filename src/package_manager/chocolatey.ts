@@ -7,9 +7,12 @@ const chocoCommandLine: string[] = [
 	"--yes",
 ];
 
-const chocoDependencies: string[] = ["wget", "7zip", "lcov", "openssl"];
+const chocoDependencies: string[] = ["wget", "7zip", "lcov"];
 
-const chocoDependenciesPinned: [string, string][] = [["cppcheck", "1.90"]];
+const chocoDependenciesPinned: [string, string][] = [
+	["cppcheck", "1.90"],
+	["openssl", "1.1.1.2100"],
+];
 
 const ros2ChocolateyPackagesUrl: string[] = [
 	"https://github.com/ros2/choco-packages/releases/download/2022-03-15/asio.1.12.1.nupkg",
