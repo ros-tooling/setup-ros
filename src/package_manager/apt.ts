@@ -87,8 +87,10 @@ const distributionSpecificAptDependencies = {
 };
 
 const aptRtiConnextDds = {
-	jammy: "rti-connext-dds-6.0.1",
-	noble: "rti-connext-dds-6.0.1",
+	jammy: ["rti-connext-dds-6.0.1"],
+	// ROS 2 Rolling switched to Connext 7.3.0 before Kilted;
+	// ROS 2 Jazzy still uses Connext 6.0.1
+	noble: ["rti-connext-dds-6.0.1", "rti-connext-dds-7.3.0-ros"],
 };
 
 /**
