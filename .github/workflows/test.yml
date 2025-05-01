@@ -78,6 +78,8 @@ jobs:
           - iron
           # Jazzy Jalisco (May 2024 - May 2029)
           - jazzy
+          # Kilted Kaiju (May 2025 - November 2026)
+          - kilted
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4.4.0
@@ -127,13 +129,22 @@ jobs:
             ros_distribution: iron
             ros_version: 2
 
-          # Jazzy Jalisco (May 2024 - November 2029)
+          # Jazzy Jalisco (May 2024 - May 2029)
           - docker_image: ubuntu:noble
             ros_distribution: jazzy
             ros_version: 2
 
           - docker_image: almalinux:9
             ros_distribution: jazzy
+            ros_version: 2
+
+          # Kilted Kaiju (May 2025 - November 2026)
+          - docker_image: ubuntu:noble
+            ros_distribution: kilted
+            ros_version: 2
+
+          - docker_image: almalinux:9
+            ros_distribution: kilted
             ros_version: 2
 
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
@@ -158,6 +169,8 @@ jobs:
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
+          # Use ros2-testing repo for Kilted before it's officially released
+          use-ros2-testing: ${{ matrix.ros_distribution == 'kilted' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 1

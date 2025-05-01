@@ -45,7 +45,7 @@ async function configOs(): Promise<void> {
 /**
  * Add OSRF repository.
  */
-async function addDnfRepo(): Promise<void> {
+async function addDnfRepo(use_ros2_testing: boolean): Promise<void> {
 	dnf.runDnfInstall(["epel-release"]);
 
 	await utils.exec("bash", [
@@ -72,11 +72,12 @@ async function addDnfRepo(): Promise<void> {
 		extra_repo_name,
 	]);
 
+	const testing_repo_suffix = use_ros2_testing ? "-testing" : "";
 	await utils.exec("sudo", [
 		"curl",
 		"--output",
 		"/etc/yum.repos.d/ros2.repo",
-		"http://packages.ros.org/ros2/rhel/ros2.repo",
+		`http://packages.ros.org/ros2${testing_repo_suffix}/rhel/ros2${testing_repo_suffix}.repo`,
 	]);
 
 	await utils.exec("sudo", ["dnf", "makecache", "--assumeyes"]);
@@ -102,9 +103,11 @@ async function rosdepInit(): Promise<void> {
  * Install ROS 2 (development packages and/or ROS binaries) on a Linux worker.
  */
 export async function runLinux(): Promise<void> {
+	const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
+
 	await configOs();
 
-	await addDnfRepo();
+	await addDnfRepo(use_ros2_testing);
 
 	// Install development-related packages and some common dependencies
 	await dnf.installDnfDependencies();

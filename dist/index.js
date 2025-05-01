@@ -6944,7 +6944,7 @@ function configOs() {
 /**
  * Add OSRF repository.
  */
-function addDnfRepo() {
+function addDnfRepo(use_ros2_testing) {
     return __awaiter(this, void 0, void 0, function* () {
         dnf.runDnfInstall(["epel-release"]);
         yield utils.exec("bash", [
@@ -6965,11 +6965,12 @@ function addDnfRepo() {
             "--set-enabled",
             extra_repo_name,
         ]);
+        const testing_repo_suffix = use_ros2_testing ? "-testing" : "";
         yield utils.exec("sudo", [
             "curl",
             "--output",
             "/etc/yum.repos.d/ros2.repo",
-            "http://packages.ros.org/ros2/rhel/ros2.repo",
+            `http://packages.ros.org/ros2${testing_repo_suffix}/rhel/ros2${testing_repo_suffix}.repo`,
         ]);
         yield utils.exec("sudo", ["dnf", "makecache", "--assumeyes"]);
     });
@@ -6996,8 +6997,9 @@ function rosdepInit() {
  */
 function runLinux() {
     return __awaiter(this, void 0, void 0, function* () {
+        const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
         yield configOs();
-        yield addDnfRepo();
+        yield addDnfRepo(use_ros2_testing);
         // Install development-related packages and some common dependencies
         yield dnf.installDnfDependencies();
         yield rosdepInit();
@@ -7302,6 +7304,7 @@ const binaryReleases = {
     humble: "https://github.com/ros2/ros2/releases/download/release-humble-20230614/ros2-humble-20230614-windows-release-amd64.zip",
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20230523/ros2-iron-20230523-windows-release-amd64.zip",
     jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20240705/ros2-jazzy-20240705-windows-release-amd64.zip",
+    kilted: "https://github.com/ros2/ros2/releases/download/release-kilted-beta-20250430/ros2-kilted-beta-20250430-windows-release-amd64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**
@@ -7557,7 +7560,14 @@ function getRequiredRosDistributions() {
     return requiredRosDistributionsList;
 }
 //list of valid linux distributions
-const validDistro = ["noetic", "humble", "iron", "jazzy", "rolling"];
+const validDistro = [
+    "noetic",
+    "humble",
+    "iron",
+    "jazzy",
+    "kilted",
+    "rolling",
+];
 //Determine whether all inputs name supported ROS distributions.
 function validateDistro(requiredRosDistributionsList) {
     for (const rosDistro of requiredRosDistributionsList) {

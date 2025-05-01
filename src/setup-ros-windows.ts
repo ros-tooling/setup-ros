@@ -12,6 +12,8 @@ const binaryReleases: { [index: string]: string } = {
 	iron: "https://github.com/ros2/ros2/releases/download/release-iron-20230523/ros2-iron-20230523-windows-release-amd64.zip",
 	jazzy:
 		"https://github.com/ros2/ros2/releases/download/release-jazzy-20240705/ros2-jazzy-20240705-windows-release-amd64.zip",
+	kilted:
+		"https://github.com/ros2/ros2/releases/download/release-kilted-beta-20250430/ros2-kilted-beta-20250430-windows-release-amd64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
