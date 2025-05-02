@@ -1,6 +1,6 @@
 {
 	"name": "setup-ros",
-	"version": "0.7.11",
+	"version": "0.7.12",
 	"description": "GitHub Action to setup a ROS 2 development environment",
 	"main": "lib/main.js",
 	"scripts": {
