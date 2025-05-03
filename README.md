@@ -1,9 +1,9 @@
 # `setup-ros`
 
 [![GitHub Action Status](https://github.com/ros-tooling/setup-ros/workflows/Test%20setup-ros/badge.svg)](https://github.com/ros-tooling/setup-ros)
-[![codecov](https://codecov.io/gh/ros-tooling/setup-ros/branch/master/graph/badge.svg)](https://codecov.io/gh/ros-tooling/setup-ros)
+[![codecov](https://codecov.io/gh/ros-tooling/setup-ros/branch/main/graph/badge.svg)](https://codecov.io/gh/ros-tooling/setup-ros)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=ros-tooling/setup-ros)](https://dependabot.com)
-[![License](https://img.shields.io/github/license/ros-tooling/setup-ros)](https://github.com/ros-tooling/setup-ros/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/ros-tooling/setup-ros)](https://github.com/ros-tooling/setup-ros/blob/main/LICENSE)
 
 This action sets up a [ROS] and [ROS 2] environment for use in actions.
 
@@ -78,7 +78,7 @@ See [`src/package_manager/*.ts`](./src/package_manager/) for the complete list.
 See [action.yml](action.yml).
 
 `setup-ros` is under active development, and compatibility between releases is not yet guaranteed.
-Please do not use `ros-tooling/setup-ros@master`.
+Please do not use `ros-tooling/setup-ros@main`.
 Instead, pin your workflows to a particular release, e.g.: `ros-tooling/setup-ros@v0.7`.
 
 ### Setting up the worker, and installing the system dependencies
