@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - "releases/*"
   schedule:
     # Run the CI automatically twice per day to look for flakyness.
