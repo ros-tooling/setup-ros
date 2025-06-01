@@ -72,23 +72,13 @@ async function addDnfRepo(use_ros2_testing: boolean): Promise<void> {
 		extra_repo_name,
 	]);
 
-	// Install key and repo using ros-apt-source:
-	// https://docs.ros.org/en/rolling/Installation/RHEL-Install-RPMs.html#enable-required-repositories
-	const apt_version = await utils.getRosAptSourceLatestVersion();
+	const testing_repo_suffix = use_ros2_testing ? "-testing" : "";
 	await utils.exec("sudo", [
-		"dnf",
-		"install",
-		`https://github.com/${utils.ROS_APT_SOURCE_REPO}/releases/download/${apt_version}/ros2-release-${apt_version}-1.noarch.rpm`,
+		"curl",
+		"--output",
+		"/etc/yum.repos.d/ros2.repo",
+		`http://packages.ros.org/ros2${testing_repo_suffix}/rhel/ros2${testing_repo_suffix}.repo`,
 	]);
-	if (use_ros2_testing) {
-		await utils.exec("sudo", ["dnf", "config-manager", "--disable", "ros2"]);
-		await utils.exec("sudo", [
-			"dnf",
-			"config-manager",
-			"--enable",
-			"ros2-testing",
-		]);
-	}
 
 	await utils.exec("sudo", ["dnf", "makecache", "--assumeyes"]);
 }

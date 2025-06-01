@@ -121,22 +121,3 @@ export async function determineDistribVer(): Promise<string> {
 export async function getArch(): Promise<string> {
 	return getCommandOutput("dpkg --print-architecture");
 }
-
-export const ROS_APT_SOURCE_REPO = "ros-infrastructure/ros-apt-source";
-
-/**
- * Get the latest version of the ros-apt-source package.
- *
- * https://github.com/ros-infrastructure/ros-apt-source/releases
- *
- * @returns the latest version of the ros-apt-source packages
- */
-export async function getRosAptSourceLatestVersion(): Promise<string> {
-	// TODO(christophebedard): figure out why doesn't work and switch back
-	// return getCommandOutput(
-	// 	`curl -s https://api.github.com/repos/${ROS_APT_SOURCE_REPO}/releases/latest | grep -F "tag_name" | awk -F\\" '{print $4}'`,
-	// );
-	return new Promise((resolve) => {
-		resolve("1.1.0");
-	});
-}
