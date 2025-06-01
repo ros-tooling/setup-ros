@@ -7059,9 +7059,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(186));
@@ -7069,58 +7066,6 @@ const io = __importStar(__nccwpck_require__(436));
 const apt = __importStar(__nccwpck_require__(671));
 const pip = __importStar(__nccwpck_require__(744));
 const utils = __importStar(__nccwpck_require__(314));
-const path = __importStar(__nccwpck_require__(17));
-const fs_1 = __importDefault(__nccwpck_require__(147));
-// Open Robotics APT Repository public GPG key, as retrieved at:
-// https://github.com/ros/rosdistro/blob/master/ros.asc
-//
-// Unfortunately, usin apt-key adv is slow, and is failing sometimes, causing
-// spurious pipelines failures. The action is hard-coding the key here to
-// mitigate this issue.
-const openRoboticsAptPublicGpgKey = `
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1
-
-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
-=9IZg
------END PGP PUBLIC KEY BLOCK-----
-`;
 /**
  * Configure basic OS stuff.
  */
@@ -7160,19 +7105,6 @@ function configOs() {
         yield apt.runAptGetInstall(["tzdata"]);
     });
 }
-/**
- * Add OSRF APT repository key.
- *
- * This is necessary even when building from source to install colcon, vcs, etc.
- */
-function addAptRepoKey() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const workspace = process.env.GITHUB_WORKSPACE;
-        const keyFilePath = path.join(workspace, "ros.key");
-        fs_1.default.writeFileSync(keyFilePath, openRoboticsAptPublicGpgKey);
-        yield utils.exec("sudo", ["apt-key", "add", keyFilePath]);
-    });
-}
 // Ubuntu distribution for ROS 1
 const ros1UbuntuVersion = "focal";
 /**
@@ -7183,18 +7115,30 @@ const ros1UbuntuVersion = "focal";
 function addAptRepo(ubuntuCodename, use_ros2_testing) {
     return __awaiter(this, void 0, void 0, function* () {
         // There is now no Ubuntu version overlap between ROS 1 and ROS 2
+        const keyring = "/usr/share/keyrings/ros-archive-keyring.gpg";
+        const arch = yield utils.getArch();
         if (ros1UbuntuVersion === ubuntuCodename) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
-                `echo "deb http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
+                `curl -L https://github.com/ros-infrastructure/ros-apt-source/raw/refs/heads/main/ros-apt-source/keys/ros-archive-keyring.gpg -o ${keyring}`,
+            ]);
+            yield utils.exec("sudo", [
+                "bash",
+                "-c",
+                `echo "deb [arch=${arch} signed-by=${keyring}] http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
             ]);
         }
         else {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
-                `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
+                `curl -L https://github.com/ros-infrastructure/ros-apt-source/raw/refs/heads/main/ros-apt-source/keys/ros2-archive-keyring.gpg -o ${keyring}`,
+            ]);
+            yield utils.exec("sudo", [
+                "bash",
+                "-c",
+                `echo "deb [arch=${arch} signed-by=${keyring}] http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
             ]);
         }
         yield utils.exec("sudo", ["apt-get", "update"]);
@@ -7226,7 +7170,6 @@ function runLinux() {
         const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
         const installConnext = core.getInput("install-connext") === "true";
         yield configOs();
-        yield addAptRepoKey();
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield addAptRepo(ubuntuCodename, use_ros2_testing);
         if ("noble" !== ubuntuCodename) {
