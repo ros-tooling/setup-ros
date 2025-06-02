@@ -7071,11 +7071,8 @@ const pip = __importStar(__nccwpck_require__(744));
 const utils = __importStar(__nccwpck_require__(314));
 const path = __importStar(__nccwpck_require__(17));
 const fs_1 = __importDefault(__nccwpck_require__(147));
-// Open Robotics APT Repository public GPG key, as retrieved by
-//
-// $ apt-key adv --refresh-keys --keyserver hkp://keyserver.ubuntu.com:80 \
-//     C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-// See also http://packages.ros.org/ros.asc (caution, this is an HTTP URL)
+// Open Robotics APT Repository public GPG key, as retrieved at:
+// https://github.com/ros/rosdistro/blob/master/ros.asc
 //
 // Unfortunately, usin apt-key adv is slow, and is failing sometimes, causing
 // spurious pipelines failures. The action is hard-coding the key here to
@@ -7108,8 +7105,20 @@ quoIFL39BhUEvBynuqlrqistnyOhw8W/IQy/ymNzBMcMz6rcMjMwhkgm/LNXoSD1
 qjiCEUOsnlf4CGlhzNMZOx3low6ixzEqKOcfECpeIj80a2fBDmWkcAAjlHu6VBhA
 TUDG9e2xKLzV2Z/DLYsb3+n9QW7KO0yZKfiuUo6AYboAioQKn5jh3iRvjGh2Ujpo
 22G+oae3PcCc7G+z12j6xIY709FQuA49dA2YpzMda0/OX4LP56STEveDRrO+CnV6
-WE+F5FaIKwb72PL4rLi4
-=i0tj
+WE+F5FaIKwb72PL4rLi4iQJUBBMBCAA+AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4B
+AheAFiEEwc9uMea63ohosXK09C7W+6sXxlQFAmgSGgYFCRS0dnAACgkQ9C7W+6sX
+xlS/UA//aAgP67DunDdak96+fLemWJkl4PHhj6637lzacJ+SlRzeUbnS/2XLhmk1
+BNYoib3IHp3GBqvLsQqkCUZWaJTvkkAvJ+1W2N7JByt7Z/tnTS7aVfDxF53nYCxY
+eSH921y2AtIZCIl1N3R2ic7pyzNkVVqwKIV1EqWLMa8GQTy4V0pgwaLE6Ce9Bmtv
+04upGyiPXRoPM3Rfc0mTUtPGJLf651img6TYGb1UbKs2aAitiI2ptg8EdiRYYcGo
+nG8Ar3aUnYj+fpfhTyvqwx0MTtAPDiMUx2vELReYIvhwU+SRHWpp20nL0WIK2krK
+qIq5SwIboBSLkQ5j7tjehKkqfxanUrlUxu/XYlEhq0Mh5oCfBrarIFBUBULUX86p
+ZQUqW4+MrIxHcNcrCPGm3U/4dSZ1rTAdyeEUi7a2H96CYYofl7dq1xXGMDFh+b5/
+3Yw3t8US4VCwxmEj+C3ciARJauB1oDOilEieszPvIS3PdVpp6HCZRRHaB689AzMF
+FoD40iowsNS9XmO6O8V7xzVVS0EtNhz9qUGIz8yjWeLLdpR8NqHOFOvrPP66voEV
+Gc0Va/nozc05WWt42bc0hs1faRMqHRlAlJIKSUm4NSqc+YDNPYFlZSnB97tBhHC9
+CEXRgHY3Utq/I3CLJ+KcJCUCH5D16Z7aOoazG9DKbewA+da8Drw=
+=9IZg
 -----END PGP PUBLIC KEY BLOCK-----
 `;
 /**
