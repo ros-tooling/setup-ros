@@ -14,7 +14,6 @@ const brewDependencies: string[] = [
 	"log4cxx",
 	"opencv",
 	"openssl",
-	"osrf/simulation/tinyxml1",
 	"pcre",
 	"poco",
 	"python@3.10",
