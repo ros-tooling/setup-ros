@@ -6297,8 +6297,7 @@ function runBrew(packages) {
 function installBrewDependencies() {
     return __awaiter(this, void 0, void 0, function* () {
         // brew now only offers CMake >=4, so manually use an older formula to install version 3.31.1
-        let ret = yield utils.exec("brew", ["unlink", "cmake"]);
-        ret += yield utils.exec("curl", [
+        let ret = yield utils.exec("curl", [
             "-O",
             "https://raw.githubusercontent.com/Homebrew/homebrew-core/4cfc96448e261e9b16d9b51dc6d563c717003bfd/Formula/c/cmake.rb",
         ]);

@@ -41,8 +41,7 @@ export async function runBrew(packages: string[]): Promise<number> {
  */
 export async function installBrewDependencies(): Promise<number> {
 	// brew now only offers CMake >=4, so manually use an older formula to install version 3.31.1
-	let ret = await utils.exec("brew", ["unlink", "cmake"]);
-	ret += await utils.exec("curl", [
+	let ret = await utils.exec("curl", [
 		"-O",
 		"https://raw.githubusercontent.com/Homebrew/homebrew-core/4cfc96448e261e9b16d9b51dc6d563c717003bfd/Formula/c/cmake.rb",
 	]);
