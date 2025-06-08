@@ -5,7 +5,6 @@ const brewDependencies: string[] = [
 	"assimp",
 	"bison",
 	"bullet",
-	"cmake",
 	"console_bridge",
 	"cppcheck",
 	"cunit",
@@ -41,7 +40,14 @@ export async function runBrew(packages: string[]): Promise<number> {
  * @returns Promise<number> exit code
  */
 export async function installBrewDependencies(): Promise<number> {
-	return runBrew(brewDependencies);
+	// brew now only offers CMake >=4, so manually use an older formula to install version 3.31.1
+	let ret = await utils.exec("curl", [
+		"-O",
+		"https://raw.githubusercontent.com/Homebrew/homebrew-core/4cfc96448e261e9b16d9b51dc6d563c717003bfd/Formula/c/cmake.rb",
+	]);
+	ret += await runBrew(["./cmake.rb"]);
+	ret += await runBrew(brewDependencies);
+	return ret;
 }
 
 /**
