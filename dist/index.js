@@ -6274,7 +6274,6 @@ const brewDependencies = [
     "python@3.10",
     "qt",
     "spdlog",
-    "tinyxml",
     "tinyxml2",
     "wget",
     "lcov",
