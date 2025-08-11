@@ -27,7 +27,7 @@ jobs:
           - macOS-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -50,7 +50,7 @@ jobs:
           - almalinux:8
           - almalinux:9
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -81,7 +81,7 @@ jobs:
           # Kilted Kaiju (May 2025 - November 2026)
           - kilted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -161,7 +161,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -181,7 +181,7 @@ jobs:
     container:
       image: ubuntu:24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -196,7 +196,7 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-noble-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
@@ -214,7 +214,7 @@ jobs:
         docker_image:
           - ubuntu:24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: "20.x"
