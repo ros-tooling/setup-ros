@@ -7201,18 +7201,21 @@ const ros1UbuntuVersion = "focal";
  * Add OSRF APT repository.
  *
  * @param ubuntuCodename the Ubuntu version codename
+ * @param needsRos1 whether ROS 1 packages are needed
+ * @param needsRos2 whether ROS 2 packages are needed
  */
-function addAptRepo(ubuntuCodename, use_ros2_testing) {
+function addAptRepo(ubuntuCodename, use_ros2_testing, needsRos1, needsRos2) {
     return __awaiter(this, void 0, void 0, function* () {
-        // There is now no Ubuntu version overlap between ROS 1 and ROS 2
-        if (ros1UbuntuVersion === ubuntuCodename) {
+        // Add ROS 1 repository if needed
+        if (needsRos1) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
                 `echo "deb http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
             ]);
         }
-        else {
+        // Add ROS 2 repository if needed
+        if (needsRos2) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
@@ -7281,10 +7284,17 @@ function runLinux() {
         const installConnext = core.getInput("install-connext") === "true";
         const requiredDistros = utils.getRequiredRosDistributions();
         const needsRosOne = requiredDistros.includes("one");
+        // Determine which ROS versions are needed
+        // ROS 1 distributions: noetic (from packages.ros.org/ros)
+        // ROS 2 distributions: rolling, humble, jazzy, iron, kilted, etc. (from packages.ros.org/ros2)
+        // ROS-O "one": separate repository (ros.packages.techfak.net)
+        const ros1Distros = ["noetic"];
+        const needsRos1 = requiredDistros.some((distro) => ros1Distros.includes(distro));
+        const needsRos2 = requiredDistros.some((distro) => !ros1Distros.includes(distro) && distro !== "one");
         yield configOs();
         yield addAptRepoKey();
         const ubuntuCodename = yield utils.determineDistribCodename();
-        yield addAptRepo(ubuntuCodename, use_ros2_testing);
+        yield addAptRepo(ubuntuCodename, use_ros2_testing, needsRos1, needsRos2);
         // Add ROS-O repository if needed
         if (needsRosOne) {
             yield addRosOneAptRepoKey();
