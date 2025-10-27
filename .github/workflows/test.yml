@@ -8,6 +8,7 @@ on:
   schedule:
     # Run the CI automatically twice per day to look for flakyness.
     - cron: "0 */12 * * *"
+  workflow_dispatch:
 
 defaults:
   run:
@@ -113,6 +114,15 @@ jobs:
           # Noetic Ninjemys (May 2020 - May 2025)
           - docker_image: ubuntu:focal
             ros_distribution: noetic
+            ros_version: 1
+
+          # ROS-O (ROS One) - ROS 1 for Ubuntu 20.04+
+          - docker_image: ubuntu:jammy
+            ros_distribution: one
+            ros_version: 1
+
+          - docker_image: ubuntu:noble
+            ros_distribution: one
             ros_version: 1
 
           # Humble Hawksbill (May 2022 - May 2027)
