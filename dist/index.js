@@ -7144,7 +7144,13 @@ function configOs() {
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+        yield apt.runAptGetInstall([
+            "ca-certificates",
+            "curl",
+            "gnupg2",
+            "locales",
+            "lsb-release",
+        ]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
@@ -7179,6 +7185,9 @@ function addAptRepoKey() {
  */
 function addRosOneAptRepoKey() {
     return __awaiter(this, void 0, void 0, function* () {
+        // Ensure the keyrings directory exists and ca-certificates is up to date
+        yield utils.exec("sudo", ["mkdir", "-p", "/etc/apt/keyrings"]);
+        yield utils.exec("sudo", ["update-ca-certificates"]);
         yield utils.exec("sudo", [
             "bash",
             "-c",

@@ -83,7 +83,13 @@ async function configOs(): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+	await apt.runAptGetInstall([
+		"ca-certificates",
+		"curl",
+		"gnupg2",
+		"locales",
+		"lsb-release",
+	]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
@@ -118,6 +124,9 @@ async function addAptRepoKey(): Promise<void> {
  * Downloads and installs the GPG key for the ROS-O repository.
  */
 async function addRosOneAptRepoKey(): Promise<void> {
+	// Ensure the keyrings directory exists and ca-certificates is up to date
+	await utils.exec("sudo", ["mkdir", "-p", "/etc/apt/keyrings"]);
+	await utils.exec("sudo", ["update-ca-certificates"]);
 	await utils.exec("sudo", [
 		"bash",
 		"-c",
