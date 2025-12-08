@@ -28,7 +28,7 @@ jobs:
           - windows-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -51,7 +51,7 @@ jobs:
           - almalinux:9
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -82,7 +82,7 @@ jobs:
           - kilted
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -162,7 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -182,7 +182,7 @@ jobs:
       image: ubuntu:24.04
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -197,7 +197,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-noble-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
@@ -215,7 +215,7 @@ jobs:
           - ubuntu:24.04
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/setup-node@v6.1.0
         with:
           node-version: "20.x"
       - run: .github/workflows/build-and-test.sh
