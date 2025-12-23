@@ -43,6 +43,7 @@ export function getRequiredRosDistributions(): string[] {
 //list of valid linux distributions
 const validDistro: string[] = [
 	"noetic",
+	"one",
 	"humble",
 	"iron",
 	"jazzy",

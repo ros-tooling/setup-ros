@@ -83,7 +83,13 @@ async function configOs(): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+	await apt.runAptGetInstall([
+		"ca-certificates",
+		"curl",
+		"gnupg2",
+		"locales",
+		"lsb-release",
+	]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
@@ -112,6 +118,22 @@ async function addAptRepoKey(): Promise<void> {
 	await utils.exec("sudo", ["apt-key", "add", keyFilePath]);
 }
 
+/**
+ * Add ROS-O (ROS One) APT repository key.
+ *
+ * Downloads and installs the GPG key for the ROS-O repository.
+ */
+async function addRosOneAptRepoKey(): Promise<void> {
+	// Ensure the keyrings directory exists and ca-certificates is up to date
+	await utils.exec("sudo", ["mkdir", "-p", "/etc/apt/keyrings"]);
+	await utils.exec("sudo", ["update-ca-certificates"]);
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
+		"curl -sSL https://ros.packages.techfak.net/gpg.key -o /etc/apt/keyrings/ros-one-keyring.gpg",
+	]);
+}
+
 // Ubuntu distribution for ROS 1
 const ros1UbuntuVersion = "focal";
 
@@ -119,19 +141,26 @@ const ros1UbuntuVersion = "focal";
  * Add OSRF APT repository.
  *
  * @param ubuntuCodename the Ubuntu version codename
+ * @param needsRos1 whether ROS 1 packages are needed
+ * @param needsRos2 whether ROS 2 packages are needed
  */
 async function addAptRepo(
 	ubuntuCodename: string,
 	use_ros2_testing: boolean,
+	needsRos1: boolean,
+	needsRos2: boolean,
 ): Promise<void> {
-	// There is now no Ubuntu version overlap between ROS 1 and ROS 2
-	if (ros1UbuntuVersion === ubuntuCodename) {
+	// Add ROS 1 repository if needed
+	if (needsRos1) {
 		await utils.exec("sudo", [
 			"bash",
 			"-c",
 			`echo "deb http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
 		]);
-	} else {
+	}
+
+	// Add ROS 2 repository if needed
+	if (needsRos2) {
 		await utils.exec("sudo", [
 			"bash",
 			"-c",
@@ -141,6 +170,26 @@ async function addAptRepo(
 		]);
 	}
 
+	await utils.exec("sudo", ["apt-get", "update"]);
+}
+
+/**
+ * Add ROS-O (ROS One) APT repository.
+ *
+ * @param ubuntuCodename the Ubuntu version codename
+ * @param use_testing whether to use the testing repository
+ */
+async function addRosOneAptRepo(
+	ubuntuCodename: string,
+	use_testing: boolean,
+): Promise<void> {
+	const arch = await utils.getArch();
+	const repo = use_testing ? `${ubuntuCodename}-testing` : ubuntuCodename;
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
+		`echo "deb [arch=${arch} signed-by=/etc/apt/keyrings/ros-one-keyring.gpg] https://ros.packages.techfak.net ${repo} main" > /etc/apt/sources.list.d/ros-one.list`,
+	]);
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
@@ -161,6 +210,19 @@ async function rosdepInit(): Promise<void> {
 }
 
 /**
+ * Configure rosdep for ROS-O (ROS One).
+ *
+ * Adds custom rosdep source for ROS-O packages.
+ */
+async function configureRosOneRosdep(): Promise<void> {
+	await utils.exec("sudo", [
+		"bash",
+		"-c",
+		'echo "yaml https://ros.packages.techfak.net/ros-one.yaml one" > /etc/ros/rosdep/sources.list.d/1-ros-one.list',
+	]);
+}
+
+/**
  * Install ROS 1 or 2 (development packages and/or ROS binaries) on a Linux worker.
  */
 export async function runLinux(): Promise<void> {
@@ -168,12 +230,42 @@ export async function runLinux(): Promise<void> {
 	const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
 	const installConnext = core.getInput("install-connext") === "true";
 
+	const requiredDistros = utils.getRequiredRosDistributions();
+	const needsRosOne = requiredDistros.includes("one");
+
+	// Determine which ROS versions are needed
+	// ROS 1 distributions: noetic (from packages.ros.org/ros)
+	// ROS 2 distributions: rolling, humble, jazzy, iron, kilted, etc. (from packages.ros.org/ros2)
+	// ROS-O "one": separate repository (ros.packages.techfak.net)
+	const ros1Distros = ["noetic"];
+	const needsRos1 = requiredDistros.some((distro) =>
+		ros1Distros.includes(distro),
+	);
+	const needsRos2 = requiredDistros.some(
+		(distro) => !ros1Distros.includes(distro) && distro !== "one",
+	);
+
 	await configOs();
 
 	await addAptRepoKey();
 
 	const ubuntuCodename = await utils.determineDistribCodename();
-	await addAptRepo(ubuntuCodename, use_ros2_testing);
+	// For backward compatibility when no ROS distributions are specified:
+	// - Focal (Ubuntu 20.04): add ROS 1 repository (for focal-specific dependencies)
+	// - Other versions: add ROS 2 repository (for jammy/noble-specific dependencies)
+	// For ROS-O (one): also add ROS 2 repository as it depends on ROS 2 packages
+	const addRos1Repo = needsRos1 || ubuntuCodename === ros1UbuntuVersion;
+	const addRos2Repo =
+		needsRos2 ||
+		needsRosOne ||
+		(requiredDistros.length === 0 && ubuntuCodename !== ros1UbuntuVersion);
+	await addAptRepo(ubuntuCodename, use_ros2_testing, addRos1Repo, addRos2Repo);
+
+	// Add ROS-O repository if needed
+	if (needsRosOne) {
+		await addRosOneAptRepoKey();
+		await addRosOneAptRepo(ubuntuCodename, use_ros2_testing);
+	}
 
 	if ("noble" !== ubuntuCodename) {
 		// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
@@ -195,7 +287,12 @@ export async function runLinux(): Promise<void> {
 
 	await rosdepInit();
 
-	for (const rosDistro of utils.getRequiredRosDistributions()) {
+	// Configure rosdep for ROS-O if needed
+	if (needsRosOne) {
+		await configureRosOneRosdep();
+	}
+
+	for (const rosDistro of requiredDistros) {
 		await apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
 	}
 }
