@@ -6682,6 +6682,7 @@ const pip3Packages = [
     "colcon-recursive-crawl==0.2.1",
     "colcon-ros==0.3.23",
     "colcon-test-result==0.3.8",
+    "meson>=0.60.0,<0.64.0",
     "coverage",
     "cryptography",
     "empy<4",
@@ -7144,7 +7145,13 @@ function configOs() {
         yield utils.exec("sudo", ["bash", "-c", "echo 'Etc/UTC' > /etc/timezone"]);
         yield utils.exec("sudo", ["apt-get", "update"]);
         // Install tools required to configure the worker system.
-        yield apt.runAptGetInstall(["curl", "gnupg2", "locales", "lsb-release"]);
+        yield apt.runAptGetInstall([
+            "ca-certificates",
+            "curl",
+            "gnupg2",
+            "locales",
+            "lsb-release",
+        ]);
         // Select a locale supporting Unicode.
         yield utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
         core.exportVariable("LANG", "en_US.UTF-8");
@@ -7172,30 +7179,68 @@ function addAptRepoKey() {
         yield utils.exec("sudo", ["apt-key", "add", keyFilePath]);
     });
 }
+/**
+ * Add ROS-O (ROS One) APT repository key.
+ *
+ * Downloads and installs the GPG key for the ROS-O repository.
+ */
+function addRosOneAptRepoKey() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Ensure the keyrings directory exists and ca-certificates is up to date
+        yield utils.exec("sudo", ["mkdir", "-p", "/etc/apt/keyrings"]);
+        yield utils.exec("sudo", ["update-ca-certificates"]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            "curl -sSL https://ros.packages.techfak.net/gpg.key -o /etc/apt/keyrings/ros-one-keyring.gpg",
+        ]);
+    });
+}
 // Ubuntu distribution for ROS 1
 const ros1UbuntuVersion = "focal";
 /**
  * Add OSRF APT repository.
  *
  * @param ubuntuCodename the Ubuntu version codename
+ * @param needsRos1 whether ROS 1 packages are needed
+ * @param needsRos2 whether ROS 2 packages are needed
  */
-function addAptRepo(ubuntuCodename, use_ros2_testing) {
+function addAptRepo(ubuntuCodename, use_ros2_testing, needsRos1, needsRos2) {
     return __awaiter(this, void 0, void 0, function* () {
-        // There is now no Ubuntu version overlap between ROS 1 and ROS 2
-        if (ros1UbuntuVersion === ubuntuCodename) {
+        // Add ROS 1 repository if needed
+        if (needsRos1) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
                 `echo "deb http://packages.ros.org/ros/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros-latest.list`,
             ]);
         }
-        else {
+        // Add ROS 2 repository if needed
+        if (needsRos2) {
             yield utils.exec("sudo", [
                 "bash",
                 "-c",
                 `echo "deb http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu ${ubuntuCodename} main" > /etc/apt/sources.list.d/ros2-latest.list`,
             ]);
         }
+        yield utils.exec("sudo", ["apt-get", "update"]);
+    });
+}
+/**
+ * Add ROS-O (ROS One) APT repository.
+ *
+ * @param ubuntuCodename the Ubuntu version codename
+ * @param use_testing whether to use the testing repository
+ */
+function addRosOneAptRepo(ubuntuCodename, use_testing) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const arch = yield utils.getArch();
+        const repo = use_testing ? `${ubuntuCodename}-testing` : ubuntuCodename;
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            `echo "deb [arch=${arch} signed-by=/etc/apt/keyrings/ros-one-keyring.gpg] https://ros.packages.techfak.net ${repo} main" > /etc/apt/sources.list.d/ros-one.list`,
+        ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
     });
 }
@@ -7217,6 +7262,20 @@ function rosdepInit() {
     });
 }
 /**
+ * Configure rosdep for ROS-O (ROS One).
+ *
+ * Adds custom rosdep source for ROS-O packages.
+ */
+function configureRosOneRosdep() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "yaml https://ros.packages.techfak.net/ros-one.yaml one" > /etc/ros/rosdep/sources.list.d/1-ros-one.list',
+        ]);
+    });
+}
+/**
  * Install ROS 1 or 2 (development packages and/or ROS binaries) on a Linux worker.
  */
 function runLinux() {
@@ -7224,10 +7283,32 @@ function runLinux() {
         // Get user input & validate
         const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
         const installConnext = core.getInput("install-connext") === "true";
+        const requiredDistros = utils.getRequiredRosDistributions();
+        const needsRosOne = requiredDistros.includes("one");
+        // Determine which ROS versions are needed
+        // ROS 1 distributions: noetic (from packages.ros.org/ros)
+        // ROS 2 distributions: rolling, humble, jazzy, iron, kilted, etc. (from packages.ros.org/ros2)
+        // ROS-O "one": separate repository (ros.packages.techfak.net)
+        const ros1Distros = ["noetic"];
+        const needsRos1 = requiredDistros.some((distro) => ros1Distros.includes(distro));
+        const needsRos2 = requiredDistros.some((distro) => !ros1Distros.includes(distro) && distro !== "one");
         yield configOs();
         yield addAptRepoKey();
         const ubuntuCodename = yield utils.determineDistribCodename();
-        yield addAptRepo(ubuntuCodename, use_ros2_testing);
+        // For backward compatibility when no ROS distributions are specified:
+        // - Focal (Ubuntu 20.04): add ROS 1 repository (for focal-specific dependencies)
+        // - Other versions: add ROS 2 repository (for jammy/noble-specific dependencies)
+        // For ROS-O (one): also add ROS 2 repository as it depends on ROS 2 packages
+        const addRos1Repo = needsRos1 || ubuntuCodename === ros1UbuntuVersion;
+        const addRos2Repo = needsRos2 ||
+            needsRosOne ||
+            (requiredDistros.length === 0 && ubuntuCodename !== ros1UbuntuVersion);
+        yield addAptRepo(ubuntuCodename, use_ros2_testing, addRos1Repo, addRos2Repo);
+        // Add ROS-O repository if needed
+        if (needsRosOne) {
+            yield addRosOneAptRepoKey();
+            yield addRosOneAptRepo(ubuntuCodename, use_ros2_testing);
+        }
         if ("noble" !== ubuntuCodename) {
             // Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
             const arch = yield utils.getArch();
@@ -7244,7 +7325,11 @@ function runLinux() {
             yield pip.installPython3Dependencies();
         }
         yield rosdepInit();
-        for (const rosDistro of utils.getRequiredRosDistributions()) {
+        // Configure rosdep for ROS-O if needed
+        if (needsRosOne) {
+            yield configureRosOneRosdep();
+        }
+        for (const rosDistro of requiredDistros) {
             yield apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
         }
     });
@@ -7570,6 +7655,7 @@ function getRequiredRosDistributions() {
 //list of valid linux distributions
 const validDistro = [
     "noetic",
+    "one",
     "humble",
     "iron",
     "jazzy",
