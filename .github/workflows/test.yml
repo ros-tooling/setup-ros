@@ -44,11 +44,10 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
-          - almalinux:8
           - almalinux:9
+          - almalinux:10
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6.1.0
@@ -74,8 +73,6 @@ jobs:
         ros_distribution:
           # Humble Hawksbill (May 2022 - May 2027)
           - humble
-          # Iron Irwini (May 2023 - November 2024)
-          - iron
           # Jazzy Jalisco (May 2024 - May 2029)
           - jazzy
           # Kilted Kaiju (May 2025 - November 2026)
@@ -110,23 +107,14 @@ jobs:
         #
         # Platforms are defined in REP 3: https://ros.org/reps/rep-0003.html
         include:
-          # Noetic Ninjemys (May 2020 - May 2025)
-          - docker_image: ubuntu:focal
-            ros_distribution: noetic
-            ros_version: 1
 
           # Humble Hawksbill (May 2022 - May 2027)
           - docker_image: ubuntu:jammy
             ros_distribution: humble
             ros_version: 2
 
-          - docker_image: almalinux:8
+          - docker_image: almalinux:9
             ros_distribution: humble
-            ros_version: 2
-
-          # Iron Irwini (May 2023 - November 2024)
-          - docker_image: ubuntu:jammy
-            ros_distribution: iron
             ros_version: 2
 
           # Jazzy Jalisco (May 2024 - May 2029)
@@ -152,7 +140,7 @@ jobs:
             ros_distribution: rolling
             ros_version: 2
 
-          - docker_image: almalinux:9
+          - docker_image: almalinux:10
             ros_distribution: rolling
             ros_version: 2
 
@@ -170,8 +158,6 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - run: .github/workflows/check-environment.sh
-      - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
-        if: matrix.ros_version == 1
       - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 2
 
