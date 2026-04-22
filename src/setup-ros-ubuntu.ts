@@ -34,7 +34,12 @@ async function configOs(): Promise<void> {
 	await utils.exec("sudo", ["apt-get", "update"]);
 
 	// Install tools required to configure the worker system.
-	await apt.runAptGetInstall(["curl", "ca-certificates", "locales", "lsb-release"]);
+	await apt.runAptGetInstall([
+		"curl",
+		"ca-certificates",
+		"locales",
+		"lsb-release",
+	]);
 
 	// Select a locale supporting Unicode.
 	await utils.exec("sudo", ["locale-gen", "en_US", "en_US.UTF-8"]);
