@@ -71,6 +71,36 @@ async function installRosAptSourcePackage(
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
 
+/**
+ * Check if the ROS APT repository is already configured.
+ */
+async function isRosAptSourcePackageInstalled(
+	use_ros2_testing: boolean,
+): Promise<boolean> {
+	const expectedAptRepoUrl = `http://packages.ros.org/ros2${use_ros2_testing ? "-testing" : ""}/ubuntu`;
+	// We need to have run 'apt update' at least once before this, but we do that earlier
+	const aptCachePolicyOutput = await utils.getCommandOutput(`apt-cache policy`);
+	return aptCachePolicyOutput.includes(expectedAptRepoUrl);
+}
+
+/**
+ * Install the ROS APT source package for the current Ubuntu release if it is not already installed.
+ */
+async function installRosAptSourcePackageIfNeeded(
+	ubuntuCodename: string,
+	use_ros2_testing: boolean,
+): Promise<void> {
+	const isAlreadyInstalled =
+		await isRosAptSourcePackageInstalled(use_ros2_testing);
+	if (!isAlreadyInstalled) {
+		const aptSourcePackageName = determineAptSourcePackageName(
+			ubuntuCodename,
+			use_ros2_testing,
+		);
+		await installRosAptSourcePackage(aptSourcePackageName);
+	}
+}
+
 // Ubuntu distribution for ROS 1
 const ros1UbuntuVersion = "focal";
 
@@ -118,9 +148,7 @@ export async function runLinux(): Promise<void> {
 	await configOs();
 
 	const ubuntuCodename = await utils.determineDistribCodename();
-	await installRosAptSourcePackage(
-		determineAptSourcePackageName(ubuntuCodename, use_ros2_testing),
-	);
+	await installRosAptSourcePackageIfNeeded(ubuntuCodename, use_ros2_testing);
 
 	if ("noble" !== ubuntuCodename) {
 		// Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
