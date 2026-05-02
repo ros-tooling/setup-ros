@@ -29048,6 +29048,25 @@ const distributionSpecificDnfDependencies = {
         "python3-importlib-metadata",
         "curl-minimal",
     ],
+    10: [
+        // Basic development packages (from ROS 2 source/development setup instructions)
+        // ros-dev-tools includes many packages that we needed to include manually in Focal & older
+        "python3-pip",
+        "python3-pytest-cov",
+        "python3-pytest-repeat",
+        "python3-pytest-rerunfailures",
+        "ros-build-essential",
+        "python3-colcon-common-extensions",
+        "python3-colcon-mixin",
+        "python3-rosdep",
+        "python3-vcstool",
+        // Additional colcon packages (not included in ros-dev-tools)
+        "python3-colcon-coveragepy-result",
+        "python3-colcon-lcov-result",
+        // Others
+        "python3-importlib-metadata",
+        "curl-minimal",
+    ],
 };
 /**
  * Run dnf install on list of specified packages.
@@ -29751,6 +29770,7 @@ const binaryReleases = {
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20241204/ros2-iron-20241204-windows-release-amd64.zip",
     jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20250430/ros2-jazzy-20250407-windows-release-amd64.zip",
     kilted: "https://github.com/ros2/ros2/releases/download/release-kilted-20250523/ros2-kilted-20250523-windows-release-amd64.zip",
+    lyrical: "https://github.com/ros2/ros2/releases/download/release-lyrical-beta-20260430/ros2-lyrical-2026-04-30-windows-AMD64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**
@@ -30013,6 +30033,7 @@ const validDistro = [
     "iron",
     "jazzy",
     "kilted",
+    "lyrical",
     "rolling",
 ];
 //Determine whether all inputs name supported ROS distributions.
