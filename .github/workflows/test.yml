@@ -47,6 +47,7 @@ jobs:
           - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
+          - ubuntu:26.04
           - almalinux:8
           - almalinux:9
     steps:
@@ -148,7 +149,7 @@ jobs:
             ros_version: 2
 
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
-          - docker_image: ubuntu:noble
+          - docker_image: ubuntu:resolute
             ros_distribution: rolling
             ros_version: 2
 
@@ -179,7 +180,7 @@ jobs:
     name: "Test with setup.cfg file in root directory (Linux only)"
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:24.04
+      image: ubuntu:26.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6.1.0
@@ -212,7 +213,7 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - ubuntu:24.04
+          - ubuntu:26.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6.1.0
