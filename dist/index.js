@@ -29048,6 +29048,25 @@ const distributionSpecificDnfDependencies = {
         "python3-importlib-metadata",
         "curl-minimal",
     ],
+    10: [
+        // Basic development packages (from ROS 2 source/development setup instructions)
+        // ros-dev-tools includes many packages that we needed to include manually in Focal & older
+        "python3-pip",
+        "python3-pytest-cov",
+        "python3-pytest-repeat",
+        "python3-pytest-rerunfailures",
+        "ros-build-essential",
+        "python3-colcon-common-extensions",
+        "python3-colcon-mixin",
+        "python3-rosdep",
+        "python3-vcstool",
+        // Additional colcon packages (not included in ros-dev-tools)
+        "python3-colcon-coveragepy-result",
+        "python3-colcon-lcov-result",
+        // Others
+        "python3-importlib-metadata",
+        "curl-minimal",
+    ],
 };
 /**
  * Run dnf install on list of specified packages.
