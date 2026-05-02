@@ -50,6 +50,7 @@ jobs:
           - ubuntu:26.04
           - almalinux:8
           - almalinux:9
+          - almalinux:10
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6.1.0
@@ -81,6 +82,8 @@ jobs:
           - jazzy
           # Kilted Kaiju (May 2025 - November 2026)
           - kilted
+          # Lyrical Luth (May 2026 - May 2031)
+          - lyrical
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6.1.0
@@ -148,12 +151,21 @@ jobs:
             ros_distribution: kilted
             ros_version: 2
 
+          # Lyrical Luth (May 2026 - May 2031)
+          - docker_image: ubuntu:resolute
+            ros_distribution: lyrical
+            ros_version: 2
+
+          - docker_image: almalinux:10
+            ros_distribution: lyrical
+            ros_version: 2
+
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
           - docker_image: ubuntu:resolute
             ros_distribution: rolling
             ros_version: 2
 
-          - docker_image: almalinux:9
+          - docker_image: almalinux:10
             ros_distribution: rolling
             ros_version: 2
 

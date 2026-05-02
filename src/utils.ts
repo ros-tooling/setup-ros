@@ -47,6 +47,7 @@ const validDistro: string[] = [
 	"iron",
 	"jazzy",
 	"kilted",
+	"lyrical",
 	"rolling",
 ];
 

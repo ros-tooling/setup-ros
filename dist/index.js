@@ -29751,6 +29751,7 @@ const binaryReleases = {
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20241204/ros2-iron-20241204-windows-release-amd64.zip",
     jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20250430/ros2-jazzy-20250407-windows-release-amd64.zip",
     kilted: "https://github.com/ros2/ros2/releases/download/release-kilted-20250523/ros2-kilted-20250523-windows-release-amd64.zip",
+    lyrical: "https://github.com/ros2/ros2/releases/download/release-lyrical-beta-20260430/ros2-lyrical-2026-04-30-windows-AMD64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**
@@ -30013,6 +30014,7 @@ const validDistro = [
     "iron",
     "jazzy",
     "kilted",
+    "lyrical",
     "rolling",
 ];
 //Determine whether all inputs name supported ROS distributions.
