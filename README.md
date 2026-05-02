@@ -114,7 +114,7 @@ jobs:
   build_docker:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:noble
+      image: ubuntu:resolute
     steps:
       - name: Setup ROS
         uses: ros-tooling/setup-ros@v0.7
@@ -129,12 +129,12 @@ One or more ROS distributions can be installed simultaneously by passing multipl
 build_docker:
   runs-on: ubuntu-latest
   container:
-    image: ubuntu:noble
+    image: ubuntu:resolute
   steps:
     - uses: ros-tooling/setup-ros@v0.7
       with:
-        required-ros-distributions: jazzy rolling
-    - run: "source /opt/ros/jazzy/setup.bash && ros2 run --help"
+        required-ros-distributions: lyrical rolling
+    - run: "source /opt/ros/lyrical/setup.bash && ros2 run --help"
     - run: "source /opt/ros/rolling/setup.bash && ros2 run --help"
 ```
 
@@ -184,7 +184,7 @@ The workflow `test` is iterating on all ROS 2 distributions, on macOS, and Windo
 The workflow `test_docker` is iterating on all ROS and ROS 2 distributions, for all supported Ubuntu distributions, using Docker.
 The test matrix associates each distribution with one Docker image.
 This is required to ensure that the appropriate Ubuntu container is used.
-For example, Noetic requires `focal`, Humble requires `jammy`, Jazzy requires `noble`, etc.
+For example, Noetic requires `focal`, Humble requires `jammy`, Jazzy requires `noble`, Kilted requires `resolute`, etc.
 
 ```yaml
 jobs:
@@ -246,8 +246,13 @@ jobs:
             ros_distribution: jazzy
             ros_version: 2
 
-          # Rolling Ridley (No End-Of-Life)
+          # Kilted Kaiju (May 2025 - December 2026)
           - docker_image: ubuntu:noble
+            ros_distribution: kilted
+            ros_version: 2
+
+          # Rolling Ridley (No End-Of-Life)
+          - docker_image: ubuntu:resolute
             ros_distribution: rolling
             ros_version: 2
     container:
