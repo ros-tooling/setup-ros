@@ -118,7 +118,7 @@ jobs:
             ros_distribution: humble
             ros_version: 2
 
-          - docker_image: almalinux:9
+          - docker_image: almalinux:8
             ros_distribution: humble
             ros_version: 2
 
