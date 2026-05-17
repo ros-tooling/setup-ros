@@ -158,6 +158,8 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
       - run: .github/workflows/check-environment.sh
+      - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
+        if: matrix.ros_version == 1
       - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 2
 
