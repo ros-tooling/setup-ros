@@ -47,6 +47,7 @@ jobs:
           - ubuntu:22.04
           - ubuntu:24.04
           - ubuntu:26.04
+          - almalinux:8
           - almalinux:9
           - almalinux:10
     steps:
