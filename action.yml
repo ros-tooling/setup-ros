@@ -26,9 +26,7 @@ inputs:
 
       Allowed ROS distributions
       - "" (no value) - no ROS binary installation
-      - noetic
       - humble
-      - iron
       - jazzy
       - kilted
       - lyrical

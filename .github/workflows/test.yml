@@ -44,7 +44,6 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
           - ubuntu:26.04
@@ -76,8 +75,6 @@ jobs:
         ros_distribution:
           # Humble Hawksbill (May 2022 - May 2027)
           - humble
-          # Iron Irwini (May 2023 - November 2024)
-          - iron
           # Jazzy Jalisco (May 2024 - May 2029)
           - jazzy
           # Kilted Kaiju (May 2025 - November 2026)
@@ -116,10 +113,6 @@ jobs:
         #
         # Platforms are defined in REP 3: https://ros.org/reps/rep-0003.html
         include:
-          # Noetic Ninjemys (May 2020 - May 2025)
-          - docker_image: ubuntu:focal
-            ros_distribution: noetic
-            ros_version: 1
 
           # Humble Hawksbill (May 2022 - May 2027)
           - docker_image: ubuntu:jammy
@@ -128,11 +121,6 @@ jobs:
 
           - docker_image: almalinux:8
             ros_distribution: humble
-            ros_version: 2
-
-          # Iron Irwini (May 2023 - November 2024)
-          - docker_image: ubuntu:jammy
-            ros_distribution: iron
             ros_version: 2
 
           # Jazzy Jalisco (May 2024 - May 2029)
