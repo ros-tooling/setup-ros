@@ -84,13 +84,37 @@ const distributionSpecificAptDependencies = {
 		// https://github.com/ros-tooling/setup-ros/issues/685
 		"libclang-rt-dev",
 	],
+	resolute: [
+		// Basic development packages (from ROS 2 source/development setup instructions)
+		// ros-dev-tools includes many packages that we needed to include manually in Focal & older
+		"python3-pip",
+		"python3-pytest-cov",
+		"python3-flake8-blind-except",
+		"python3-flake8-class-newline",
+		"python3-flake8-deprecated",
+		"python3-pytest-repeat",
+		"python3-pytest-rerunfailures",
+		"ros-dev-tools",
+		// Additional colcon packages (not included in ros-dev-tools)
+		"python3-colcon-coveragepy-result",
+		"python3-colcon-lcov-result",
+		"python3-colcon-meson",
+		"python3-colcon-mixin",
+		// Others
+		"python3-importlib-metadata",
+	],
 };
 
 const aptRtiConnextDds = {
 	jammy: ["rti-connext-dds-6.0.1"],
-	// ROS 2 Rolling switched to Connext 7.3.0 before Kilted;
-	// ROS 2 Jazzy still uses Connext 6.0.1
-	noble: ["rti-connext-dds-6.0.1", "rti-connext-dds-7.3.0-ros"],
+	// ROS 2 Jazzy still uses Connext 6.0.1.
+	// ROS 2 Rolling switched to Connext 7.3.0 before Kilted and then switched to Connext 7.7.0 before Lyrical.
+	noble: [
+		"rti-connext-dds-6.0.1",
+		"rti-connext-dds-7.3.0-ros",
+		"rti-connext-dds-7.7.0-ros",
+	],
+	resolute: ["rti-connext-dds-7.7.0-ros"],
 };
 
 /**

@@ -47,6 +47,7 @@ const validDistro: string[] = [
 	"iron",
 	"jazzy",
 	"kilted",
+	"lyrical",
 	"rolling",
 ];
 
@@ -69,7 +70,7 @@ export function validateDistro(
  * @param command the command, which must output something
  * @returns the string output
  */
-async function getCommandOutput(command: string): Promise<string> {
+export async function getCommandOutput(command: string): Promise<string> {
 	let output = "";
 	const options: im.ExecOptions = {};
 	options.listeners = {
