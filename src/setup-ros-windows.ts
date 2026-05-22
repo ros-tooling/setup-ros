@@ -66,6 +66,7 @@ async function prepareRos2BuildEnvironment() {
 		["git+https://github.com/ros-infrastructure/rosdistro.git"],
 		false,
 	);
+	await pip.runPython3PipInstall(["rosdep"], false);
 	return utils.exec(`rosdep`, ["init"]);
 }
 

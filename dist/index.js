@@ -29809,6 +29809,7 @@ function prepareRos2BuildEnvironment() {
         // install "rosdistro" from master to include distutils fix:
         // https://github.com/ros-infrastructure/rosdistro/pull/194
         yield pip.runPython3PipInstall(["git+https://github.com/ros-infrastructure/rosdistro.git"], false);
+        yield pip.runPython3PipInstall(["rosdep"], false);
         return utils.exec(`rosdep`, ["init"]);
     });
 }
