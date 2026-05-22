@@ -59,7 +59,13 @@ async function prepareRos2BuildEnvironment() {
 
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
-	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
+	await pip.runPython3PipInstall(["vcstool"], false);
+	// install "rosdistro" from master to include distutils fix:
+	// https://github.com/ros-infrastructure/rosdistro/pull/194
+	await pip.runPython3PipInstall(
+		["git+https://github.com/ros-infrastructure/rosdistro.git"],
+		false,
+	);
 	return utils.exec(`rosdep`, ["init"]);
 }
 

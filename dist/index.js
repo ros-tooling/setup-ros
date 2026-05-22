@@ -29805,7 +29805,10 @@ function prepareRos2BuildEnvironment() {
         });
         yield pip.installPython3Dependencies(false);
         yield pip.runPython3PipInstall(pip3Packages, false);
-        yield pip.runPython3PipInstall(["rosdep", "vcstool"], false);
+        yield pip.runPython3PipInstall(["vcstool"], false);
+        // install "rosdistro" from master to include distutils fix:
+        // https://github.com/ros-infrastructure/rosdistro/pull/194
+        yield pip.runPython3PipInstall(["git+https://github.com/ros-infrastructure/rosdistro.git"], false);
         return utils.exec(`rosdep`, ["init"]);
     });
 }
