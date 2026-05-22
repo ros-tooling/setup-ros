@@ -66,7 +66,7 @@ const distributionSpecificDnfDependencies = {
 		"python3-rosdep",
 		"python3-vcstool",
 		// Additional colcon packages (not included in ros-dev-tools)
-		"python3-colcon-coveragepy-result",
+		// "python3-colcon-coveragepy-result",
 		"python3-colcon-lcov-result",
 		// Others
 		"python3-importlib-metadata",
