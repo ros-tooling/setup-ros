@@ -29440,7 +29440,7 @@ function configOs() {
  */
 function addDnfRepo(use_ros2_testing) {
     return __awaiter(this, void 0, void 0, function* () {
-        dnf.runDnfInstall(["epel-release"]);
+        yield dnf.runDnfInstall(["epel-release"]);
         yield utils.exec("bash", [
             "-c",
             "sudo dnf install --setopt=install_weak_deps=False --quiet --assumeyes 'dnf-command(config-manager)'",
