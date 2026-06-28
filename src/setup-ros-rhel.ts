@@ -46,7 +46,7 @@ async function configOs(): Promise<void> {
  * Add OSRF repository.
  */
 async function addDnfRepo(use_ros2_testing: boolean): Promise<void> {
-	dnf.runDnfInstall(["epel-release"]);
+	await dnf.runDnfInstall(["epel-release"]);
 
 	await utils.exec("bash", [
 		"-c",

@@ -28,10 +28,10 @@ jobs:
           - macOS-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
       - run: .github/workflows/check-environment.sh
@@ -45,16 +45,17 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
+          - ubuntu:26.04
           - almalinux:8
           - almalinux:9
+          - almalinux:10
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
       - run: .github/workflows/check-environment.sh
@@ -75,21 +76,23 @@ jobs:
         ros_distribution:
           # Humble Hawksbill (May 2022 - May 2027)
           - humble
-          # Iron Irwini (May 2023 - November 2024)
-          - iron
           # Jazzy Jalisco (May 2024 - May 2029)
           - jazzy
           # Kilted Kaiju (May 2025 - November 2026)
           - kilted
+          # Lyrical Luth (May 2026 - May 2031)
+          - lyrical
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
+          # TODO(christophebedard): remove once Lyrical has been released and the Rolling transition to Resolute is complete
+          use-ros2-testing: ${{ matrix.ros_distribution == 'lyrical' || matrix.ros_distribution == 'rolling' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros2-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.os != 'windows-latest'
@@ -111,10 +114,6 @@ jobs:
         #
         # Platforms are defined in REP 3: https://ros.org/reps/rep-0003.html
         include:
-          # Noetic Ninjemys (May 2020 - May 2025)
-          - docker_image: ubuntu:focal
-            ros_distribution: noetic
-            ros_version: 1
 
           # ROS-O (ROS One) - ROS 1 for Ubuntu 20.04+
           - docker_image: ubuntu:jammy
@@ -132,11 +131,6 @@ jobs:
 
           - docker_image: almalinux:8
             ros_distribution: humble
-            ros_version: 2
-
-          # Iron Irwini (May 2023 - November 2024)
-          - docker_image: ubuntu:jammy
-            ros_distribution: iron
             ros_version: 2
 
           # Jazzy Jalisco (May 2024 - May 2029)
@@ -157,12 +151,21 @@ jobs:
             ros_distribution: kilted
             ros_version: 2
 
+          # Lyrical Luth (May 2026 - May 2031)
+          - docker_image: ubuntu:resolute
+            ros_distribution: lyrical
+            ros_version: 2
+
+          - docker_image: almalinux:10
+            ros_distribution: lyrical
+            ros_version: 2
+
           # Rolling Ridley (see REP 2002: https://www.ros.org/reps/rep-2002.html)
-          - docker_image: ubuntu:noble
+          - docker_image: ubuntu:resolute
             ros_distribution: rolling
             ros_version: 2
 
-          - docker_image: almalinux:9
+          - docker_image: almalinux:10
             ros_distribution: rolling
             ros_version: 2
 
@@ -171,14 +174,16 @@ jobs:
       image: ${{ matrix.docker_image }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./ # Uses an action in the root directory
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
+          # TODO(christophebedard): remove once Lyrical has been released and the Rolling transition to Resolute is complete
+          use-ros2-testing: ${{ matrix.ros_distribution == 'lyrical' || matrix.ros_distribution == 'rolling' }}
       - run: .github/workflows/check-environment.sh
       - run: .github/workflows/check-ros-distribution.sh "${{ matrix.ros_distribution }}"
         if: matrix.ros_version == 1
@@ -189,12 +194,12 @@ jobs:
     name: "Test with setup.cfg file in root directory (Linux only)"
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:24.04
+      image: ubuntu:26.04
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - run: cp .github/workflows/test_setup.cfg setup.cfg
       - uses: ./ # Uses an action in the root directory
@@ -204,12 +209,12 @@ jobs:
     name: "Test on a setup-ros-docker container"
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-noble-latest
+      image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-resolute:latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
 
@@ -222,12 +227,12 @@ jobs:
       fail-fast: false
       matrix:
         docker_image:
-          - ubuntu:24.04
+          - ubuntu:26.04
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6.0.0
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6.1.0
         with:
-          node-version: "20.x"
+          node-version: "24.x"
       - run: .github/workflows/build-and-test.sh
       - uses: ./
         with:

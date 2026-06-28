@@ -26,11 +26,10 @@ inputs:
 
       Allowed ROS distributions
       - "" (no value) - no ROS binary installation
-      - noetic
       - humble
-      - iron
       - jazzy
       - kilted
+      - lyrical
       - rolling
 
       Multiple values can be passed using a whitespace delimited list
@@ -38,5 +37,5 @@ inputs:
     required: false
     default: ""
 runs:
-  using: "node20"
+  using: "node24"
   main: "dist/index.js"

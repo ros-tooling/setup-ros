@@ -1,6 +1,6 @@
 {
 	"name": "setup-ros",
-	"version": "0.7.15",
+	"version": "0.7.19",
 	"description": "GitHub Action to setup a ROS 2 development environment",
 	"main": "lib/main.js",
 	"scripts": {
@@ -32,10 +32,10 @@
 		"url": "https://github.com/ros-tooling/setup-ros/issues"
 	},
 	"dependencies": {
-		"@actions/core": "^1.11.1",
-		"@actions/exec": "^1.1.1",
-		"@actions/io": "^1.1.3",
-		"@actions/tool-cache": "^2.0.1"
+		"@actions/core": "^2.0.1",
+		"@actions/exec": "^2.0.0",
+		"@actions/io": "^2.0.0",
+		"@actions/tool-cache": "^3.0.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^30.0.0",
@@ -50,7 +50,7 @@
 		"jest": "^30.2.0",
 		"jest-circus": "^30.0.0",
 		"lint-staged": "^16.2.0",
-		"prettier": "^3.6.0",
+		"prettier": "^3.7.4",
 		"ts-jest": "^29.4.0",
 		"typescript": "^5.9.3"
 	}

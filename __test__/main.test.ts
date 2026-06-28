@@ -69,6 +69,7 @@ describe("validate distribution test", () => {
 		await expect(utils.validateDistro(["iron"])).toBe(true);
 		await expect(utils.validateDistro(["jazzy"])).toBe(true);
 		await expect(utils.validateDistro(["kilted"])).toBe(true);
+		await expect(utils.validateDistro(["lyrical"])).toBe(true);
 		await expect(utils.validateDistro(["rolling"])).toBe(true);
 	});
 

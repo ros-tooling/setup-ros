@@ -14,6 +14,8 @@ const binaryReleases: { [index: string]: string } = {
 		"https://github.com/ros2/ros2/releases/download/release-jazzy-20250430/ros2-jazzy-20250407-windows-release-amd64.zip",
 	kilted:
 		"https://github.com/ros2/ros2/releases/download/release-kilted-20250523/ros2-kilted-20250523-windows-release-amd64.zip",
+	lyrical:
+		"https://github.com/ros2/ros2/releases/download/release-lyrical-beta-20260430/ros2-lyrical-2026-04-30-windows-AMD64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
@@ -57,7 +59,14 @@ async function prepareRos2BuildEnvironment() {
 
 	await pip.installPython3Dependencies(false);
 	await pip.runPython3PipInstall(pip3Packages, false);
-	await pip.runPython3PipInstall(["rosdep", "vcstool"], false);
+	await pip.runPython3PipInstall(["vcstool"], false);
+	// install "rosdistro" from master to include distutils fix:
+	// https://github.com/ros-infrastructure/rosdistro/pull/194
+	await pip.runPython3PipInstall(
+		["git+https://github.com/ros-infrastructure/rosdistro.git"],
+		false,
+	);
+	await pip.runPython3PipInstall(["rosdep"], false);
 	return utils.exec(`rosdep`, ["init"]);
 }
 
