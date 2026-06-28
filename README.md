@@ -64,6 +64,9 @@ It also performs the following actions:
   - Setting the locale to `en_US.UTF-8` and, the timezone to UTC
   - GCC and clang default APT packages
   - Registering the Open Robotics APT repository
+    - For ROS-O (`one`), packages are installed from a separate APT repository
+      (`ros.packages.techfak.net`) maintained by the ROS-O community at CITEC
+      Bielefeld, not from the Open Robotics APT repository.
   - Installing ROS and ROS 2 system dependencies using APT
 - On macOS:
   - Installing ROS and ROS 2 system dependencies using [Homebrew] and [pip]
