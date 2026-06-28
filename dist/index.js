@@ -34607,6 +34607,7 @@ const pip3Packages = [
     "colcon-recursive-crawl==0.2.1",
     "colcon-ros==0.3.23",
     "colcon-test-result==0.3.8",
+    "meson>=0.60.0,<0.64.0",
     "coverage",
     "cryptography",
     "empy<4",
@@ -35073,6 +35074,23 @@ function installRosAptSourcePackageIfNeeded(ubuntuCodename, use_ros2_testing) {
         }
     });
 }
+/**
+ * Add ROS-O (ROS One) APT repository key.
+ *
+ * Downloads and installs the GPG key for the ROS-O repository.
+ */
+function addRosOneAptRepoKey() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Ensure the keyrings directory exists and ca-certificates is up to date
+        yield utils.exec("sudo", ["mkdir", "-p", "/etc/apt/keyrings"]);
+        yield utils.exec("sudo", ["update-ca-certificates"]);
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            "curl -sSL https://ros.packages.techfak.net/gpg.key -o /etc/apt/keyrings/ros-one-keyring.gpg",
+        ]);
+    });
+}
 // Ubuntu distribution for ROS 1
 const ros1UbuntuVersion = "focal";
 /**
@@ -35086,6 +35104,24 @@ function determineAptSourcePackageName(ubuntuCodename, use_ros2_testing) {
         return "ros-apt-source";
     }
     return `ros2${use_ros2_testing ? "-testing" : ""}-apt-source`;
+}
+/**
+ * Add ROS-O (ROS One) APT repository.
+ *
+ * @param ubuntuCodename the Ubuntu version codename
+ * @param use_testing whether to use the testing repository
+ */
+function addRosOneAptRepo(ubuntuCodename, use_testing) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const arch = yield utils.getArch();
+        const repo = use_testing ? `${ubuntuCodename}-testing` : ubuntuCodename;
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            `echo "deb [arch=${arch} signed-by=/etc/apt/keyrings/ros-one-keyring.gpg] https://ros.packages.techfak.net ${repo} main" > /etc/apt/sources.list.d/ros-one.list`,
+        ]);
+        yield utils.exec("sudo", ["apt-get", "update"]);
+    });
 }
 /**
  * Initialize rosdep.
@@ -35105,6 +35141,20 @@ function rosdepInit() {
     });
 }
 /**
+ * Configure rosdep for ROS-O (ROS One).
+ *
+ * Adds custom rosdep source for ROS-O packages.
+ */
+function configureRosOneRosdep() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield utils.exec("sudo", [
+            "bash",
+            "-c",
+            'echo "yaml https://ros.packages.techfak.net/ros-one.yaml one" > /etc/ros/rosdep/sources.list.d/1-ros-one.list',
+        ]);
+    });
+}
+/**
  * Install ROS 1 or 2 (development packages and/or ROS binaries) on a Linux worker.
  */
 function runLinux() {
@@ -35112,9 +35162,17 @@ function runLinux() {
         // Get user input & validate
         const use_ros2_testing = core.getInput("use-ros2-testing") === "true";
         const installConnext = core.getInput("install-connext") === "true";
+        const requiredDistros = utils.getRequiredRosDistributions();
+        // ROS-O "one" uses a separate repository (ros.packages.techfak.net).
+        const needsRosOne = requiredDistros.includes("one");
         yield configOs();
         const ubuntuCodename = yield utils.determineDistribCodename();
         yield installRosAptSourcePackageIfNeeded(ubuntuCodename, use_ros2_testing);
+        // Add ROS-O repository if needed
+        if (needsRosOne) {
+            yield addRosOneAptRepoKey();
+            yield addRosOneAptRepo(ubuntuCodename, use_ros2_testing);
+        }
         if ("noble" !== ubuntuCodename && "resolute" !== ubuntuCodename) {
             // Temporary fix to avoid error mount: /var/lib/grub/esp: special device (...) does not exist.
             const arch = yield utils.getArch();
@@ -35131,7 +35189,11 @@ function runLinux() {
             yield pip.installPython3Dependencies();
         }
         yield rosdepInit();
-        for (const rosDistro of utils.getRequiredRosDistributions()) {
+        // Configure rosdep for ROS-O if needed
+        if (needsRosOne) {
+            yield configureRosOneRosdep();
+        }
+        for (const rosDistro of requiredDistros) {
             yield apt.runAptGetInstall([`ros-${rosDistro}-desktop`]);
         }
     });
@@ -35463,6 +35525,7 @@ function getRequiredRosDistributions() {
 //list of valid linux distributions
 const validDistro = [
     "noetic",
+    "one",
     "humble",
     "iron",
     "jazzy",

@@ -64,6 +64,7 @@ describe("required-ros-distributions/noetic workflow tests", () => {
 describe("validate distribution test", () => {
 	it("test valid", async () => {
 		await expect(utils.validateDistro(["noetic"])).toBe(true);
+		await expect(utils.validateDistro(["one"])).toBe(true);
 		await expect(utils.validateDistro(["humble"])).toBe(true);
 		await expect(utils.validateDistro(["iron"])).toBe(true);
 		await expect(utils.validateDistro(["jazzy"])).toBe(true);

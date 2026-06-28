@@ -27,6 +27,7 @@ const pip3Packages: string[] = [
 	"colcon-recursive-crawl==0.2.1",
 	"colcon-ros==0.3.23",
 	"colcon-test-result==0.3.8",
+	"meson>=0.60.0,<0.64.0",
 	"coverage",
 	"cryptography",
 	"empy<4",
