@@ -8,14 +8,14 @@ import * as utils from "./utils";
 
 const binaryReleases: { [index: string]: string } = {
 	humble:
-		"https://github.com/ros2/ros2/releases/download/humble-20250331/ros2-humble-20250331-windows-release-amd64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-humble-20260220/ros2-humble-20260220-windows-release-amd64.zip",
 	iron: "https://github.com/ros2/ros2/releases/download/release-iron-20241204/ros2-iron-20241204-windows-release-amd64.zip",
 	jazzy:
-		"https://github.com/ros2/ros2/releases/download/release-jazzy-20250430/ros2-jazzy-20250407-windows-release-amd64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-jazzy-20260128/ros2-jazzy-20260128-windows-release-amd64.zip",
 	kilted:
-		"https://github.com/ros2/ros2/releases/download/release-kilted-20250523/ros2-kilted-20250523-windows-release-amd64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-kilted-20250728/ros2-kilted-20250728-windows-release-amd64.zip",
 	lyrical:
-		"https://github.com/ros2/ros2/releases/download/release-lyrical-beta-20260430/ros2-lyrical-2026-04-30-windows-AMD64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-lyrical-20260623/ros2-lyrical-2026-06-23-windows-AMD64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
