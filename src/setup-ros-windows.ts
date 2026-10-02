@@ -1,92 +1,69 @@
 import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
+import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 
-import * as chocolatey from "./package_manager/chocolatey";
-import * as pip from "./package_manager/pip";
 import * as utils from "./utils";
 
+// Pixi-based binary releases; humble and iron are not supported.
 const binaryReleases: { [index: string]: string } = {
-	humble:
-		"https://github.com/ros2/ros2/releases/download/humble-20250331/ros2-humble-20250331-windows-release-amd64.zip",
-	iron: "https://github.com/ros2/ros2/releases/download/release-iron-20241204/ros2-iron-20241204-windows-release-amd64.zip",
 	jazzy:
 		"https://github.com/ros2/ros2/releases/download/release-jazzy-20250430/ros2-jazzy-20250407-windows-release-amd64.zip",
 	kilted:
 		"https://github.com/ros2/ros2/releases/download/release-kilted-20250523/ros2-kilted-20250523-windows-release-amd64.zip",
 	lyrical:
 		"https://github.com/ros2/ros2/releases/download/release-lyrical-beta-20260430/ros2-lyrical-2026-04-30-windows-AMD64.zip",
+	rolling:
+		"https://github.com/ros2/ros2/releases/download/release-rolling-nightlies/ros2-rolling-nightly-windows-amd64.zip",
 };
 
-const pip3Packages: string[] = ["lxml", "netifaces"];
+const pixiWorkspace = "C:\\pixi_ws";
 
-/**
- * Install ROS 2 build tools.
- */
-async function prepareRos2BuildEnvironment() {
-	// Currently targeted Python version for Windows according to REP 2000
-	const python_dir = tc.find("Python", "3.8");
-
-	await utils.exec(
-		path.join(python_dir, "python"),
-		[
-			"-c",
-			"import sysconfig; print(sysconfig.get_config_var('BINDIR')); print(sysconfig.get_path('scripts'))",
-		],
-		{
-			listeners: {
-				stdline: (data: string) => {
-					const p = data.trim();
-					if (p) {
-						core.info("Prepending to path: " + JSON.stringify(p));
-						core.addPath(p);
-					}
-				},
-			},
-		},
-	);
-
-	core.addPath("c:\\program files\\cppcheck");
-	await chocolatey.installChocoDependencies();
-	await chocolatey.downloadAndInstallRos2NugetPackages();
-
-	// Avoid version of pip that breaks Windows GitHub actions. See:
-	// * https://github.com/ros-tooling/action-ros-ci/pull/719#issuecomment-1030318146
-	// * https://github.com/actions/virtual-environments/issues/5027#issuecomment-1031113617
-	await utils.exec("python", ["-m", "pip", "install", "-U", "pip!=22.0.*"], {
-		cwd: path.sep,
-	});
-
-	await pip.installPython3Dependencies(false);
-	await pip.runPython3PipInstall(pip3Packages, false);
-	await pip.runPython3PipInstall(["vcstool"], false);
-	// install "rosdistro" from master to include distutils fix:
-	// https://github.com/ros-infrastructure/rosdistro/pull/194
-	await pip.runPython3PipInstall(
-		["git+https://github.com/ros-infrastructure/rosdistro.git"],
-		false,
-	);
-	await pip.runPython3PipInstall(["rosdep"], false);
-	return utils.exec(`rosdep`, ["init"]);
+async function installPixi() {
+	await utils.exec("powershell", [
+		"-ExecutionPolicy",
+		"ByPass",
+		"-Command",
+		"irm -useb https://pixi.sh/install.ps1 | iex",
+	]);
+	core.addPath(path.join(os.homedir(), ".pixi", "bin"));
 }
 
 /**
- * Install ROS 2 binary releases.
+ * Install ROS 2 binary releases and their pixi environments.
  */
 async function prepareRos2BinaryReleases() {
 	for (const rosDistro of utils.getRequiredRosDistributions()) {
-		if (rosDistro in binaryReleases) {
-			await utils.exec("wget", [
-				"--quiet",
-				binaryReleases[rosDistro],
-				"-O",
-				`${rosDistro}.zip`,
-			]);
-			await utils.exec("7z", [
-				"x",
-				`${rosDistro}.zip`,
-				"-y",
-				`-oC:\\dev\\${rosDistro}`,
+		if (!(rosDistro in binaryReleases)) {
+			core.warning(`No Windows binary release available for ${rosDistro}`);
+			continue;
+		}
+		const installDir = path.join(pixiWorkspace, rosDistro);
+		const manifestPath = path.join(installDir, "pixi.toml");
+		fs.mkdirSync(installDir, { recursive: true });
+
+		await tc.downloadTool(
+			`https://raw.githubusercontent.com/ros2/ros2/refs/heads/${rosDistro}/pixi.toml`,
+			manifestPath,
+		);
+		const zipPath = await tc.downloadTool(binaryReleases[rosDistro]);
+		await tc.extractZip(zipPath, installDir);
+
+		await utils.exec("pixi", ["install", "--manifest-path", manifestPath]);
+
+		const preinstallScript = path.join(
+			installDir,
+			"ros2-windows",
+			"preinstall_setup_windows.py",
+		);
+		if (fs.existsSync(preinstallScript)) {
+			await utils.exec("pixi", [
+				"run",
+				"--manifest-path",
+				manifestPath,
+				"python",
+				preinstallScript,
 			]);
 		}
 	}
@@ -96,6 +73,6 @@ async function prepareRos2BinaryReleases() {
  * Install build environment on a Windows worker.
  */
 export async function runWindows() {
-	await prepareRos2BuildEnvironment();
+	await installPixi();
 	return await prepareRos2BinaryReleases();
 }
