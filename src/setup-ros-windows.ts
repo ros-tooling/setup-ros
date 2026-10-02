@@ -20,6 +20,93 @@ const binaryReleases: { [index: string]: string } = {
 
 const pixiWorkspace = "C:\\pixi_ws";
 
+// Windows 11 starts at build 22000; GitHub-hosted runners are Windows Server and will warn.
+function checkWindows11() {
+	const build = Number(os.release().split(".")[2]);
+	if (!(build >= 22000)) {
+		core.warning(`ROS 2 binaries only support Windows 11 (found ${os.release()})`);
+	}
+}
+
+async function findVs2022(): Promise<string> {
+	const vswhere = path.join(
+		process.env["ProgramFiles(x86)"] || "C:\\Program Files (x86)",
+		"Microsoft Visual Studio",
+		"Installer",
+		"vswhere.exe",
+	);
+	if (!fs.existsSync(vswhere)) {
+		return "";
+	}
+
+	let installPath = "";
+	await utils.exec(
+		vswhere,
+		[
+			"-latest",
+			"-products",
+			"*",
+			"-version",
+			"[17.0,18.0)",
+			"-requires",
+			"Microsoft.VisualStudio.Component.VC.Tools.x86.x64",
+			"-property",
+			"installationPath",
+		],
+		{ listeners: { stdout: (d: Buffer) => (installPath += d.toString()) } },
+	);
+	return installPath.trim();
+}
+
+/**
+ * Activate the Visual Studio 2022 (MSVC v143) toolchain, installing the Build Tools if missing.
+ * VS 18+ is not supported by ROS 2 yet.
+ */
+async function selectMsvc2022() {
+	let installPath = await findVs2022();
+	if (!installPath) {
+		const bootstrapper = await tc.downloadTool(
+			"https://aka.ms/vs/17/release/vs_BuildTools.exe",
+			path.join(process.env["RUNNER_TEMP"] || os.tmpdir(), "vs_BuildTools.exe"),
+		);
+		// 3010 means success, reboot pending.
+		const code = await utils.exec(
+			bootstrapper,
+			[
+				"--quiet",
+				"--wait",
+				"--norestart",
+				"--nocache",
+				"--add",
+				"Microsoft.VisualStudio.Workload.VCTools",
+				"--includeRecommended",
+			],
+			{ ignoreReturnCode: true },
+		);
+		if (code && code !== 3010) {
+			throw new Error(`VS 2022 Build Tools installation failed with exit code ${code}`);
+		}
+		installPath = await findVs2022();
+	}
+	if (!installPath) {
+		core.warning("Visual Studio 2022 C++ tools not found, skipping MSVC selection");
+		return;
+	}
+
+	const vcvars = path.join(installPath, "VC", "Auxiliary", "Build", "vcvars64.bat");
+	let envDump = "";
+	await utils.exec("cmd", ["/d", "/s", "/c", `""${vcvars}" >nul && set"`], {
+		windowsVerbatimArguments: true,
+		listeners: { stdout: (d: Buffer) => (envDump += d.toString()) },
+	});
+	for (const line of envDump.split(/\r?\n/)) {
+		const i = line.indexOf("=");
+		if (i > 0 && process.env[line.slice(0, i)] !== line.slice(i + 1)) {
+			core.exportVariable(line.slice(0, i), line.slice(i + 1));
+		}
+	}
+}
+
 async function installPixi() {
 	await utils.exec("powershell", [
 		"-ExecutionPolicy",
@@ -73,6 +160,8 @@ async function prepareRos2BinaryReleases() {
  * Install build environment on a Windows worker.
  */
 export async function runWindows() {
+	checkWindows11();
+	await selectMsvc2022();
 	await installPixi();
 	return await prepareRos2BinaryReleases();
 }
