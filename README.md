@@ -68,7 +68,7 @@ It also performs the following actions:
 - On macOS:
   - Installing ROS and ROS 2 system dependencies using [Homebrew] and [pip]
 - On Microsoft Windows:
-  - Installing ROS and ROS 2 system dependencies using [Chocolatey]
+  - Installing ROS 2 binaries and their dependencies using [pixi]
 
 The dependencies installed by this package include ROS 2 DDS vendor packages, such as Eclipse Cyclone DDS, eProsima Fast DDS, and RTI Connext DDS.
 See [`src/package_manager/*.ts`](./src/package_manager/) for the complete list.
@@ -294,7 +294,7 @@ The scripts and documentation in this project are released under the [Apache 2](
 [ros2_latest_development_setup]: https://docs.ros.org/en/rolling/Installation/Alternatives/Latest-Development-Setup.html
 [rep-2000]: https://www.ros.org/reps/rep-2000.html
 [rep-3]: https://www.ros.org/reps/rep-0003.html
-[chocolatey]: https://chocolatey.org/
+[pixi]: https://pixi.sh/
 [homebrew]: https://brew.sh/
 [pip]: https://pip.pypa.io/en/stable/
 [dockerhub_osrf]: https://hub.docker.com/r/osrf/ros/
