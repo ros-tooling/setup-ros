@@ -34984,13 +34984,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRosAptSourceInstallScript = getRosAptSourceInstallScript;
 exports.runLinux = runLinux;
 const core = __importStar(__nccwpck_require__(2186));
 const io = __importStar(__nccwpck_require__(7436));
 const apt = __importStar(__nccwpck_require__(4671));
 const pip = __importStar(__nccwpck_require__(6744));
 const utils = __importStar(__nccwpck_require__(1314));
-const rosAptSourceRepository = "https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest";
+// Redirects to the page of the latest release, .../releases/tag/<version>.
+// This is used instead of the GitHub REST API, which only allows 60
+// unauthenticated requests per hour per IP address. GitHub-hosted runners share
+// IP addresses, so the API often refuses the request.
+const rosAptSourceLatestRelease = "https://github.com/ros-infrastructure/ros-apt-source/releases/latest";
 const rosAptSourceDownloadBase = "https://github.com/ros-infrastructure/ros-apt-source/releases/download";
 /**
  * Configure basic OS stuff.
@@ -35037,6 +35042,29 @@ function configOs() {
     });
 }
 /**
+ * Get the bash script that installs the ROS APT source package.
+ *
+ * The script fails with a clear error if the latest ros-apt-source version
+ * cannot be determined, instead of trying to download a package with an empty
+ * version from a URL that does not exist.
+ *
+ * @param aptSourcePackageName the name of the ROS APT source package
+ * @returns the bash script
+ */
+function getRosAptSourceInstallScript(aptSourcePackageName) {
+    return [
+        "set -eo pipefail",
+        `latest_release_url=$(curl --fail --silent --show-error --location --retry 5 --retry-delay 2 --output /dev/null --write-out "%{url_effective}" "${rosAptSourceLatestRelease}")`,
+        `ROS_APT_SOURCE_VERSION="\${latest_release_url##*/}"`,
+        `if ! [[ "\${ROS_APT_SOURCE_VERSION}" =~ ^[0-9]+(\\.[0-9]+)*$ ]]; then echo "Could not determine the latest ros-apt-source version from ${rosAptSourceLatestRelease} (redirected to '\${latest_release_url}')" >&2; exit 1; fi`,
+        `ubuntu_codename=$(. /etc/os-release && echo "\${UBUNTU_CODENAME:-\${VERSION_CODENAME}}")`,
+        `package_name="${aptSourcePackageName}"`,
+        `curl --fail --location --retry 5 --retry-delay 2 -o "/tmp/\${package_name}.deb" "${rosAptSourceDownloadBase}/\${ROS_APT_SOURCE_VERSION}/\${package_name}_\${ROS_APT_SOURCE_VERSION}.\${ubuntu_codename}_all.deb"`,
+        `sudo dpkg -i "/tmp/\${package_name}.deb"`,
+        `rm -f "/tmp/\${package_name}.deb"`,
+    ].join("\n");
+}
+/**
  * Install the ROS APT source package for the current Ubuntu release.
  *
  * This is necessary even when building from source to install colcon, vcs, etc.
@@ -35045,7 +35073,7 @@ function installRosAptSourcePackage(aptSourcePackageName) {
     return __awaiter(this, void 0, void 0, function* () {
         yield utils.exec("bash", [
             "-c",
-            `set -eo pipefail && export ROS_APT_SOURCE_VERSION=$(curl -s ${rosAptSourceRepository} | grep -F "tag_name" | awk -F'"' '{print $4}') && ubuntu_codename=$(. /etc/os-release && echo \${UBUNTU_CODENAME:-\${VERSION_CODENAME}}) && package_name="${aptSourcePackageName}" && curl --fail --location --retry 3 --retry-delay 2 -o "/tmp/\${package_name}.deb" "${rosAptSourceDownloadBase}/\${ROS_APT_SOURCE_VERSION}/\${package_name}_\${ROS_APT_SOURCE_VERSION}.\${ubuntu_codename}_all.deb" && sudo dpkg -i "/tmp/\${package_name}.deb" && rm -f "/tmp/\${package_name}.deb"`,
+            getRosAptSourceInstallScript(aptSourcePackageName),
         ]);
         yield utils.exec("sudo", ["apt-get", "update"]);
     });
