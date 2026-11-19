@@ -5,8 +5,12 @@ import * as apt from "./package_manager/apt";
 import * as pip from "./package_manager/pip";
 import * as utils from "./utils";
 
-const rosAptSourceRepository =
-	"https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest";
+// Redirects to the page of the latest release, .../releases/tag/<version>.
+// This is used instead of the GitHub REST API, which only allows 60
+// unauthenticated requests per hour per IP address. GitHub-hosted runners share
+// IP addresses, so the API often refuses the request.
+const rosAptSourceLatestRelease =
+	"https://github.com/ros-infrastructure/ros-apt-source/releases/latest";
 const rosAptSourceDownloadBase =
 	"https://github.com/ros-infrastructure/ros-apt-source/releases/download";
 
@@ -57,6 +61,25 @@ async function configOs(): Promise<void> {
 }
 
 /**
+ * Get the bash script that installs the ROS APT source package.
+ *
+ * @param aptSourcePackageName the name of the ROS APT source package
+ * @returns the bash script
+ */
+function getRosAptSourceInstallScript(aptSourcePackageName: string): string {
+	return [
+		"set -eo pipefail",
+		`latest_release_url=$(curl --fail --silent --show-error --location --retry 5 --retry-delay 2 --output /dev/null --write-out "%{url_effective}" "${rosAptSourceLatestRelease}")`,
+		`ROS_APT_SOURCE_VERSION="\${latest_release_url##*/}"`,
+		`ubuntu_codename=$(. /etc/os-release && echo "\${UBUNTU_CODENAME:-\${VERSION_CODENAME}}")`,
+		`package_name="${aptSourcePackageName}"`,
+		`curl --fail --location --retry 5 --retry-delay 2 -o "/tmp/\${package_name}.deb" "${rosAptSourceDownloadBase}/\${ROS_APT_SOURCE_VERSION}/\${package_name}_\${ROS_APT_SOURCE_VERSION}.\${ubuntu_codename}_all.deb"`,
+		`sudo dpkg -i "/tmp/\${package_name}.deb"`,
+		`rm -f "/tmp/\${package_name}.deb"`,
+	].join("\n");
+}
+
+/**
  * Install the ROS APT source package for the current Ubuntu release.
  *
  * This is necessary even when building from source to install colcon, vcs, etc.
@@ -66,7 +89,7 @@ async function installRosAptSourcePackage(
 ): Promise<void> {
 	await utils.exec("bash", [
 		"-c",
-		`set -eo pipefail && export ROS_APT_SOURCE_VERSION=$(curl -s ${rosAptSourceRepository} | grep -F "tag_name" | awk -F'"' '{print $4}') && ubuntu_codename=$(. /etc/os-release && echo \${UBUNTU_CODENAME:-\${VERSION_CODENAME}}) && package_name="${aptSourcePackageName}" && curl --fail --location --retry 3 --retry-delay 2 -o "/tmp/\${package_name}.deb" "${rosAptSourceDownloadBase}/\${ROS_APT_SOURCE_VERSION}/\${package_name}_\${ROS_APT_SOURCE_VERSION}.\${ubuntu_codename}_all.deb" && sudo dpkg -i "/tmp/\${package_name}.deb" && rm -f "/tmp/\${package_name}.deb"`,
+		getRosAptSourceInstallScript(aptSourcePackageName),
 	]);
 	await utils.exec("sudo", ["apt-get", "update"]);
 }
