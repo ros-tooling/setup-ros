@@ -35222,7 +35222,7 @@ const binaryReleases = {
     iron: "https://github.com/ros2/ros2/releases/download/release-iron-20241204/ros2-iron-20241204-windows-release-amd64.zip",
     jazzy: "https://github.com/ros2/ros2/releases/download/release-jazzy-20260128/ros2-jazzy-20260128-windows-release-amd64.zip",
     kilted: "https://github.com/ros2/ros2/releases/download/release-kilted-20250728/ros2-kilted-20250728-windows-release-amd64.zip",
-    lyrical: "https://github.com/ros2/ros2/releases/download/release-lyrical-20260623/ros2-lyrical-2026-06-23-windows-AMD64.zip",
+    lyrical: "https://github.com/ros2/ros2/releases/download/release-lyrical-20260807/ros2-lyrical-2026-08-07-windows-AMD64.zip",
 };
 const pip3Packages = ["lxml", "netifaces"];
 /**

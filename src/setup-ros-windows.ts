@@ -15,7 +15,7 @@ const binaryReleases: { [index: string]: string } = {
 	kilted:
 		"https://github.com/ros2/ros2/releases/download/release-kilted-20250728/ros2-kilted-20250728-windows-release-amd64.zip",
 	lyrical:
-		"https://github.com/ros2/ros2/releases/download/release-lyrical-20260623/ros2-lyrical-2026-06-23-windows-AMD64.zip",
+		"https://github.com/ros2/ros2/releases/download/release-lyrical-20260807/ros2-lyrical-2026-08-07-windows-AMD64.zip",
 };
 
 const pip3Packages: string[] = ["lxml", "netifaces"];
