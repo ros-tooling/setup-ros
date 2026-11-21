@@ -1,6 +1,5 @@
 import * as actions_exec from "@actions/exec";
 import * as core from "@actions/core";
-import * as im from "@actions/exec/lib/interfaces";
 
 /**
  * Execute a command and wrap the output in a log group.
@@ -14,7 +13,7 @@ import * as im from "@actions/exec/lib/interfaces";
 export async function exec(
 	commandLine: string,
 	args?: string[],
-	options?: im.ExecOptions,
+	options?: actions_exec.ExecOptions,
 	log_message?: string,
 ): Promise<number> {
 	const argsAsString = (args || []).join(" ");
@@ -72,7 +71,7 @@ export function validateDistro(
  */
 export async function getCommandOutput(command: string): Promise<string> {
 	let output = "";
-	const options: im.ExecOptions = {};
+	const options: actions_exec.ExecOptions = {};
 	options.listeners = {
 		stdout: (data: Buffer) => {
 			output += data.toString();

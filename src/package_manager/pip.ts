@@ -1,4 +1,4 @@
-import * as im from "@actions/exec/lib/interfaces"; // eslint-disable-line no-unused-vars
+import type { ExecOptions } from "@actions/exec";
 import * as path from "path";
 import * as utils from "../utils";
 
@@ -83,7 +83,7 @@ export async function runPython3PipInstall(
 ): Promise<number> {
 	const args = pip3CommandLine.concat(packages);
 	// Set CWD to root to avoid running 'pip install' in directory with setup.cfg file
-	const options: im.ExecOptions = {
+	const options: ExecOptions = {
 		cwd: path.sep,
 	};
 	if (run_with_sudo) {
