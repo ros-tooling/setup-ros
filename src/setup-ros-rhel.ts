@@ -13,7 +13,7 @@ async function configOs(): Promise<void> {
 	// root, action does not run as root) everywhere in the action.
 	try {
 		await io.which("sudo", true);
-	} catch (err) {
+	} catch {
 		await utils.exec("dnf", [
 			"install",
 			"--setopt=install_weak_deps=False",
