@@ -27,7 +27,7 @@ jobs:
           - macOS-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -51,7 +51,7 @@ jobs:
           - almalinux:9
           - almalinux:10
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -82,7 +82,7 @@ jobs:
           # Lyrical Luth (May 2026 - May 2031)
           - lyrical
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -164,7 +164,7 @@ jobs:
       image: ${{ matrix.docker_image }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -186,7 +186,7 @@ jobs:
     container:
       image: ubuntu:26.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -201,7 +201,7 @@ jobs:
     container:
       image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-resolute:latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
@@ -219,7 +219,7 @@ jobs:
         docker_image:
           - ubuntu:26.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.1.0
         with:
           node-version: "24.x"
